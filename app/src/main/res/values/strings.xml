@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">BulldogVods</string>
+
+    <string name="error_generic_title">Something went wrong</string>
+    <string name="error_generic_description">Please try again.</string>
+    <string name="error_generic_retry_button">Try again</string>
+
+    <string name="title_bulldog">BULLDOG</string>
+    <string name="title_vods">VODS</string>
+
+    <string name="vod_state_live">Live</string>
+    <string name="vod_state_ready">Ready</string>
+    <string name="vod_state_processing">Processing</string>
+
+    <string name="fragment_vods_image_search_content_description">Search icon</string>
+    <string name="fragment_vods_image_vod_thumbnail_content_description">Vod thumbnail</string>
+    <string name="fragment_vods_image_game_thumbnail_content_description">Game thumbnail</string>
+    <string name="fragment_vods_chapters">Chapters</string>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/fruit_salad</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:colorBackground">@color/aqua_haze</item>
+        <item name="colorOnBackground">@color/shark</item>
+        <item name="colorSurface">@color/aqua_haze</item>
+        <item name="colorOnSurface">@color/shark</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

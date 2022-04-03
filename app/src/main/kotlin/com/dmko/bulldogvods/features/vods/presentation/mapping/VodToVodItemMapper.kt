@@ -1,0 +1,76 @@
+package com.dmko.bulldogvods.features.vods.presentation.mapping
+
+import com.dmko.bulldogvods.R
+import com.dmko.bulldogvods.features.vods.domain.entities.Vod
+import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
+import com.dmko.bulldogvods.features.vods.domain.entities.VodState
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.*
+import com.dmko.bulldogvods.features.vods.presentation.formatting.DurationFormat
+import com.dmko.bulldogvods.features.vods.presentation.formatting.RelativeDateFormat
+import javax.inject.Inject
+
+class VodToVodItemMapper @Inject constructor(
+    private val durationFormat: DurationFormat,
+    private val relativeDateFormat: RelativeDateFormat
+) {
+
+    fun map(vod: Vod): VodItem {
+        return VodItem(
+            id = vod.id,
+            thumbnailUrl = DEFAULT_VOD_THUMBNAIL_URL,
+            length = mapVodStateToDuration(vod.state),
+            recordedAt = relativeDateFormat.format(vod.recordedAtMillis),
+            gameThumbnailUrl = getLongestChapterGameThumbnail(vod.chapters) ?: DEFAULT_GAME_THUMBNAIL_URL,
+            title = vod.title,
+            stateBadge = mapVodStateToBadge(vod.state),
+            chaptersSection = mapChaptersToSection(vod.chapters)
+        )
+    }
+
+    private fun mapVodStateToDuration(vodState: VodState): String? {
+        return when (vodState) {
+            is VodState.Ready -> durationFormat.format(vodState.length)
+            is VodState.Processing -> durationFormat.format(vodState.length)
+            is VodState.Live, is VodState.Unknown -> null
+        }
+    }
+
+    private fun getLongestChapterGameThumbnail(chapters: List<VodChapter>): String? {
+        return chapters.maxByOrNull(VodChapter::length)?.gameThumbnailUrl
+    }
+
+    private fun mapVodStateToBadge(vodState: VodState): VodItem.StateBadge? {
+        return when (vodState) {
+            is VodState.Live -> VodItem.StateBadge(
+                backgroundColor = R.color.red_70,
+                text = R.string.vod_state_live
+            )
+            is VodState.Ready -> VodItem.StateBadge(
+                backgroundColor = R.color.sea_green_70,
+                text = R.string.vod_state_ready
+            )
+            is VodState.Processing -> VodItem.StateBadge(
+                backgroundColor = R.color.clementine_70,
+                text = R.string.vod_state_processing
+            )
+            is VodState.Unknown -> null
+        }
+    }
+
+    private fun mapChaptersToSection(chapters: List<VodChapter>): ChaptersSection {
+        return when {
+            chapters.isEmpty() -> NoChapters
+            chapters.size == 1 -> SingleChapter(gameName = chapters.first().gameName)
+            else -> MultipleChapters(chaptersCount = chapters.size)
+        }
+    }
+
+    private companion object {
+
+        private const val DEFAULT_VOD_THUMBNAIL_URL =
+            "https://vods.admiralbulldog.live/assets/default-thumbnail.2162522e.webp"
+        private const val DEFAULT_GAME_THUMBNAIL_URL = "https://static-cdn.jtvnw.net/ttv-boxart/66082-285x380.jpg"
+    }
+}

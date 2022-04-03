@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="aqua_haze">#FAFCFC</color>
+    <color name="shark">#191C1C</color>
+    <color name="shark_50">#80191C1C</color>
+    <color name="fruit_salad">#4CAF50</color>
+    <color name="iron">#E0E3E3</color>
+    <color name="black_70">#B3000000</color>
+    <color name="red_70">#B3FF0000</color>
+    <color name="sea_green_70">#B32E7D32</color>
+    <color name="clementine_70">#B3EF6C00</color>
+</resources>

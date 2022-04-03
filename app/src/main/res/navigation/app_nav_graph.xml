@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/fragmentVods">
+
+    <fragment
+        android:id="@+id/fragmentVods"
+        android:name="com.dmko.bulldogvods.app.screens.vods.VodsFragment"
+        tools:layout="@layout/fragment_vods" />
+
+    <fragment
+        android:id="@+id/fragmentVodPlayback"
+        android:name="com.dmko.bulldogvods.app.screens.vodplayback.VodPlaybackFragment"
+        tools:layout="@layout/fragment_vod_playback">
+
+        <argument
+            android:name="vod_id"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/actionVodPlayback"
+        app:destination="@id/fragmentVodPlayback" />
+</navigation>

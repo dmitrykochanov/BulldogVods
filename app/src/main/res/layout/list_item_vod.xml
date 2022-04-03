@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageVodThumbnail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/fragment_vods_image_vod_thumbnail_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@sample/vod_thumbnails" />
+
+    <TextView
+        android:id="@+id/textLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:background="@drawable/tag_background"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:textAppearance="?textAppearanceLabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10:15:30" />
+
+    <TextView
+        android:id="@+id/textState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:background="@drawable/tag_background"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:textAppearance="?textAppearanceLabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Ready" />
+
+    <TextView
+        android:id="@+id/textRecordedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_medium"
+        android:background="@drawable/tag_background"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:textAppearance="?textAppearanceLabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/imageVodThumbnail"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="2 days ago" />
+
+    <ImageView
+        android:id="@+id/imageGameThumbnail"
+        android:layout_width="@dimen/game_thumbnail_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/vods_list_content_extra_padding"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:contentDescription="@string/fragment_vods_image_game_thumbnail_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="3:4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageVodThumbnail"
+        tools:src="@sample/game_thumbnails" />
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/vods_list_content_extra_padding"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textAppearance="?textAppearanceTitleSmall"
+        app:layout_constraintBottom_toTopOf="@id/text_single_chapter_game_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageGameThumbnail"
+        app:layout_constraintTop_toBottomOf="@id/imageVodThumbnail"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="ELDEN RING WAITING ROOM" />
+
+    <TextView
+        android:id="@+id/text_single_chapter_game_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/vods_list_content_extra_padding"
+        android:textAppearance="?textAppearanceLabelSmall"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/cardChapters"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageGameThumbnail"
+        app:layout_constraintTop_toBottomOf="@id/textTitle"
+        tools:text="Elden Ring" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardChapters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/vods_list_content_extra_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/imageGameThumbnail"
+        app:layout_constraintTop_toBottomOf="@id/text_single_chapter_game_name"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small">
+
+            <ImageView
+                android:layout_width="@dimen/icon_size_normal"
+                android:layout_height="@dimen/icon_size_normal"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/padding_small"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_list" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/padding_small"
+                android:text="@string/fragment_vods_chapters"
+                android:textAppearance="?textAppearanceLabelSmall" />
+
+            <TextView
+                android:id="@+id/textChaptersCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_marginEnd="@dimen/padding_medium"
+                android:background="@drawable/chapter_count_background"
+                android:maxLines="1"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:textAppearance="?textAppearanceLabelSmall"
+                android:textColor="?colorOnPrimary"
+                tools:text="3" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
