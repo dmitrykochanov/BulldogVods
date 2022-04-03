@@ -1,21 +1,31 @@
+fragment VodSchema on Vod {
+    id
+    title
+    started_at
+    ended_at
+    state
+    visibility
+    categories {
+        name
+        timestamp
+        url
+    }
+    variants {
+        name
+        width
+        height
+        fps
+    }
+}
+
 query VodsQuery($userId: ObjectID!, $page: Int!, $limit: Int!) {
-    vodSchemas: vods(user_id: $userId, page: $page, limit: $limit) {
-        id
-        title
-        started_at
-        ended_at
-        state
-        visibility
-        categories {
-            name
-            timestamp
-            url
-        }
-        variants {
-            name
-            width
-            height
-            fps
-        }
+    vods(user_id: $userId, page: $page, limit: $limit) {
+        ...VodSchema
+    }
+}
+
+query VodQuery($id: ObjectID!) {
+    vod(id: $id) {
+        ...VodSchema
     }
 }

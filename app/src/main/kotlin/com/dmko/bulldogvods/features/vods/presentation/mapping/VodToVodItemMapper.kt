@@ -48,7 +48,7 @@ class VodToVodItemMapper @Inject constructor(
                 text = R.string.vod_state_live
             )
             is VodState.Ready -> VodItem.StateBadge(
-                backgroundColor = R.color.sea_green_70,
+                backgroundColor = R.color.fruit_salad_70,
                 text = R.string.vod_state_ready
             )
             is VodState.Processing -> VodItem.StateBadge(

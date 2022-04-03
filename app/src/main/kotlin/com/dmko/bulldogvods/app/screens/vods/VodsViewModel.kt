@@ -29,6 +29,6 @@ class VodsViewModel @Inject constructor(
     }
 
     fun onVodChaptersClicked(vodId: String) {
-        // TODO
+        navigationEventDispatcher.dispatch(NavigationEvent.ChapterChooser(vodId))
     }
 }

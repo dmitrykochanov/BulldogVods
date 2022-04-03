@@ -16,4 +16,7 @@
     <string name="fragment_vods_image_vod_thumbnail_content_description">Vod thumbnail</string>
     <string name="fragment_vods_image_game_thumbnail_content_description">Game thumbnail</string>
     <string name="fragment_vods_chapters">Chapters</string>
+
+    <string name="dialog_chapter_chooser_title">Chapter Select</string>
+    <string name="dialog_chapter_chooser_image_close_content_description">Close dialog</string>
 </resources>

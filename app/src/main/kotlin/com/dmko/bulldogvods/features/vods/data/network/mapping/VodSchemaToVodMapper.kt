@@ -1,7 +1,6 @@
 package com.dmko.bulldogvods.features.vods.data.network.mapping
 
-import apollo.VodsQuery
-import apollo.VodsQuery.VodSchema
+import apollo.fragment.VodSchema
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
@@ -53,7 +52,7 @@ class VodSchemaToVodMapper @Inject constructor() {
     private fun mapVodChapters(
         vodStartedAtMillis: Long,
         vodEndedAtMillis: Long?,
-        categories: List<VodsQuery.Category>
+        categories: List<VodSchema.Category>
     ): List<VodChapter> {
         val chapters = mutableListOf<VodChapter>()
         for (i in categories.indices) {
@@ -75,7 +74,7 @@ class VodSchemaToVodMapper @Inject constructor() {
         return chapters
     }
 
-    private fun mapVideoSource(variant: VodsQuery.Variant): VodVideoSource {
+    private fun mapVideoSource(variant: VodSchema.Variant): VodVideoSource {
         return VodVideoSource(
             name = variant.name,
             width = variant.width,

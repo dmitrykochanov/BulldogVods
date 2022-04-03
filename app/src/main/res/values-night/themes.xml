@@ -3,13 +3,17 @@
     <style name="Theme.App" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/fruit_salad</item>
         <item name="colorOnPrimary">@color/white</item>
+
         <item name="android:colorBackground">@color/shark</item>
         <item name="colorOnBackground">@color/iron</item>
+
         <item name="colorSurface">@color/shark</item>
         <item name="colorOnSurface">@color/white</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <item name="dialogTheme">@style/Theme.Dialog.RoundedCorners</item>
     </style>
 </resources>

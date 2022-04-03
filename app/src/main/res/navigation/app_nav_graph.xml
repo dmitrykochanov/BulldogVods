@@ -18,9 +18,27 @@
         <argument
             android:name="vod_id"
             app:argType="string" />
+
+        <argument
+            android:name="start_offset_millis"
+            app:argType="long" />
     </fragment>
+
+    <dialog
+        android:id="@+id/dialogChapterChooser"
+        android:name="com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialog"
+        tools:layout="@layout/dialog_fragment_chapter_chooser">
+
+        <argument
+            android:name="vod_id"
+            app:argType="string" />
+    </dialog>
 
     <action
         android:id="@+id/actionVodPlayback"
         app:destination="@id/fragmentVodPlayback" />
+
+    <action
+        android:id="@+id/actionChapterChooser"
+        app:destination="@id/dialogChapterChooser" />
 </navigation>
