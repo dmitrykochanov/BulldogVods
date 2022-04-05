@@ -4,14 +4,15 @@ import apollo.fragment.VodSchema
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
-import com.dmko.bulldogvods.features.vods.domain.entities.VodVideoSource
 import java.time.OffsetDateTime
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import apollo.type.VodState as VodStateSchema
 
-class VodSchemaToVodMapper @Inject constructor() {
+class VodSchemaToVodMapper @Inject constructor(
+    private val vodSchemaToVodVideoSourcesMapper: VodSchemaToVodVideoSourcesMapper
+) {
 
     fun map(vodSchema: VodSchema): Vod {
         val startedAtMillis = parseDate(vodSchema.started_at as String)
@@ -22,7 +23,7 @@ class VodSchemaToVodMapper @Inject constructor() {
             recordedAtMillis = startedAtMillis,
             state = mapVodState(startedAtMillis, endedAtMillis, vodSchema.state),
             chapters = mapVodChapters(startedAtMillis, endedAtMillis, vodSchema.categories),
-            videoSources = vodSchema.variants.map(::mapVideoSource),
+            videoSources = vodSchemaToVodVideoSourcesMapper.map(vodSchema),
         )
     }
 
@@ -72,15 +73,6 @@ class VodSchemaToVodMapper @Inject constructor() {
             )
         }
         return chapters
-    }
-
-    private fun mapVideoSource(variant: VodSchema.Variant): VodVideoSource {
-        return VodVideoSource(
-            name = variant.name,
-            width = variant.width,
-            height = variant.height,
-            fps = variant.fps
-        )
     }
 
     private fun parseDate(date: String): Long {

@@ -15,6 +15,7 @@ fragment VodSchema on Vod {
         width
         height
         fps
+        ready
     }
 }
 
