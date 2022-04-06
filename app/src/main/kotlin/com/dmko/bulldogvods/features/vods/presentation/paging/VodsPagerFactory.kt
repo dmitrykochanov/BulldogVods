@@ -10,10 +10,10 @@ class VodsPagerFactory @Inject constructor(
     private val networkVodsDataSource: NetworkVodsDataSource
 ) {
 
-    fun createVodsPager(): Pager<Int, Vod> {
+    fun createVodsPager(searchQuery: String? = null): Pager<Int, Vod> {
         return Pager(
             config = PagingConfig(pageSize = VODS_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { VodsPagingSource(networkVodsDataSource) }
+            pagingSourceFactory = { VodsPagingSource(networkVodsDataSource, searchQuery) }
         )
     }
 

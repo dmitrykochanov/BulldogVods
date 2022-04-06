@@ -8,15 +8,15 @@ import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 
 class VodsPagingSource(
-    private val networkVodsDataSource: NetworkVodsDataSource
+    private val networkVodsDataSource: NetworkVodsDataSource,
+    private val searchQuery: String?
 ) : RxPagingSource<Int, Vod>() {
 
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Vod>> {
         val page = params.key ?: 0
         val limit = params.loadSize
-        return networkVodsDataSource.getVods(page, limit)
+        return networkVodsDataSource.getVods(page, limit, searchQuery)
             .map<LoadResult<Int, Vod>> { vods ->
-                Timber.d(vods.toString())
                 LoadResult.Page(
                     data = vods,
                     prevKey = null,

@@ -28,7 +28,7 @@ class ChapterChooserDialog : AppCompatDialogFragment(R.layout.dialog_fragment_ch
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageClose.setOnClickListener { dismiss() }
-        binding.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
+        binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         chapterItemsAdapter = ChapterItemsAdapter(
             imageLoader = imageLoader,
             onChapterClickListener = viewModel::onChapterClicked
@@ -42,16 +42,16 @@ class ChapterChooserDialog : AppCompatDialogFragment(R.layout.dialog_fragment_ch
         when (chapterItemsState) {
             is Loading -> {
                 binding.progressBar.isVisible = true
-                binding.layoutError.isVisible = false
+                binding.layoutError.root.isVisible = false
             }
             is Data -> {
                 binding.progressBar.isVisible = false
-                binding.layoutError.isVisible = false
+                binding.layoutError.root.isVisible = false
                 chapterItemsAdapter.submitList(chapterItemsState.chapterItems)
             }
             is Error -> {
                 binding.progressBar.isVisible = false
-                binding.layoutError.isVisible = true
+                binding.layoutError.root.isVisible = true
             }
         }
     }

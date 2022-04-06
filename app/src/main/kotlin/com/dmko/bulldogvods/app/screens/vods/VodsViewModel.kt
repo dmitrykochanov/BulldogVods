@@ -24,6 +24,10 @@ class VodsViewModel @Inject constructor(
         .cachedIn(viewModelScope)
         .map { pagingData -> pagingData.map(vodToVodItemMapper::map) }
 
+    fun onSearchClicked() {
+        navigationEventDispatcher.dispatch(NavigationEvent.SearchVods)
+    }
+
     fun onVodClicked(vodId: String) {
         navigationEventDispatcher.dispatch(NavigationEvent.VodPlayback(vodId))
     }

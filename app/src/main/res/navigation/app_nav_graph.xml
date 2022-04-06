@@ -24,6 +24,11 @@
             app:argType="long" />
     </fragment>
 
+    <fragment
+        android:id="@+id/fragmentSearchVods"
+        android:name="com.dmko.bulldogvods.app.screens.searchvods.SearchVodsFragment"
+        tools:layout="@layout/fragment_search_vods" />
+
     <dialog
         android:id="@+id/dialogChapterChooser"
         android:name="com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialog"
@@ -37,6 +42,10 @@
     <action
         android:id="@+id/actionVodPlayback"
         app:destination="@id/fragmentVodPlayback" />
+
+    <action
+        android:id="@+id/actionSearchVods"
+        app:destination="@id/fragmentSearchVods" />
 
     <action
         android:id="@+id/actionChapterChooser"

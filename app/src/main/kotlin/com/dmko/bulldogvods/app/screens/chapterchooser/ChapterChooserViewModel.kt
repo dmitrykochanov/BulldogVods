@@ -12,7 +12,6 @@ import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsStat
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VodChapterToChapterItemMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -28,19 +27,20 @@ class ChapterChooserViewModel @Inject constructor(
 
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
 
+    private val loadVodsSubject = PublishSubject.create<Unit>()
+
     private val chapterItemsStateMutableLiveData = MutableLiveData<ChapterItemsState>()
     val chapterItemsStateLiveData: LiveData<ChapterItemsState> = chapterItemsStateMutableLiveData
 
-    private val loadVodsSubject = PublishSubject.create<Unit>()
-
     init {
         loadVodsSubject.toFlowable(BackpressureStrategy.DROP)
-            .startWith(Single.just(Unit))
+            .startWithItem(Unit)
             .switchMap {
                 networkVodsDataSource.getVod(vodId)
                     .map { vod -> vod.chapters.map(vodChapterToChapterItemMapper::map) }
                     .map<ChapterItemsState>(ChapterItemsState::Data)
-                    .startWith(Single.just(ChapterItemsState.Loading))
+                    .toFlowable()
+                    .startWithItem(ChapterItemsState.Loading)
                     .onErrorReturnItem(ChapterItemsState.Error)
             }
             .subscribeOn(schedulers.io)

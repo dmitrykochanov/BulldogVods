@@ -59,42 +59,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageClose" />
 
-    <LinearLayout
+    <include
         android:id="@+id/layoutError"
+        layout="@layout/layout_generic_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginStart="@dimen/padding_large"
         android:layout_marginEnd="@dimen/padding_large"
         android:layout_marginBottom="@dimen/padding_large"
-        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageClose">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_generic_title"
-            android:textAppearance="?textAppearanceTitleMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/error_generic_description"
-            android:textAppearance="?textAppearanceLabelMedium" />
-
-        <Button
-            android:id="@+id/buttonRetry"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/padding_normal"
-            android:text="@string/error_generic_retry_button" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/imageClose" />
 </androidx.constraintlayout.widget.ConstraintLayout>

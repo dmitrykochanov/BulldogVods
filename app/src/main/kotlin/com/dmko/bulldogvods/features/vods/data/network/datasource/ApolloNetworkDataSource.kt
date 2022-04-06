@@ -3,6 +3,7 @@ package com.dmko.bulldogvods.features.vods.data.network.datasource
 import apollo.VodQuery
 import apollo.VodsQuery
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.rx3.rxSingle
 import com.dmko.bulldogvods.features.vods.data.network.mapping.VodSchemaToVodMapper
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
@@ -15,9 +16,9 @@ class ApolloNetworkVodsDataSource @Inject constructor(
 ) : NetworkVodsDataSource {
 
 
-    override fun getVods(page: Int, limit: Int): Single<List<Vod>> {
+    override fun getVods(page: Int, limit: Int, searchQuery: String?): Single<List<Vod>> {
         return apolloClient
-            .query(VodsQuery(BULLDOG_USER_ID, page, limit))
+            .query(VodsQuery(BULLDOG_USER_ID, page, limit, Optional.presentIfNotNull(searchQuery)))
             .rxSingle()
             .map { apolloResponse -> requireNotNull(apolloResponse.data?.vods) }
             .map { vods -> vods.map(VodsQuery.Vod::vodSchema).map(vodSchemaToVodMapper::map) }

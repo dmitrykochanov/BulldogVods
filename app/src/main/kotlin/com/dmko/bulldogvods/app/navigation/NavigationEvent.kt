@@ -9,6 +9,8 @@ sealed class NavigationEvent {
         val startOffset: Duration = Duration.ZERO
     ) : NavigationEvent()
 
+    object SearchVods : NavigationEvent()
+
     data class ChapterChooser(
         val vodId: String
     ) : NavigationEvent()

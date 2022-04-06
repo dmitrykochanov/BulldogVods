@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_title_lirik"
+        android:id="@+id/text_title_bulldog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_bulldog"
@@ -27,9 +27,21 @@
         android:textAppearance="?textAppearanceTitleLarge"
         android:textColor="?colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@id/text_title_lirik"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_title_bulldog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/text_title_lirik" />
+        app:layout_constraintStart_toEndOf="@id/text_title_bulldog" />
+
+    <ImageView
+        android:id="@+id/imageSearch"
+        android:layout_width="@dimen/touch_target_size"
+        android:layout_height="@dimen/touch_target_size"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:contentDescription="@string/fragment_vods_image_search_content_description"
+        android:padding="@dimen/touch_target_icon_padding_large"
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toTopOf="@id/toolbarGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/toolbarGuideline"
@@ -56,39 +68,14 @@
             tools:listitem="@layout/list_item_vod" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <LinearLayout
+    <include
         android:id="@+id/layoutError"
+        layout="@layout/layout_generic_error"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarGuideline">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_generic_title"
-            android:textAppearance="?textAppearanceTitleMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/error_generic_description"
-            android:textAppearance="?textAppearanceLabelMedium" />
-
-        <Button
-            android:id="@+id/buttonRetry"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/padding_normal"
-            android:text="@string/error_generic_retry_button" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/toolbarGuideline" />
 </androidx.constraintlayout.widget.ConstraintLayout>

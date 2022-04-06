@@ -29,6 +29,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 vodId = event.vodId,
                 startOffsetMillis = event.startOffset.inWholeMilliseconds
             )
+            is NavigationEvent.SearchVods -> AppNavGraphDirections.actionSearchVods()
             is NavigationEvent.ChapterChooser -> AppNavGraphDirections.actionChapterChooser(event.vodId)
         }
         findNavController(R.id.fragmentNavHost).navigate(navDirections)

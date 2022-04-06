@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Single
 
 interface NetworkVodsDataSource {
 
-    fun getVods(page: Int, limit: Int): Single<List<Vod>>
+    fun getVods(page: Int, limit: Int, searchQuery: String?): Single<List<Vod>>
 
     fun getVod(id: String): Single<Vod>
 }
