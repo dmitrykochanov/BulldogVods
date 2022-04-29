@@ -23,6 +23,6 @@ class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
 
         binding.playerView
             .findViewById<ImageButton>(com.google.android.exoplayer2.R.id.exo_settings)
-            .setOnClickListener(null)
+            .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }
     }
 }

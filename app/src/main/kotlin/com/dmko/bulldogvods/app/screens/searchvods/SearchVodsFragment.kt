@@ -14,8 +14,8 @@ import androidx.paging.PagingData
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
-import com.dmko.bulldogvods.app.common.keyboard.KeyboardExtensions.clearFocusAndHideKeyboard
-import com.dmko.bulldogvods.app.common.keyboard.KeyboardExtensions.focusAndShowKeyboard
+import com.dmko.bulldogvods.app.common.keyboard.clearFocusAndHideKeyboard
+import com.dmko.bulldogvods.app.common.keyboard.focusAndShowKeyboard
 import com.dmko.bulldogvods.app.common.recycler.decorations.GridSpacingItemDecoration
 import com.dmko.bulldogvods.app.common.recycler.paging.GenericLoadStateAdapter
 import com.dmko.bulldogvods.app.common.views.OutsideTouchHelper

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class VodSchemaToVodMapper @Inject constructor(
     private val vodSchemaToVodStateMapper: VodSchemaToVodStateMapper,
     private val vodSchemaToVodChaptersMapper: VodSchemaToVodChaptersMapper,
-    private val vodSchemaToVodVideoSourcesMapper: VodSchemaToVodVideoSourcesMapper,
+    private val vodSchemaToVideoSourcesMapper: VodSchemaToVideoSourcesMapper,
     private val dateStringToTimestampMapper: DateStringToTimestampMapper
 ) {
 
@@ -18,7 +18,7 @@ class VodSchemaToVodMapper @Inject constructor(
             recordedAtMillis = dateStringToTimestampMapper.map(vodSchema.started_at as String),
             state = vodSchemaToVodStateMapper.map(vodSchema),
             chapters = vodSchemaToVodChaptersMapper.map(vodSchema),
-            videoSources = vodSchemaToVodVideoSourcesMapper.map(vodSchema),
+            videoSources = vodSchemaToVideoSourcesMapper.map(vodSchema),
         )
     }
 }

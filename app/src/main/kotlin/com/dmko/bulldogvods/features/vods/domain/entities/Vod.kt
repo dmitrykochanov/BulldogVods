@@ -6,5 +6,5 @@ data class Vod(
     val recordedAtMillis: Long,
     val state: VodState,
     val chapters: List<VodChapter>,
-    val videoSources: List<VodVideoSource>
+    val videoSources: List<VideoSource>
 )

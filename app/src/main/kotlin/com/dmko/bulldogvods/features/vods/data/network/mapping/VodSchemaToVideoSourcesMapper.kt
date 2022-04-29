@@ -1,21 +1,21 @@
 package com.dmko.bulldogvods.features.vods.data.network.mapping
 
 import apollo.fragment.VodSchema
-import com.dmko.bulldogvods.features.vods.domain.entities.VodVideoSource
+import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import javax.inject.Inject
 
-class VodSchemaToVodVideoSourcesMapper @Inject constructor() {
+class VodSchemaToVideoSourcesMapper @Inject constructor() {
 
-    fun map(vodSchema: VodSchema): List<VodVideoSource> {
-        val sources = mutableListOf<VodVideoSource>()
-        sources += VodVideoSource(
-            quality = VodVideoSource.Quality.Adaptive,
+    fun map(vodSchema: VodSchema): List<VideoSource> {
+        val sources = mutableListOf<VideoSource>()
+        sources += VideoSource(
+            quality = VideoSource.Quality.Adaptive,
             url = SOURCE_URL_MASTER.format(vodSchema.id),
             isReady = vodSchema.variants.any { it.ready }
         )
         sources += vodSchema.variants.map { vodVariant ->
-            VodVideoSource(
-                quality = VodVideoSource.Quality.Static(
+            VideoSource(
+                quality = VideoSource.Quality.Static(
                     width = vodVariant.width,
                     height = vodVariant.height,
                     fps = vodVariant.fps

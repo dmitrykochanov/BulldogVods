@@ -1,6 +1,6 @@
 package com.dmko.bulldogvods.features.vods.domain.entities
 
-data class VodVideoSource(
+data class VideoSource(
     val quality: Quality,
     val url: String,
     val isReady: Boolean
