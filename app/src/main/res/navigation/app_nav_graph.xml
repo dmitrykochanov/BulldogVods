@@ -31,7 +31,7 @@
 
     <dialog
         android:id="@+id/dialogChapterChooser"
-        android:name="com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialog"
+        android:name="com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogFragment"
         tools:layout="@layout/dialog_fragment_chapter_chooser">
 
         <argument

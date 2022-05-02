@@ -13,7 +13,6 @@ import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDat
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.presentation.entities.VideoSourceItem
-import com.dmko.bulldogvods.features.vods.presentation.events.VideoSourceSelectedEvent
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VideoSourceToVideoSourceItemMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -60,8 +59,8 @@ class VodPlaybackSettingsViewModel @Inject constructor(
     }
 
     fun onVideoSourceClicked(videoSourceUrl: String) {
-        eventBus.post(VideoSourceSelectedEvent(videoSourceUrl))
         navigationEventDispatcher.dispatch(NavigationEvent.Back)
+        eventBus.post(VodPlaybackSettingsDialogEvent(videoSourceUrl))
     }
 
     fun onRetryClicked() {

@@ -18,9 +18,12 @@ class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playerLiveData.observe(viewLifecycleOwner) { player -> binding.playerView.player = player }
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
+        viewModel.playerLiveData.observe(viewLifecycleOwner) { player -> binding.playerView.player = player }
 
+        binding.playerView
+            .findViewById<ImageButton>(R.id.exo_chapters)
+            .setOnClickListener { viewModel.onVodChaptersClicked() }
         binding.playerView
             .findViewById<ImageButton>(com.google.android.exoplayer2.R.id.exo_settings)
             .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }

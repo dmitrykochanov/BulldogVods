@@ -32,6 +32,7 @@ class VodsFragment : Fragment(R.layout.fragment_vods) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycle.addObserver(viewModel)
         setupVodsRecycler()
         binding.swipeRefreshLayout.setOnRefreshListener { vodItemsAdapter.refresh() }
         binding.layoutError.buttonRetry.setOnClickListener { vodItemsAdapter.retry() }

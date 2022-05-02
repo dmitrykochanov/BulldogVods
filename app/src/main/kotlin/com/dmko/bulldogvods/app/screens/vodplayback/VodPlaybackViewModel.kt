@@ -3,14 +3,16 @@ package com.dmko.bulldogvods.app.screens.vodplayback
 import android.content.Context
 import androidx.lifecycle.*
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
+import com.dmko.bulldogvods.app.common.rx.getFlowable
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
 import com.dmko.bulldogvods.app.navigation.NavigationEvent
 import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
+import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.selector.DefaultVideoSourceSelector
-import com.dmko.bulldogvods.features.vods.presentation.events.VideoSourceSelectedEvent
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -28,50 +30,36 @@ class VodPlaybackViewModel @Inject constructor(
     private val navigationEventDispatcher: NavigationEventDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
-    networkVodsDataSource: NetworkVodsDataSource,
-    defaultVideoSourceSelector: DefaultVideoSourceSelector,
+    private val networkVodsDataSource: NetworkVodsDataSource,
+    private val defaultVideoSourceSelector: DefaultVideoSourceSelector,
     schedulers: Schedulers,
     @ApplicationContext context: Context
 ) : RxViewModel(), DefaultLifecycleObserver {
 
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
-    private val startOffsetMillis = requireNotNull(savedStateHandle.get<Long>(ARG_START_OFFSET_MILLIS))
-
-    private val exoPlayer = ExoPlayer.Builder(context.applicationContext).build()
-
+    private val exoPlayer = ExoPlayer.Builder(context.applicationContext).build().also(ExoPlayer::prepare)
     private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
-    private val userSelectedVideoSourceUrlSubject = PublishSubject.create<String>()
 
-    private val playerMutableLiveData = MutableLiveData<Player>()
-    val playerLiveData: LiveData<Player> = playerMutableLiveData
+    val playerLiveData: LiveData<Player> = MutableLiveData(exoPlayer)
 
     init {
-        playerMutableLiveData.value = exoPlayer
-        exoPlayer.prepare()
-        exoPlayer.playWhenReady = true
-
-        val defaultVideoSourceUrlFlowable = networkVodsDataSource.getVod(vodId)
-            .map(Vod::videoSources)
-            .map { videoSources -> videoSources.filter(VideoSource::isReady) }
-            .map(defaultVideoSourceSelector::selectDefaultVideoSource)
-            .map(VideoSource::url)
-            .toFlowable()
-
-        val userSelectedVideoSourceUrlFlowable = userSelectedVideoSourceUrlSubject
-            .toFlowable(BackpressureStrategy.DROP)
-
-        val selectedVideoSourceUrlFlowable = Flowable.merge(
-            defaultVideoSourceUrlFlowable,
-            userSelectedVideoSourceUrlFlowable
-        )
-            .replay(1)
-            .autoConnect()
+        val selectedVideoSourceUrlFlowable = createSelectedVideoSourceUrlFlowable()
 
         selectedVideoSourceUrlFlowable
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
-            .subscribe { vodVideoSourceUrl ->
-                exoPlayer.setMediaItem(MediaItem.fromUri(vodVideoSourceUrl), startOffsetMillis)
+            .subscribe { videoSourceUrl ->
+                exoPlayer.setMediaItem(MediaItem.fromUri(videoSourceUrl), exoPlayer.currentPosition)
+            }
+            .disposeOnClear()
+
+        savedStateHandle.getFlowable<Long>(ARG_START_OFFSET_MILLIS)
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe { startOffsetMillis ->
+                if (exoPlayer.currentPosition != startOffsetMillis) {
+                    exoPlayer.seekTo(startOffsetMillis)
+                }
             }
             .disposeOnClear()
 
@@ -85,24 +73,51 @@ class VodPlaybackViewModel @Inject constructor(
             .disposeOnClear()
     }
 
+    private fun createSelectedVideoSourceUrlFlowable(): Flowable<String> {
+        val savedVideoSourceUrlFlowable = savedStateHandle.getFlowable<String>(ARG_VIDEO_SOURCE_URL)
+
+        val defaultVideoSourceUrlFlowable = networkVodsDataSource.getVod(vodId)
+            .map(Vod::videoSources)
+            .map { videoSources -> videoSources.filter(VideoSource::isReady) }
+            .map(defaultVideoSourceSelector::selectDefaultVideoSource)
+            .map(VideoSource::url)
+            .toFlowable()
+            .takeUntil(savedVideoSourceUrlFlowable)
+
+        return Flowable.merge(savedVideoSourceUrlFlowable, defaultVideoSourceUrlFlowable)
+            .replay(1)
+            .autoConnect()
+    }
+
     fun onVodPlaybackSettingsClicked() {
         vodPlaybackSettingsClickedSubject.onNext(Unit)
     }
 
+    fun onVodChaptersClicked() {
+        navigationEventDispatcher.dispatch(NavigationEvent.ChapterChooser(vodId))
+    }
+
     @Subscribe
-    fun onVideoSourceSelected(videoSourceSelectedEvent: VideoSourceSelectedEvent) {
-        userSelectedVideoSourceUrlSubject.onNext(videoSourceSelectedEvent.videoSourceUrl)
+    fun onVodPlaybackSettingsDialogEvent(event: VodPlaybackSettingsDialogEvent) {
+        savedStateHandle.set(ARG_VIDEO_SOURCE_URL, event.selectedVideoSourceUrl)
+    }
+
+    @Subscribe
+    fun onChapterChooserDialogEvent(event: ChapterChooserDialogEvent) {
+        savedStateHandle.set(ARG_START_OFFSET_MILLIS, event.selectedStartOffset.inWholeMilliseconds)
+        exoPlayer.playWhenReady = true
     }
 
     override fun onStart(owner: LifecycleOwner) {
         eventBus.register(this)
-        exoPlayer.play()
+        exoPlayer.playWhenReady = savedStateHandle.get<Boolean>(ARG_IS_PLAYING) ?: true
     }
 
     override fun onStop(owner: LifecycleOwner) {
         eventBus.unregister(this)
-        exoPlayer.pause()
+        savedStateHandle.set(ARG_IS_PLAYING, exoPlayer.isPlaying)
         savedStateHandle.set(ARG_START_OFFSET_MILLIS, exoPlayer.currentPosition)
+        exoPlayer.pause()
     }
 
     override fun onCleared() {
@@ -114,5 +129,7 @@ class VodPlaybackViewModel @Inject constructor(
 
         private const val ARG_VOD_ID = "vod_id"
         private const val ARG_START_OFFSET_MILLIS = "start_offset_millis"
+        private const val ARG_VIDEO_SOURCE_URL = "video_source_url"
+        private const val ARG_IS_PLAYING = "is_playing"
     }
 }

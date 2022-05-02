@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChapterChooserDialog : AppCompatDialogFragment(R.layout.dialog_fragment_chapter_chooser) {
+class ChapterChooserDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragment_chapter_chooser) {
 
     private val viewModel: ChapterChooserViewModel by viewModels()
     private val binding by viewBinding(DialogFragmentChapterChooserBinding::bind)

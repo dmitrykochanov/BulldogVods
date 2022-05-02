@@ -13,6 +13,7 @@ import com.dmko.bulldogvods.features.vods.presentation.mapping.VodChapterToChapt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.subjects.PublishSubject
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -20,6 +21,7 @@ import kotlin.time.Duration
 class ChapterChooserViewModel @Inject constructor(
     private val vodChapterToChapterItemMapper: VodChapterToChapterItemMapper,
     private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val eventBus: EventBus,
     networkVodsDataSource: NetworkVodsDataSource,
     schedulers: Schedulers,
     savedStateHandle: SavedStateHandle
@@ -50,7 +52,8 @@ class ChapterChooserViewModel @Inject constructor(
     }
 
     fun onChapterClicked(startOffset: Duration) {
-        navigationEventDispatcher.dispatch(NavigationEvent.VodPlayback(vodId, startOffset))
+        navigationEventDispatcher.dispatch(NavigationEvent.Back)
+        eventBus.post(ChapterChooserDialogEvent(vodId, startOffset))
     }
 
     fun onRetryClicked() {
