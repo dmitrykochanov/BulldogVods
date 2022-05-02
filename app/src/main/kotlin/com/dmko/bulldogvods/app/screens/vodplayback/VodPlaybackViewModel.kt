@@ -5,8 +5,8 @@ import androidx.lifecycle.*
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.rx.getFlowable
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VodPlaybackViewModel @Inject constructor(
-    private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
     private val networkVodsDataSource: NetworkVodsDataSource,
@@ -68,7 +68,7 @@ class VodPlaybackViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe { selectedVideoSourceUrl ->
-                navigationEventDispatcher.dispatch(NavigationEvent.VodPlaybackSettings(vodId, selectedVideoSourceUrl))
+                navigationCommandDispatcher.dispatch(NavigationCommand.VodPlaybackSettings(vodId, selectedVideoSourceUrl))
             }
             .disposeOnClear()
     }
@@ -94,7 +94,7 @@ class VodPlaybackViewModel @Inject constructor(
     }
 
     fun onVodChaptersClicked() {
-        navigationEventDispatcher.dispatch(NavigationEvent.ChapterChooser(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
     }
 
     @Subscribe

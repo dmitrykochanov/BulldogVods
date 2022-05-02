@@ -2,23 +2,23 @@ package com.dmko.bulldogvods.app.navigation
 
 import kotlin.time.Duration
 
-sealed class NavigationEvent {
-
-    object Back : NavigationEvent()
+sealed class NavigationCommand {
 
     data class VodPlayback(
         val vodId: String,
         val startOffset: Duration = Duration.ZERO
-    ) : NavigationEvent()
+    ) : NavigationCommand()
 
-    object SearchVods : NavigationEvent()
+    object SearchVods : NavigationCommand()
 
     data class ChapterChooser(
         val vodId: String
-    ) : NavigationEvent()
+    ) : NavigationCommand()
 
     data class VodPlaybackSettings(
         val vodId: String,
         val selectedVideoSourceUrl: String
-    ) : NavigationEvent()
+    ) : NavigationCommand()
+
+    object Back : NavigationCommand()
 }

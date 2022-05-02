@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VodChapterToChapterItemMapper
@@ -20,7 +20,7 @@ import kotlin.time.Duration
 @HiltViewModel
 class ChapterChooserViewModel @Inject constructor(
     private val vodChapterToChapterItemMapper: VodChapterToChapterItemMapper,
-    private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     networkVodsDataSource: NetworkVodsDataSource,
     schedulers: Schedulers,
@@ -52,7 +52,7 @@ class ChapterChooserViewModel @Inject constructor(
     }
 
     fun onChapterClicked(startOffset: Duration) {
-        navigationEventDispatcher.dispatch(NavigationEvent.Back)
+        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
         eventBus.post(ChapterChooserDialogEvent(vodId, startOffset))
     }
 

@@ -2,7 +2,7 @@ package com.dmko.bulldogvods.app.navigation
 
 import com.zhuinden.eventemitter.EventSource
 
-interface NavigationEventSource {
+interface NavigationCommandSource {
 
-    val source: EventSource<NavigationEvent>
+    val source: EventSource<NavigationCommand>
 }

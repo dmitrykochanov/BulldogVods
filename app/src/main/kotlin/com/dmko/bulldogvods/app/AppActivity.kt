@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.dmko.bulldogvods.AppNavGraphDirections
 import com.dmko.bulldogvods.R
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventSource
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandSource
 import com.zhuinden.liveevent.observe
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -15,30 +15,30 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
-    @Inject lateinit var navigationEventSource: NavigationEventSource
+    @Inject lateinit var navigationCommandSource: NavigationCommandSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigationEventSource.source.observe(this, ::handleNavigationEvent)
+        navigationCommandSource.source.observe(this, ::handleNavigationCommand)
     }
 
-    private fun handleNavigationEvent(event: NavigationEvent) {
-        Timber.i("Handling navigation event $event")
-        val navDirections = when (event) {
-            is NavigationEvent.Back -> {
+    private fun handleNavigationCommand(command: NavigationCommand) {
+        Timber.i("Handling navigation command $command")
+        val navDirections = when (command) {
+            is NavigationCommand.VodPlayback -> AppNavGraphDirections.actionVodPlayback(
+                vodId = command.vodId,
+                startOffsetMillis = command.startOffset.inWholeMilliseconds
+            )
+            is NavigationCommand.SearchVods -> AppNavGraphDirections.actionSearchVods()
+            is NavigationCommand.ChapterChooser -> AppNavGraphDirections.actionChapterChooser(command.vodId)
+            is NavigationCommand.VodPlaybackSettings -> AppNavGraphDirections.actionVodPlaybackSettings(
+                vodId = command.vodId,
+                selectedVideoSourceUrl = command.selectedVideoSourceUrl
+            )
+            is NavigationCommand.Back -> {
                 findNavController(R.id.fragmentNavHost).navigateUp()
                 return
             }
-            is NavigationEvent.VodPlayback -> AppNavGraphDirections.actionVodPlayback(
-                vodId = event.vodId,
-                startOffsetMillis = event.startOffset.inWholeMilliseconds
-            )
-            is NavigationEvent.SearchVods -> AppNavGraphDirections.actionSearchVods()
-            is NavigationEvent.ChapterChooser -> AppNavGraphDirections.actionChapterChooser(event.vodId)
-            is NavigationEvent.VodPlaybackSettings -> AppNavGraphDirections.actionVodPlaybackSettings(
-                vodId = event.vodId,
-                selectedVideoSourceUrl = event.selectedVideoSourceUrl
-            )
         }
         findNavController(R.id.fragmentNavHost).navigate(navDirections)
     }

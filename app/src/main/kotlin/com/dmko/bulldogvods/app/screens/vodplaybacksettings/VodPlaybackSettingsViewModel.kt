@@ -7,8 +7,8 @@ import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.app.common.resource.asResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VodPlaybackSettingsViewModel @Inject constructor(
     private val videoSourceToVideoSourceItemMapper: VideoSourceToVideoSourceItemMapper,
-    private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     vodsDataSource: NetworkVodsDataSource,
     schedulers: Schedulers,
@@ -59,7 +59,7 @@ class VodPlaybackSettingsViewModel @Inject constructor(
     }
 
     fun onVideoSourceClicked(videoSourceUrl: String) {
-        navigationEventDispatcher.dispatch(NavigationEvent.Back)
+        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
         eventBus.post(VodPlaybackSettingsDialogEvent(videoSourceUrl))
     }
 

@@ -8,8 +8,8 @@ import androidx.paging.cachedIn
 import androidx.paging.liveData
 import androidx.paging.map
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VodToVodItemMapper
 import com.dmko.bulldogvods.features.vods.presentation.paging.VodsPagerFactory
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class VodsViewModel @Inject constructor(
     vodsPagerFactory: VodsPagerFactory,
     private val vodToVodItemMapper: VodToVodItemMapper,
-    private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus
 ) : RxViewModel(), DefaultLifecycleObserver {
 
@@ -31,20 +31,20 @@ class VodsViewModel @Inject constructor(
         .map { pagingData -> pagingData.map(vodToVodItemMapper::map) }
 
     fun onSearchClicked() {
-        navigationEventDispatcher.dispatch(NavigationEvent.SearchVods)
+        navigationCommandDispatcher.dispatch(NavigationCommand.SearchVods)
     }
 
     fun onVodClicked(vodId: String) {
-        navigationEventDispatcher.dispatch(NavigationEvent.VodPlayback(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.VodPlayback(vodId))
     }
 
     fun onVodChaptersClicked(vodId: String) {
-        navigationEventDispatcher.dispatch(NavigationEvent.ChapterChooser(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
     }
 
     @Subscribe
     fun onChapterChooserDialogEvent(event: ChapterChooserDialogEvent) {
-        navigationEventDispatcher.dispatch(NavigationEvent.VodPlayback(event.vodId, event.selectedStartOffset))
+        navigationCommandDispatcher.dispatch(NavigationCommand.VodPlayback(event.vodId, event.selectedStartOffset))
     }
 
     override fun onStart(owner: LifecycleOwner) {

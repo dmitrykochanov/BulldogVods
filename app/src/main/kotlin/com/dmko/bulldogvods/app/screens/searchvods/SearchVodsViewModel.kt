@@ -10,8 +10,8 @@ import androidx.paging.map
 import androidx.paging.rxjava3.flowable
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
-import com.dmko.bulldogvods.app.navigation.NavigationEvent
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommand
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VodToVodItemMapper
 import com.dmko.bulldogvods.features.vods.presentation.paging.VodsPagerFactory
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SearchVodsViewModel @Inject constructor(
     private val vodsPagerFactory: VodsPagerFactory,
     private val vodToVodItemMapper: VodToVodItemMapper,
-    private val navigationEventDispatcher: NavigationEventDispatcher,
+    private val navigationCommandDispatcher: NavigationCommandDispatcher,
     schedulers: Schedulers,
     private val savedStateHandle: SavedStateHandle
 ) : RxViewModel() {
@@ -55,11 +55,11 @@ class SearchVodsViewModel @Inject constructor(
     }
 
     fun onVodClicked(vodId: String) {
-        navigationEventDispatcher.dispatch(NavigationEvent.VodPlayback(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.VodPlayback(vodId))
     }
 
     fun onVodChaptersClicked(vodId: String) {
-        navigationEventDispatcher.dispatch(NavigationEvent.ChapterChooser(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
     }
 
     private companion object {

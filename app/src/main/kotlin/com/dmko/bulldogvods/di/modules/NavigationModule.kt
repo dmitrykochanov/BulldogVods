@@ -1,8 +1,8 @@
 package com.dmko.bulldogvods.di.modules
 
-import com.dmko.bulldogvods.app.navigation.NavigationEventDispatcher
-import com.dmko.bulldogvods.app.navigation.NavigationEventSource
-import com.dmko.bulldogvods.app.navigation.ScreensNavigator
+import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
+import com.dmko.bulldogvods.app.navigation.NavigationCommandSource
+import com.dmko.bulldogvods.app.navigation.NavigationCoordinator
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,18 +16,16 @@ interface NavigationModule {
 
     @Binds
     @Singleton
-    fun provideNavigationEventSource(screensNavigator: ScreensNavigator): NavigationEventSource
+    fun provideNavigationCommandSource(navigationCoordinator: NavigationCoordinator): NavigationCommandSource
 
     @Binds
     @Singleton
-    fun provideNavigationEventDispatcher(
-        screensNavigator: ScreensNavigator
-    ): NavigationEventDispatcher
+    fun provideNavigationCommandDispatcher(navigationCoordinator: NavigationCoordinator): NavigationCommandDispatcher
 
     companion object {
 
         @Provides
         @Singleton
-        fun provideScreensNavigator() = ScreensNavigator()
+        fun provideNavigationCoordinator() = NavigationCoordinator()
     }
 }
