@@ -1,7 +1,14 @@
 package com.dmko.bulldogvods.app.screens.vodplayback
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import com.dmko.bulldogvods.app.common.resource.Resource
+import com.dmko.bulldogvods.app.common.resource.asResource
+import com.dmko.bulldogvods.app.common.resource.unwrapResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.rx.getFlowable
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
@@ -23,6 +30,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,9 +46,12 @@ class VodPlaybackViewModel @Inject constructor(
 
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
     private val exoPlayer = ExoPlayer.Builder(context.applicationContext).build().also(ExoPlayer::prepare)
-    private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
 
-    val playerLiveData: LiveData<Player> = MutableLiveData(exoPlayer)
+    private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
+    private val loadVideoSourcesSubject = PublishSubject.create<Unit>()
+
+    private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
+    val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
 
     init {
         val selectedVideoSourceUrlFlowable = createSelectedVideoSourceUrlFlowable()
@@ -48,8 +59,24 @@ class VodPlaybackViewModel @Inject constructor(
         selectedVideoSourceUrlFlowable
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
-            .subscribe { videoSourceUrl ->
-                exoPlayer.setMediaItem(MediaItem.fromUri(videoSourceUrl), exoPlayer.currentPosition)
+            .subscribe { videoSourceUrlResource ->
+                when (videoSourceUrlResource) {
+                    is Resource.Loading -> {
+                        playerMutableLiveData.value = Resource.Loading
+                        exoPlayer.removeMediaItem(0)
+                    }
+                    is Resource.Data -> {
+                        val videoSourceUrl = videoSourceUrlResource.data
+                        Timber.i("Switching video source to $videoSourceUrl")
+                        playerMutableLiveData.value = Resource.Data(exoPlayer)
+                        exoPlayer.setMediaItem(MediaItem.fromUri(videoSourceUrl), exoPlayer.currentPosition)
+                    }
+                    is Resource.Error -> {
+                        Timber.e(videoSourceUrlResource.error, "Failed to load video sources")
+                        playerMutableLiveData.value = Resource.Error(videoSourceUrlResource.error)
+                        exoPlayer.removeMediaItem(0)
+                    }
+                }
             }
             .disposeOnClear()
 
@@ -64,27 +91,35 @@ class VodPlaybackViewModel @Inject constructor(
             .disposeOnClear()
 
         vodPlaybackSettingsClickedSubject.toFlowable(BackpressureStrategy.LATEST)
-            .switchMapSingle { selectedVideoSourceUrlFlowable.firstOrError() }
+            .switchMapSingle { selectedVideoSourceUrlFlowable.unwrapResource().firstOrError() }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe { selectedVideoSourceUrl ->
-                navigationCommandDispatcher.dispatch(NavigationCommand.VodPlaybackSettings(vodId, selectedVideoSourceUrl))
+                navigationCommandDispatcher.dispatch(
+                    NavigationCommand.VodPlaybackSettings(vodId, selectedVideoSourceUrl)
+                )
             }
             .disposeOnClear()
     }
 
-    private fun createSelectedVideoSourceUrlFlowable(): Flowable<String> {
+    private fun createSelectedVideoSourceUrlFlowable(): Flowable<Resource<String>> {
         val savedVideoSourceUrlFlowable = savedStateHandle.getFlowable<String>(ARG_VIDEO_SOURCE_URL)
+            .map { savedVideoSourceUrl -> Resource.Data(savedVideoSourceUrl) }
 
-        val defaultVideoSourceUrlFlowable = networkVodsDataSource.getVod(vodId)
-            .map(Vod::videoSources)
-            .map { videoSources -> videoSources.filter(VideoSource::isReady) }
-            .map(defaultVideoSourceSelector::selectDefaultVideoSource)
-            .map(VideoSource::url)
-            .toFlowable()
+        val defaultVideoSourceUrlFlowable = loadVideoSourcesSubject.toFlowable(BackpressureStrategy.LATEST)
+            .startWithItem(Unit)
+            .switchMap {
+                networkVodsDataSource.getVod(vodId)
+                    .map(Vod::videoSources)
+                    .map { videoSources -> videoSources.filter(VideoSource::isReady) }
+                    .map(defaultVideoSourceSelector::selectDefaultVideoSource)
+                    .map(VideoSource::url)
+                    .asResource()
+            }
             .takeUntil(savedVideoSourceUrlFlowable)
 
         return Flowable.merge(savedVideoSourceUrlFlowable, defaultVideoSourceUrlFlowable)
+            .distinctUntilChanged()
             .replay(1)
             .autoConnect()
     }
@@ -95,6 +130,10 @@ class VodPlaybackViewModel @Inject constructor(
 
     fun onVodChaptersClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
+    }
+
+    fun onRetryClicked() {
+        loadVideoSourcesSubject.onNext(Unit)
     }
 
     @Subscribe
