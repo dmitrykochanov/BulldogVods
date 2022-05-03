@@ -1,5 +1,6 @@
 package com.dmko.bulldogvods.app.screens.vodplayback
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -8,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
+import com.dmko.bulldogvods.app.common.extensions.enterFullscreen
+import com.dmko.bulldogvods.app.common.extensions.exitFullscreen
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodPlaybackBinding
 import com.google.android.exoplayer2.Player
@@ -30,6 +33,25 @@ class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
         binding.playerView
             .findViewById<ImageButton>(com.google.android.exoplayer2.R.id.exo_settings)
             .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        enterFullscreenIfLandscape()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().exitFullscreen()
+    }
+
+    private fun enterFullscreenIfLandscape() {
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (isLandscape) {
+            requireActivity().enterFullscreen()
+        } else {
+            requireActivity().exitFullscreen()
+        }
     }
 
     private fun showPlayerResource(playerResource: Resource<Player>) {

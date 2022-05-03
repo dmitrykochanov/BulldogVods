@@ -1,6 +1,6 @@
 package com.dmko.bulldogvods.features.vods.domain.selector
 
-import com.dmko.bulldogvods.app.common.maxByOrThrow
+import com.dmko.bulldogvods.app.common.extensions.maxByOrThrow
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource.Quality.Adaptive
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource.Quality.Static
