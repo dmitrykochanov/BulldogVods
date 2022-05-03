@@ -6,43 +6,41 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageClose"
-        android:layout_width="@dimen/touch_target_size"
-        android:layout_height="@dimen/touch_target_size"
-        android:layout_marginStart="@dimen/padding_medium_normal"
-        android:layout_marginTop="@dimen/padding_medium_normal"
-        android:contentDescription="@string/dialog_chapter_chooser_image_close_content_description"
-        android:padding="@dimen/touch_target_icon_padding_large"
-        android:src="@drawable/ic_close"
+        android:id="@+id/imageIcon"
+        android:layout_width="@dimen/icon_size_normal"
+        android:layout_height="@dimen/icon_size_normal"
+        android:layout_marginStart="@dimen/padding_large"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_list"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/textTitle" />
 
     <TextView
-        android:layout_width="0dp"
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_small"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/padding_large"
         android:layout_marginEnd="@dimen/padding_large"
-        android:ellipsize="end"
-        android:lines="1"
         android:text="@string/dialog_chapter_chooser_title"
-        android:textAppearance="?textAppearanceTitleSmall"
-        app:layout_constraintBottom_toBottomOf="@id/imageClose"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imageClose"
-        app:layout_constraintTop_toTopOf="@id/imageClose" />
+        android:textAppearance="?textAppearanceHeadlineSmall"
+        app:layout_constraintStart_toEndOf="@id/imageIcon"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChapterItems"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_normal"
         android:layout_marginBottom="@dimen/padding_medium"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageClose"
+        app:layout_constraintTop_toBottomOf="@id/textTitle"
         tools:listitem="@layout/list_item_chapter" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -57,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageClose" />
+        app:layout_constraintTop_toBottomOf="@id/textTitle" />
 
     <include
         android:id="@+id/layoutError"
@@ -71,5 +69,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageClose" />
+        app:layout_constraintTop_toBottomOf="@id/textTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,10 @@ class VodsViewModel @Inject constructor(
         .cachedIn(viewModelScope)
         .map { pagingData -> pagingData.map(vodToVodItemMapper::map) }
 
+    fun onSettingsClicked() {
+        navigationCommandDispatcher.dispatch(NavigationCommand.ThemeChooser)
+    }
+
     fun onSearchClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.SearchVods)
     }

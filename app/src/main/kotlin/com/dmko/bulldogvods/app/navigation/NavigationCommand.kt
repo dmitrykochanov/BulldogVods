@@ -20,5 +20,7 @@ sealed class NavigationCommand {
         val selectedVideoSourceUrl: String
     ) : NavigationCommand()
 
+    object ThemeChooser : NavigationCommand()
+
     object Back : NavigationCommand()
 }

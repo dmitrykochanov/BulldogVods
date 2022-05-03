@@ -5,6 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/imageSettings"
+        android:layout_width="@dimen/touch_target_size"
+        android:layout_height="@dimen/touch_target_size"
+        android:layout_marginStart="@dimen/padding_small"
+        android:contentDescription="@string/fragment_vods_image_search_content_description"
+        android:padding="@dimen/touch_target_icon_padding_large"
+        android:src="@drawable/ic_settings"
+        app:layout_constraintBottom_toTopOf="@id/toolbarGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/text_title_bulldog"
         android:layout_width="wrap_content"

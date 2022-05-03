@@ -52,8 +52,8 @@
 
     <ImageView
         android:id="@+id/imageArrow"
-        android:layout_width="@dimen/icon_size_normal"
-        android:layout_height="@dimen/icon_size_normal"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
         android:layout_marginEnd="@dimen/padding_large"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_arrow_right"

@@ -1,18 +1,23 @@
 <resources>
     <string name="app_name">BulldogVods</string>
 
+    <string name="title_bulldog">BULLDOG</string>
+    <string name="title_vods">VODS</string>
+
     <string name="error_generic_title">Something went wrong</string>
     <string name="error_generic_description">Please try again.</string>
     <string name="error_generic_retry_button">Try again</string>
 
-    <string name="title_bulldog">BULLDOG</string>
-    <string name="title_vods">VODS</string>
+    <string name="theme_name_dark">Dark</string>
+    <string name="theme_name_light">Light</string>
+    <string name="theme_name_system_default">System default</string>
 
     <string name="vod_state_live">Live</string>
     <string name="vod_state_ready">Ready</string>
     <string name="vod_state_processing">Processing</string>
 
     <string name="fragment_vods_image_search_content_description">Search</string>
+    <string name="fragment_vods_image_settings_content_description">Settings</string>
     <string name="fragment_vods_image_vod_thumbnail_content_description">Vod thumbnail</string>
     <string name="fragment_vods_image_game_thumbnail_content_description">Game thumbnail</string>
     <string name="fragment_vods_chapters">Chapters</string>
@@ -23,9 +28,11 @@
 
     <string name="fragment_vod_playback_chapters_content_description">Choose chapter</string>
 
-    <string name="dialog_chapter_chooser_title">Chapter Select</string>
-    <string name="dialog_chapter_chooser_image_close_content_description">Close dialog</string>
+    <string name="dialog_chapter_chooser_title">Chapter</string>
 
     <string name="dialog_vod_playback_settings_check_content_description">Selected video source</string>
     <string name="dialog_vod_playback_settings_title">Quality</string>
+
+    <string name="dialog_theme_chooser_title">Theme</string>
+    <string name="dialog_theme_chooser_check_content_description">Selected theme</string>
 </resources>

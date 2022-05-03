@@ -31,11 +31,11 @@ class VodsFragment : Fragment(R.layout.fragment_vods) {
     private lateinit var vodItemsAdapter: VodItemsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
         setupVodsRecycler()
         binding.swipeRefreshLayout.setOnRefreshListener { vodItemsAdapter.refresh() }
         binding.layoutError.buttonRetry.setOnClickListener { vodItemsAdapter.retry() }
+        binding.imageSettings.setOnClickListener { viewModel.onSettingsClicked() }
         binding.imageSearch.setOnClickListener { viewModel.onSearchClicked() }
 
         viewModel.vodItemsPagingDataLiveData.observe(viewLifecycleOwner, ::showVodItemsPagingData)

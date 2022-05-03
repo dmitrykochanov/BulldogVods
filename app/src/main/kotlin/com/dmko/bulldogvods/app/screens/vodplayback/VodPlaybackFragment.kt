@@ -17,7 +17,6 @@ class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
     private val binding by viewBinding(FragmentVodPlaybackBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
         viewModel.playerLiveData.observe(viewLifecycleOwner) { player -> binding.playerView.player = player }
 

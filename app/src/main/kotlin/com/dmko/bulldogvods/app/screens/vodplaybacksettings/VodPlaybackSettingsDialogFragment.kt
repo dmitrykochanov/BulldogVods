@@ -22,8 +22,6 @@ class VodPlaybackSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialo
     private lateinit var videoSourceItemsAdapter: VideoSourceItemsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.imageClose.setOnClickListener { dismiss() }
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         videoSourceItemsAdapter = VideoSourceItemsAdapter(
             onVideoSourceClickListener = viewModel::onVideoSourceClicked

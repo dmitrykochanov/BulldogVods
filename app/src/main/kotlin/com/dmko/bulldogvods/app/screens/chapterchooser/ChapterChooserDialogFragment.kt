@@ -26,8 +26,6 @@ class ChapterChooserDialogFragment : AppCompatDialogFragment(R.layout.dialog_fra
     private lateinit var chapterItemsAdapter: ChapterItemsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.imageClose.setOnClickListener { dismiss() }
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         chapterItemsAdapter = ChapterItemsAdapter(
             imageLoader = imageLoader,
