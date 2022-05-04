@@ -6,7 +6,9 @@ import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.*
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.MultipleChapters
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.NoChapters
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.SingleChapter
 import com.dmko.bulldogvods.features.vods.presentation.formatting.DurationFormat
 import com.dmko.bulldogvods.features.vods.presentation.formatting.RelativeDateFormat
 import javax.inject.Inject

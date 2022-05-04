@@ -8,7 +8,9 @@ import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.databinding.ListItemVodBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.*
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.MultipleChapters
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.NoChapters
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.SingleChapter
 
 class VodItemViewHolder(
     private val binding: ListItemVodBinding,

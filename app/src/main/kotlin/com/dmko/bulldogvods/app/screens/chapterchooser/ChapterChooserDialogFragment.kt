@@ -10,7 +10,9 @@ import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.databinding.DialogFragmentChapterChooserBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState
-import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState.*
+import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState.Data
+import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState.Error
+import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState.Loading
 import com.dmko.bulldogvods.features.vods.presentation.recycler.chapters.ChapterItemsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
