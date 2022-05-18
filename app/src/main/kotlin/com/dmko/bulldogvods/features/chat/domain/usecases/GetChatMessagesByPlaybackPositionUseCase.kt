@@ -71,7 +71,10 @@ class GetChatMessagesByPlaybackPositionUseCase @Inject constructor(
     ): List<ChatMessage> {
         val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
         val lastLoadedMessageSentAtMillis = loadedMessages.lastOrNull()?.sentAtMillis
+        val firstLoadedMessageSentAtMillis = loadedMessages.firstOrNull()?.sentAtMillis
         return if (lastLoadedMessageSentAtMillis != null && vodPlaybackPosition > lastLoadedMessageSentAtMillis) {
+            emptyList()
+        } else if (firstLoadedMessageSentAtMillis != null && vodPlaybackPosition < firstLoadedMessageSentAtMillis) {
             emptyList()
         } else {
             loadedMessages
