@@ -21,7 +21,7 @@ fun <T : Any> Flowable<Resource<T>>.unwrapResource(
     defaultValue: T? = null
 ): Flowable<T> {
     return switchMap { resource ->
-        return@switchMap when (resource) {
+        when (resource) {
             is Resource.Loading -> Flowable.empty()
             is Resource.Data -> Flowable.just(resource.data)
             is Resource.Error -> {
@@ -31,6 +31,26 @@ fun <T : Any> Flowable<Resource<T>>.unwrapResource(
                     else -> Flowable.empty()
                 }
             }
+        }
+    }
+}
+
+fun <T : Any, R : Any> Flowable<Resource<T>>.mapResource(transform: (T) -> R): Flowable<Resource<R>> {
+    return map { resource ->
+        when (resource) {
+            is Resource.Loading -> resource
+            is Resource.Data -> Resource.Data(transform(resource.data))
+            is Resource.Error -> resource
+        }
+    }
+}
+
+fun <T : Any, R : Any> Flowable<Resource<T>>.switchMapResource(transform: (T) -> Flowable<R>): Flowable<Resource<R>> {
+    return switchMap { resource ->
+        when (resource) {
+            is Resource.Loading -> Flowable.just(resource)
+            is Resource.Data -> transform(resource.data).asResource()
+            is Resource.Error -> Flowable.just(resource)
         }
     }
 }

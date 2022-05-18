@@ -2,7 +2,7 @@ package com.dmko.bulldogvods.features.chat.domain.usecases
 
 import com.dmko.bulldogvods.features.chat.data.network.datasource.NetworkChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfiguration
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
 import com.dmko.bulldogvods.features.chat.domain.entities.GetChatMessagesRequest
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class GetChatMessagesByPlaybackPositionUseCase @Inject constructor(
     private val networkChatDataSource: NetworkChatDataSource,
-    private val config: ChatReplayConfiguration
+    private val config: ChatReplayConfig
 ) {
 
     private val initialPreloadOffsetMillis = config.initialPreloadOffset.inWholeMilliseconds
@@ -24,7 +24,7 @@ class GetChatMessagesByPlaybackPositionUseCase @Inject constructor(
         val loadedMessagesFlowable = loadedMessagesSubject.toFlowable(BackpressureStrategy.LATEST)
             .startWithItem(emptyList())
         val playbackPositionFlowable = playbackPositionSubject.toFlowable(BackpressureStrategy.LATEST)
-
+            .map { playbackPosition -> playbackPosition + config.playbackPositionOffset.inWholeMilliseconds }
         return playbackPositionFlowable.withLatestFrom(loadedMessagesFlowable, ::Pair)
             .concatMapSingle { pair ->
                 val (playbackPosition, loadedMessages) = pair

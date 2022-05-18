@@ -2,7 +2,7 @@ package com.dmko.bulldogvods.di.modules.features
 
 import com.dmko.bulldogvods.features.chat.data.network.datasource.ApolloNetworkChatDataSource
 import com.dmko.bulldogvods.features.chat.data.network.datasource.NetworkChatDataSource
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfiguration
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,8 +22,8 @@ interface ChatModule {
 
         @Provides
         @Singleton
-        fun provideChatReplayConfiguration(): ChatReplayConfiguration {
-            return ChatReplayConfiguration()
+        fun provideChatReplayConfiguration(): ChatReplayConfig {
+            return ChatReplayConfig()
         }
     }
 }

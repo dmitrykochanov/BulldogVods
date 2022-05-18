@@ -22,8 +22,8 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:controller_layout_id="@layout/layout_exo_player_controls"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/chatSeparatorGuideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:show_next_button="false"
@@ -34,15 +34,25 @@
         android:id="@+id/recyclerChat"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_normal"
         android:layout_marginEnd="@dimen/padding_normal"
         android:layout_marginBottom="@dimen/padding_normal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerView"
+        app:layout_constraintStart_toEndOf="@id/chatSeparatorGuideline"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/list_item_chat_message" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/chatSeparatorGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.7"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/layoutError"

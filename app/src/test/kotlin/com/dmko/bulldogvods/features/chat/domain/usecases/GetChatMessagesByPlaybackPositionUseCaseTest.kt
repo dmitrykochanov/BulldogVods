@@ -1,6 +1,6 @@
 package com.dmko.bulldogvods.features.chat.domain.usecases
 
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfiguration
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_1
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_2
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_3
@@ -20,7 +20,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     fun `Should not return messages when playback position is not specified`() {
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(
             FakeNetworkChatDataSource(),
-            ChatReplayConfiguration()
+            ChatReplayConfig()
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
@@ -33,7 +33,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
 
     @ParameterizedTest
     @MethodSource("provideConfigsToTest")
-    fun `Should return correct messages when playback position is passed`(config: ChatReplayConfiguration) {
+    fun `Should return correct messages when playback position is passed`(config: ChatReplayConfig) {
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
         val playbackPositionSubject = PublishSubject.create<Long>()
 
@@ -77,7 +77,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
 
     @Test
     fun `Should prefetch messages after seeking`() {
-        val config = ChatReplayConfiguration(
+        val config = ChatReplayConfig(
             initialPreloadOffset = (MESSAGE_4.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds
         )
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
@@ -97,7 +97,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
 
     @Test
     fun `Should delete all messages if new playback position is after last loaded message`() {
-        val config = ChatReplayConfiguration(
+        val config = ChatReplayConfig(
             pageSize = 2,
             initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_4.sentAtMillis + 1).milliseconds
         )
@@ -118,7 +118,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
 
     @Test
     fun `Should not delete messages if new playback position is before last loaded message`() {
-        val config = ChatReplayConfiguration(
+        val config = ChatReplayConfig(
             pageSize = 5,
             initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_3.sentAtMillis + 1).milliseconds
         )
@@ -143,7 +143,7 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
             playback position will be loaded. Should not cause any problems in a real world scenario."""
     )
     fun `Should return correct messages if page size is less than the size of prefetched messages`() {
-        val config = ChatReplayConfiguration(
+        val config = ChatReplayConfig(
             pageSize = 2,
             initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds
         )
@@ -163,18 +163,18 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     companion object {
 
         @JvmStatic
-        fun provideConfigsToTest(): List<ChatReplayConfiguration> {
+        fun provideConfigsToTest(): List<ChatReplayConfig> {
             return listOf(
-                ChatReplayConfiguration(pageSize = 2, historySize = 2),
-                ChatReplayConfiguration(pageSize = 2, historySize = 3),
-                ChatReplayConfiguration(pageSize = 2, historySize = 4),
-                ChatReplayConfiguration(pageSize = 2, historySize = 5),
-                ChatReplayConfiguration(pageSize = 3, historySize = 3),
-                ChatReplayConfiguration(pageSize = 3, historySize = 4),
-                ChatReplayConfiguration(pageSize = 3, historySize = 5),
-                ChatReplayConfiguration(pageSize = 4, historySize = 4),
-                ChatReplayConfiguration(pageSize = 4, historySize = 5),
-                ChatReplayConfiguration(pageSize = 5, historySize = 5)
+                ChatReplayConfig(pageSize = 2, historySize = 2),
+                ChatReplayConfig(pageSize = 2, historySize = 3),
+                ChatReplayConfig(pageSize = 2, historySize = 4),
+                ChatReplayConfig(pageSize = 2, historySize = 5),
+                ChatReplayConfig(pageSize = 3, historySize = 3),
+                ChatReplayConfig(pageSize = 3, historySize = 4),
+                ChatReplayConfig(pageSize = 3, historySize = 5),
+                ChatReplayConfig(pageSize = 4, historySize = 4),
+                ChatReplayConfig(pageSize = 4, historySize = 5),
+                ChatReplayConfig(pageSize = 5, historySize = 5)
             )
         }
     }
