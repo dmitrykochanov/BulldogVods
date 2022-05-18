@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.di.modules.features
+package com.dmko.bulldogvods.di.modules.features.vods
 
 import com.dmko.bulldogvods.features.vods.data.network.datasource.ApolloNetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource

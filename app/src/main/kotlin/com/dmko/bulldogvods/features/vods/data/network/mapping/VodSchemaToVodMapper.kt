@@ -15,7 +15,8 @@ class VodSchemaToVodMapper @Inject constructor(
         return Vod(
             id = vodSchema.id as String,
             title = vodSchema.title,
-            recordedAtMillis = dateStringToTimestampMapper.map(vodSchema.started_at as String),
+            startedAtMillis = dateStringToTimestampMapper.map(vodSchema.started_at as String),
+            endedAtMillis = (vodSchema.ended_at as String?)?.let(dateStringToTimestampMapper::map),
             state = vodSchemaToVodStateMapper.map(vodSchema),
             chapters = vodSchemaToVodChaptersMapper.map(vodSchema),
             videoSources = vodSchemaToVideoSourcesMapper.map(vodSchema),

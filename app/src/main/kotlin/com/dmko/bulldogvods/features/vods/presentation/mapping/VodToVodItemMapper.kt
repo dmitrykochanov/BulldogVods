@@ -23,7 +23,7 @@ class VodToVodItemMapper @Inject constructor(
             id = vod.id,
             thumbnailUrl = DEFAULT_VOD_THUMBNAIL_URL,
             length = mapVodStateToDuration(vod.state),
-            recordedAt = relativeDateFormat.format(vod.recordedAtMillis),
+            recordedAt = relativeDateFormat.format(vod.startedAtMillis),
             gameThumbnailUrl = getLongestChapterGameThumbnail(vod.chapters) ?: DEFAULT_GAME_THUMBNAIL_URL,
             title = vod.title,
             stateBadge = mapVodStateToBadge(vod.state),

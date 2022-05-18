@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +16,7 @@ import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodPlaybackBinding
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.time.Duration
 
 @AndroidEntryPoint
 class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
@@ -73,6 +75,18 @@ class VodPlaybackFragment : Fragment(R.layout.fragment_vod_playback) {
                 binding.playerView.isVisible = false
                 binding.layoutError.root.isVisible = true
                 binding.playerView.player = null
+            }
+        }
+    }
+
+    companion object {
+
+        fun newInstance(vodId: String, startOffset: Duration): VodPlaybackFragment {
+            return VodPlaybackFragment().apply {
+                arguments = bundleOf(
+                    VodPlaybackViewModel.ARG_VOD_ID to vodId,
+                    VodPlaybackViewModel.ARG_START_OFFSET_MILLIS to startOffset.inWholeMilliseconds
+                )
             }
         }
     }

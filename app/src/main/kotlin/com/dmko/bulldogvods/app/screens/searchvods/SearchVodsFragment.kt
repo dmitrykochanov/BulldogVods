@@ -36,6 +36,7 @@ class SearchVodsFragment : Fragment(R.layout.fragment_search_vods) {
     private lateinit var vodItemsAdapter: VodItemsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewLifecycleOwner.lifecycle.addObserver(viewModel)
         setupVodsRecycler()
         binding.swipeRefreshLayout.setOnRefreshListener { vodItemsAdapter.refresh() }
         binding.layoutError.buttonRetry.setOnClickListener { vodItemsAdapter.retry() }

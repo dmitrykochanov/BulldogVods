@@ -39,7 +39,7 @@ class VodsViewModel @Inject constructor(
     }
 
     fun onVodClicked(vodId: String) {
-        navigationCommandDispatcher.dispatch(NavigationCommand.VodPlayback(vodId))
+        navigationCommandDispatcher.dispatch(NavigationCommand.Vod(vodId))
     }
 
     fun onVodChaptersClicked(vodId: String) {
@@ -48,7 +48,7 @@ class VodsViewModel @Inject constructor(
 
     @Subscribe
     fun onChapterChooserDialogEvent(event: ChapterChooserDialogEvent) {
-        navigationCommandDispatcher.dispatch(NavigationCommand.VodPlayback(event.vodId, event.selectedStartOffset))
+        navigationCommandDispatcher.dispatch(NavigationCommand.Vod(event.vodId, event.selectedStartOffset))
     }
 
     override fun onStart(owner: LifecycleOwner) {

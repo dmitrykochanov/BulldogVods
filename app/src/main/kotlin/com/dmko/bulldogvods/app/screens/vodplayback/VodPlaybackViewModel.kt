@@ -16,6 +16,7 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
+import com.dmko.bulldogvods.features.chat.domain.usecases.GetChatMessagesByPlaybackPositionUseCase
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
@@ -31,10 +32,12 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class VodPlaybackViewModel @Inject constructor(
+    private val getChatMessagesByPlaybackPositionUseCase: GetChatMessagesByPlaybackPositionUseCase,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
@@ -49,6 +52,7 @@ class VodPlaybackViewModel @Inject constructor(
 
     private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
     private val loadVideoSourcesSubject = PublishSubject.create<Unit>()
+    private val playbackPositionSubject = PublishSubject.create<Long>()
 
     private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
     val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
@@ -99,6 +103,19 @@ class VodPlaybackViewModel @Inject constructor(
                     NavigationCommand.VodPlaybackSettings(vodId, selectedVideoSourceUrl)
                 )
             }
+            .disposeOnClear()
+
+        networkVodsDataSource.getVod(vodId)
+            .flatMapPublisher { vod -> getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject) }
+            .subscribeOn(schedulers.io)
+            .subscribe { messages ->
+                Timber.d(messages.joinToString(separator = "\n") { "${it.user.name}: ${it.text}" })
+            }
+            .disposeOnClear()
+        Flowable.interval(1, TimeUnit.SECONDS)
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe { playbackPositionSubject.onNext(exoPlayer.currentPosition) }
             .disposeOnClear()
     }
 
@@ -164,10 +181,10 @@ class VodPlaybackViewModel @Inject constructor(
         exoPlayer.release()
     }
 
-    private companion object {
+    companion object {
 
-        private const val ARG_VOD_ID = "vod_id"
-        private const val ARG_START_OFFSET_MILLIS = "start_offset_millis"
+        const val ARG_VOD_ID = "vod_id"
+        const val ARG_START_OFFSET_MILLIS = "start_offset_millis"
         private const val ARG_VIDEO_SOURCE_URL = "video_source_url"
         private const val ARG_IS_PLAYING = "is_playing"
     }

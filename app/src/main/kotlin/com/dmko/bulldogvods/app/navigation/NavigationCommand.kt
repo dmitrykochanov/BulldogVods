@@ -4,7 +4,7 @@ import kotlin.time.Duration
 
 sealed class NavigationCommand {
 
-    data class VodPlayback(
+    data class Vod(
         val vodId: String,
         val startOffset: Duration = Duration.ZERO
     ) : NavigationCommand()

@@ -30,3 +30,24 @@ query VodQuery($id: ObjectID!) {
         ...VodSchema
     }
 }
+
+query ChatMessagesQuery($vodId: ObjectID!, $limit: Int!, $before: Time!, $after: Time!) {
+    messages(vod_id: $vodId, limit: $limit, before: $before, after: $after, page: 0) {
+        id
+        content
+        timestamp
+        twitch {
+            display_name
+            color
+        }
+        emotes {
+            name
+            urls
+            zero_width
+        }
+        badges {
+            name
+            urls
+        }
+    }
+}

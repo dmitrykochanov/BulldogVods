@@ -15,6 +15,7 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "$kotlin_version" apply false
     id "com.apollographql.apollo3" version "$apollo_version" apply false
     id "androidx.navigation.safeargs.kotlin" version "$nav_component_version" apply false
+    id "de.mannodermaus.android-junit5" version "1.8.2.0" apply false
 }
 
 task clean(type: Delete) {

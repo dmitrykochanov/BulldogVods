@@ -11,9 +11,9 @@
         tools:layout="@layout/fragment_vods" />
 
     <fragment
-        android:id="@+id/fragmentVodPlayback"
-        android:name="com.dmko.bulldogvods.app.screens.vodplayback.VodPlaybackFragment"
-        tools:layout="@layout/fragment_vod_playback">
+        android:id="@+id/fragmentVod"
+        android:name="com.dmko.bulldogvods.app.screens.vod.VodFragment"
+        tools:layout="@layout/fragment_vod">
 
         <argument
             android:name="vod_id"
@@ -59,8 +59,8 @@
         tools:layout="@layout/dialog_fragment_theme_chooser" />
 
     <action
-        android:id="@+id/actionVodPlayback"
-        app:destination="@id/fragmentVodPlayback" />
+        android:id="@+id/actionVod"
+        app:destination="@id/fragmentVod" />
 
     <action
         android:id="@+id/actionSearchVods"
