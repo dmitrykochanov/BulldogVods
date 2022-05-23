@@ -1,6 +1,7 @@
 package com.dmko.bulldogvods.di.modules
 
 import com.dmko.bulldogvods.app.common.imageloader.CoilImageLoader
+import com.dmko.bulldogvods.app.common.imageloader.CoilImageLoaderFactory
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
 import com.dmko.bulldogvods.app.common.schedulers.SchedulersImpl
@@ -30,6 +31,12 @@ interface CommonModule {
         @Singleton
         fun provideEventBus(): EventBus {
             return EventBus.getDefault()
+        }
+
+        @Provides
+        @Singleton
+        fun provideCoilImageLoader(coilImageLoaderFactory: CoilImageLoaderFactory): coil.ImageLoader {
+            return coilImageLoaderFactory.createCoilImageLoader()
         }
     }
 }

@@ -21,4 +21,8 @@ class ChatMessagesAdapter(
         val chatMessage = requireNotNull(getItem(position))
         holder.bindChatMessage(chatMessage)
     }
+
+    override fun onViewRecycled(holder: ChatMessageViewHolder) {
+        holder.onViewRecycled()
+    }
 }
