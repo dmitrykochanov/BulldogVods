@@ -36,10 +36,15 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.recyclerChat.adapter = chatMessagesAdapter
         binding.recyclerChat.itemAnimator = null
 
-        viewModel.playerLiveData.observe(viewLifecycleOwner, ::showPlayerResource)
-        viewModel.chatMessagesLiveData.observe(viewLifecycleOwner, ::showChatMessages)
+        viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
+            onPlayerOrChatChanged(playerResource, viewModel.chatMessagesLiveData.value)
+        }
+        viewModel.chatMessagesLiveData.observe(viewLifecycleOwner) { chatMessages ->
+            onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
+        }
 
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
+        binding.layoutChatError.buttonRetry.setOnClickListener { viewModel.onRetryChatClicked() }
         binding.playerView
             .findViewById<ImageButton>(R.id.exo_chapters)
             .setOnClickListener { viewModel.onVodChaptersClicked() }
@@ -67,6 +72,20 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         }
     }
 
+    private fun onPlayerOrChatChanged(
+        playerResource: Resource<Player>?,
+        chatMessagesResource: Resource<List<ChatMessage>>?
+    ) {
+        if (playerResource != null && chatMessagesResource != null) {
+            showPlayerResource(playerResource)
+            if (playerResource is Resource.Data) {
+                showChatMessagesResource(chatMessagesResource)
+            } else {
+                hideChat()
+            }
+        }
+    }
+
     private fun showPlayerResource(playerResource: Resource<Player>) {
         when (playerResource) {
             is Resource.Loading -> {
@@ -90,10 +109,30 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         }
     }
 
-    private fun showChatMessages(chatMessages: Resource<List<ChatMessage>>) {
-        if (chatMessages is Resource.Data) {
-            chatMessagesAdapter.submitList(chatMessages.data)
-            binding.recyclerChat.smoothScrollToPosition(chatMessagesAdapter.itemCount)
+    private fun showChatMessagesResource(chatMessagesResource: Resource<List<ChatMessage>>) {
+        when (chatMessagesResource) {
+            is Resource.Loading -> {
+                binding.recyclerChat.isVisible = false
+                binding.chatProgressBar.isVisible = true
+                binding.layoutChatError.root.isVisible = false
+            }
+            is Resource.Data -> {
+                binding.recyclerChat.isVisible = true
+                binding.chatProgressBar.isVisible = false
+                binding.layoutChatError.root.isVisible = false
+                chatMessagesAdapter.submitList(chatMessagesResource.data)
+            }
+            is Resource.Error -> {
+                binding.recyclerChat.isVisible = false
+                binding.chatProgressBar.isVisible = false
+                binding.layoutChatError.root.isVisible = true
+            }
         }
+    }
+
+    private fun hideChat() {
+        binding.recyclerChat.isVisible = false
+        binding.chatProgressBar.isVisible = false
+        binding.layoutChatError.root.isVisible = false
     }
 }

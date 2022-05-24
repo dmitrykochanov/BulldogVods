@@ -11,10 +11,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@id/playerView"
-        app:layout_constraintEnd_toEndOf="@id/playerView"
-        app:layout_constraintStart_toStartOf="@id/playerView"
-        app:layout_constraintTop_toTopOf="@id/playerView" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/chatProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playerView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.exoplayer2.ui.StyledPlayerView
         android:id="@+id/playerView"
@@ -38,12 +49,14 @@
         android:layout_marginTop="@dimen/padding_normal"
         android:layout_marginEnd="@dimen/padding_normal"
         android:layout_marginBottom="@dimen/padding_normal"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/chatSeparatorGuideline"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/list_item_chat_message" />
+        tools:listitem="@layout/list_item_chat_message"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/chatSeparatorGuideline"
@@ -60,4 +73,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/layoutChatError"
+        layout="@layout/layout_generic_error"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/chatSeparatorGuideline"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

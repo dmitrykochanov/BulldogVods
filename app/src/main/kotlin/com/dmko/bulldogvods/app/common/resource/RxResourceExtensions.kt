@@ -45,11 +45,13 @@ fun <T : Any, R : Any> Flowable<Resource<T>>.mapResource(transform: (T) -> R): F
     }
 }
 
-fun <T : Any, R : Any> Flowable<Resource<T>>.switchMapResource(transform: (T) -> Flowable<R>): Flowable<Resource<R>> {
+fun <T : Any, R : Any> Flowable<Resource<T>>.switchMapResource(
+    transform: (T) -> Flowable<Resource<R>>
+): Flowable<Resource<R>> {
     return switchMap { resource ->
         when (resource) {
             is Resource.Loading -> Flowable.just(resource)
-            is Resource.Data -> transform(resource.data).asResource()
+            is Resource.Data -> transform(resource.data)
             is Resource.Error -> Flowable.just(resource)
         }
     }

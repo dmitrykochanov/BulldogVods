@@ -61,6 +61,7 @@ class VodViewModel @Inject constructor(
     private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
     private val playbackPositionSubject = PublishSubject.create<Long>()
     private val refreshSubject = PublishSubject.create<Unit>()
+    private val refreshChatSubject = PublishSubject.create<Unit>()
 
     private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
     val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
@@ -113,7 +114,13 @@ class VodViewModel @Inject constructor(
             .disposeOnClear()
 
         vodFlowable
-            .switchMapResource { vod -> getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject) }
+            .switchMapResource { vod ->
+                refreshChatSubject.toFlowable(BackpressureStrategy.LATEST)
+                    .startWithItem(Unit)
+                    .switchMap {
+                        getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject).asResource()
+                    }
+            }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(chatMessagesMutableLiveData::setValue)
@@ -161,6 +168,10 @@ class VodViewModel @Inject constructor(
 
     fun onRetryClicked() {
         refreshSubject.onNext(Unit)
+    }
+
+    fun onRetryChatClicked() {
+        refreshChatSubject.onNext(Unit)
     }
 
     @Subscribe
