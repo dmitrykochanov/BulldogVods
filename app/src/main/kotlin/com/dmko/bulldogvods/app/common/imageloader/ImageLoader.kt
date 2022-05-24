@@ -8,8 +8,8 @@ interface ImageLoader {
 
     fun load(url: String, target: ImageView)
 
-    fun loadIntoSpan(url: String, startIndexInclusive: Int, endIndexExclusive: Int, target: TextView) {
-        loadIntoSpans(url, listOf(SpanPosition(startIndexInclusive, endIndexExclusive)), target)
+    fun loadIntoSpan(url: String, spanPosition: SpanPosition, target: TextView) {
+        loadIntoSpans(url, listOf(spanPosition), target)
     }
 
     fun loadIntoSpans(url: String, spanPositions: List<SpanPosition>, target: TextView)
@@ -18,6 +18,7 @@ interface ImageLoader {
 
     data class SpanPosition(
         val startIndexInclusive: Int,
-        val endIndexExclusive: Int
+        val endIndexExclusive: Int,
+        val shouldOverlapWithPrevious: Boolean = false
     )
 }

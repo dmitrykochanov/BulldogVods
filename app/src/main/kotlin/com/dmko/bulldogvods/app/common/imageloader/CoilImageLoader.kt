@@ -23,17 +23,16 @@ class CoilImageLoader @Inject constructor(
     }
 
     override fun loadIntoSpans(url: String, spanPositions: List<SpanPosition>, target: TextView) {
+        val callback = drawableCallbacksMap.getOrPut(url) { DrawableMultiCallback(true) }
+        callback.addView(target)
+        val textViewTarget = TextViewTarget(
+            target = target,
+            spanPositions = spanPositions,
+            drawableCallback = callback
+        )
         val request = ImageRequest.Builder(target.context)
             .data(url)
-            .target(
-                TextViewTarget(
-                    target = target,
-                    spanPositions = spanPositions,
-                    drawableCallback = drawableCallbacksMap
-                        .getOrPut(url) { DrawableMultiCallback(true) }
-                        .also { it.addView(target) }
-                )
-            )
+            .target(textViewTarget)
             .build()
         val disposable = imageLoader.enqueue(request)
         saveTextViewDisposable(disposable, target)
