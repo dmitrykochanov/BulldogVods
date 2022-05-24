@@ -5,6 +5,7 @@ import apollo.VodsQuery
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.rx3.rxSingle
+import com.dmko.bulldogvods.BuildConfig
 import com.dmko.bulldogvods.features.vods.data.network.mapping.VodSchemaToVodMapper
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import io.reactivex.rxjava3.core.Single
@@ -17,8 +18,13 @@ class ApolloNetworkVodsDataSource @Inject constructor(
 
 
     override fun getVods(page: Int, limit: Int, searchQuery: String?): Single<List<Vod>> {
+        val query = VodsQuery(
+            page = page,
+            limit = if (BuildConfig.DEBUG) limit else VODS_LIMIT_IN_PRODUCTION,
+            searchQuery = Optional.presentIfNotNull(searchQuery)
+        )
         return apolloClient
-            .query(VodsQuery(BULLDOG_USER_ID, page, limit, Optional.presentIfNotNull(searchQuery)))
+            .query(query)
             .rxSingle()
             .map { apolloResponse -> requireNotNull(apolloResponse.data?.vods) }
             .map { vods -> vods.map(VodsQuery.Vod::vodSchema).map(vodSchemaToVodMapper::map) }
@@ -34,6 +40,6 @@ class ApolloNetworkVodsDataSource @Inject constructor(
 
     private companion object {
 
-        private const val BULLDOG_USER_ID = "61e33d2940bb32eb56745580"
+        private const val VODS_LIMIT_IN_PRODUCTION = 10
     }
 }

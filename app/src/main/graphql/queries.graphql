@@ -19,8 +19,8 @@ fragment VodSchema on Vod {
     }
 }
 
-query VodsQuery($userId: ObjectID!, $page: Int!, $limit: Int!, $searchQuery: String) {
-    vods(user_id: $userId, page: $page, limit: $limit, search: $searchQuery) {
+query VodsQuery($page: Int!, $limit: Int!, $searchQuery: String) {
+    vods(user_id: "61e33d2940bb32eb56745580", page: $page, limit: $limit, search: $searchQuery) {
         ...VodSchema
     }
 }
