@@ -52,7 +52,11 @@ class VodViewModel @Inject constructor(
 ) : RxViewModel(), DefaultLifecycleObserver {
 
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
-    private val exoPlayer = ExoPlayer.Builder(context.applicationContext).build().also(ExoPlayer::prepare)
+    private val exoPlayer = ExoPlayer.Builder(context.applicationContext)
+        .setSeekBackIncrementMs(SEEK_INCREMENT_MILLIS)
+        .setSeekForwardIncrementMs(SEEK_INCREMENT_MILLIS)
+        .build()
+        .also(ExoPlayer::prepare)
 
     private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
     private val playbackPositionSubject = PublishSubject.create<Long>()
@@ -200,5 +204,6 @@ class VodViewModel @Inject constructor(
         private const val ARG_IS_PLAYING = "is_playing"
 
         private const val CHAT_UPDATE_INTERVAL_SECONDS = 1L
+        private const val SEEK_INCREMENT_MILLIS = 10_000L
     }
 }

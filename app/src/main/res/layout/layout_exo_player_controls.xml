@@ -147,14 +147,18 @@
             style="@style/ExoStyledControls.Button.Center.Previous"
             tools:ignore="ContentDescription" />
 
-        <include layout="@layout/exo_styled_player_control_rewind_button" />
+        <TextView
+            android:id="@+id/exo_rew_with_amount"
+            style="@style/ExoStyledControls.Button.Center.RewWithAmount" />
 
         <ImageButton
             android:id="@id/exo_play_pause"
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             tools:ignore="ContentDescription" />
 
-        <include layout="@layout/exo_styled_player_control_ffwd_button" />
+        <TextView
+            android:id="@+id/exo_ffwd_with_amount"
+            style="@style/ExoStyledControls.Button.Center.FfwdWithAmount" />
 
         <ImageButton
             android:id="@id/exo_next"
