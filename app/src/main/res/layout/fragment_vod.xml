@@ -15,17 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/chatProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerView" />
-
     <com.google.android.exoplayer2.ui.StyledPlayerView
         android:id="@+id/playerView"
         android:layout_width="0dp"
@@ -40,31 +29,51 @@
         app:show_previous_button="false"
         tools:visibility="visible" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerChat"
+    <FrameLayout
+        android:id="@+id/chatContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/padding_normal"
-        android:layout_marginEnd="@dimen/padding_normal"
-        android:layout_marginBottom="@dimen/padding_normal"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerView"
-        tools:listitem="@layout/list_item_chat_message"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@id/playerView">
 
-    <Button
-        android:id="@+id/buttonScrollToBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_normal"
-        android:text="@string/fragment_vod_button_scroll_to_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/chatProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/list_item_chat_message"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/buttonScrollToBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:text="@string/fragment_vod_button_scroll_to_bottom"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/layoutChatError"
+            layout="@layout/layout_generic_error"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <include
         android:id="@+id/layoutError"
@@ -72,15 +81,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
-
-    <include
-        android:id="@+id/layoutChatError"
-        layout="@layout/layout_generic_error"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

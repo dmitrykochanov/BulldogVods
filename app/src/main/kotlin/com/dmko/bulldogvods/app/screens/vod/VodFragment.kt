@@ -13,6 +13,7 @@ import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.enterFullscreen
 import com.dmko.bulldogvods.app.common.extensions.exitFullscreen
+import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
@@ -42,6 +43,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.recyclerChat.adapter = chatMessagesAdapter
         binding.recyclerChat.itemAnimator = null
         setupChatAutoScroll()
+        setupChatVisibilityToggle()
 
         viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
             onPlayerOrChatChanged(playerResource, viewModel.chatMessagesLiveData.value)
@@ -80,6 +82,15 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 }
             }
         })
+    }
+
+    private fun setupChatVisibilityToggle() {
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (isLandscape) {
+            binding.playerView.setOnDoubleClickListener {
+                binding.chatContainer.isVisible = !binding.chatContainer.isVisible
+            }
+        }
     }
 
     override fun onStart() {
