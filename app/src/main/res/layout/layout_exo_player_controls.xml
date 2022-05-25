@@ -31,7 +31,7 @@
             <ImageButton
                 android:id="@+id/exo_chapters"
                 style="@style/ExoStyledControls.Button.Bottom"
-                android:contentDescription="@string/fragment_vod_playback_chapters_content_description"
+                android:contentDescription="@string/fragment_vod_chapters_content_description"
                 android:src="@drawable/ic_list" />
 
             <TextView

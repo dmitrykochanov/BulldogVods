@@ -3,10 +3,12 @@ package com.dmko.bulldogvods.app.screens.vod
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.view.View.OnLayoutChangeListener
 import android.widget.ImageButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.enterFullscreen
@@ -30,11 +32,16 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     private lateinit var chatMessagesAdapter: ChatMessagesAdapter
 
+    private val scrollChatToBottomLayoutListener = OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        scrollChatToBottom()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
         chatMessagesAdapter = ChatMessagesAdapter(imageLoader)
         binding.recyclerChat.adapter = chatMessagesAdapter
         binding.recyclerChat.itemAnimator = null
+        setupChatAutoScroll()
 
         viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
             onPlayerOrChatChanged(playerResource, viewModel.chatMessagesLiveData.value)
@@ -42,6 +49,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         viewModel.chatMessagesLiveData.observe(viewLifecycleOwner) { chatMessages ->
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
+        viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
 
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         binding.layoutChatError.buttonRetry.setOnClickListener { viewModel.onRetryChatClicked() }
@@ -51,6 +59,27 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.playerView
             .findViewById<ImageButton>(com.google.android.exoplayer2.R.id.exo_settings)
             .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }
+    }
+
+    private fun setupChatAutoScroll() {
+        binding.buttonScrollToBottom.setOnClickListener {
+            viewModel.onAutoScrollResumed()
+        }
+        binding.recyclerChat.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val shouldPauseAutoScroll = when (newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> true
+                    RecyclerView.SCROLL_STATE_IDLE -> recyclerView.canScrollVertically(1)
+                    else -> false
+                }
+                if (shouldPauseAutoScroll) {
+                    viewModel.onAutoScrollPaused()
+                } else {
+                    viewModel.onAutoScrollResumed()
+                }
+            }
+        })
     }
 
     override fun onStart() {
@@ -134,5 +163,19 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.recyclerChat.isVisible = false
         binding.chatProgressBar.isVisible = false
         binding.layoutChatError.root.isVisible = false
+    }
+
+    private fun onAutoScrollStateChanged(isAutoScrollPaused: Boolean) {
+        binding.buttonScrollToBottom.isVisible = isAutoScrollPaused
+        if (isAutoScrollPaused) {
+            binding.recyclerChat.removeOnLayoutChangeListener(scrollChatToBottomLayoutListener)
+        } else {
+            scrollChatToBottom()
+            binding.recyclerChat.addOnLayoutChangeListener(scrollChatToBottomLayoutListener)
+        }
+    }
+
+    private fun scrollChatToBottom() {
+        binding.recyclerChat.scrollBy(0, Int.MAX_VALUE)
     }
 }

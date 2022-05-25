@@ -69,6 +69,8 @@ class VodViewModel @Inject constructor(
     private val chatMessagesMutableLiveData = MutableLiveData<Resource<List<ChatMessage>>>()
     val chatMessagesLiveData: LiveData<Resource<List<ChatMessage>>> = chatMessagesMutableLiveData
 
+    val isAutoScrollPausedLiveData: LiveData<Boolean> = savedStateHandle.getLiveData(ARG_IS_AUTO_SCROLL_PAUSED, false)
+
     private var updateChatDisposable: Disposable? = null
 
     init {
@@ -166,6 +168,14 @@ class VodViewModel @Inject constructor(
         navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
     }
 
+    fun onAutoScrollPaused() {
+        savedStateHandle.set(ARG_IS_AUTO_SCROLL_PAUSED, true)
+    }
+
+    fun onAutoScrollResumed() {
+        savedStateHandle.set(ARG_IS_AUTO_SCROLL_PAUSED, false)
+    }
+
     fun onRetryClicked() {
         refreshSubject.onNext(Unit)
     }
@@ -213,6 +223,7 @@ class VodViewModel @Inject constructor(
         const val ARG_START_OFFSET_MILLIS = "start_offset_millis"
         private const val ARG_VIDEO_SOURCE_URL = "video_source_url"
         private const val ARG_IS_PLAYING = "is_playing"
+        private const val ARG_IS_AUTO_SCROLL_PAUSED = "is_auto_scroll_paused"
 
         private const val CHAT_UPDATE_INTERVAL_SECONDS = 1L
         private const val SEEK_INCREMENT_MILLIS = 10_000L

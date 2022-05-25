@@ -26,7 +26,8 @@
     <string name="fragment_search_vods_no_results_title">No vods found</string>
     <string name="fragment_search_vods_no_results_description">Try adjusting your search.</string>
 
-    <string name="fragment_vod_playback_chapters_content_description">Choose chapter</string>
+    <string name="fragment_vod_chapters_content_description">Choose chapter</string>
+    <string name="fragment_vod_button_scroll_to_bottom">More messages below</string>
 
     <string name="dialog_chapter_chooser_title">Chapter</string>
 
