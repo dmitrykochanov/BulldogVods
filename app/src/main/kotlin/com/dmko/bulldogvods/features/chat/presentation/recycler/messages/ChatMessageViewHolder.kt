@@ -56,18 +56,12 @@ class ChatMessageViewHolder(
     }
 
     private fun findEmotePositions(emote: ChatEmote): List<SpanPosition> {
-        return " \\Q${emote.name}\\E( |$)".toRegex()
+        return "(?<= )\\Q${emote.name}\\E(?=( |\$))".toRegex()
             .findAll(binding.messageTextView.text)
             .map { matchResult ->
-                val matchStartIndex = matchResult.range.first
-                val matchEndIndex = matchResult.range.last
                 SpanPosition(
-                    startIndexInclusive = matchStartIndex + 1,
-                    endIndexExclusive = if (matchEndIndex == binding.messageTextView.text.lastIndex) {
-                        matchEndIndex + 1
-                    } else {
-                        matchEndIndex
-                    },
+                    startIndexInclusive = matchResult.range.first,
+                    endIndexExclusive = matchResult.range.last + 1,
                     shouldOverlapWithPrevious = emote.isZeroWidth
                 )
             }

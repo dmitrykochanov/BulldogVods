@@ -116,17 +116,19 @@ class VodViewModel @Inject constructor(
             .disposeOnClear()
 
         vodFlowable
-            .switchMapResource { vod ->
-                refreshChatSubject.toFlowable(BackpressureStrategy.LATEST)
-                    .startWithItem(Unit)
-                    .switchMap {
-                        getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject).asResource()
-                    }
-            }
+            .switchMapResource(::getChatMessagesFlowable)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(chatMessagesMutableLiveData::setValue)
             .disposeOnClear()
+    }
+
+    private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessage>>> {
+        return refreshChatSubject.toFlowable(BackpressureStrategy.LATEST)
+            .startWithItem(Unit)
+            .switchMap {
+                getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject).asResource()
+            }
     }
 
     private fun getDefaultVideoSourceUrl(vod: Vod): String {
