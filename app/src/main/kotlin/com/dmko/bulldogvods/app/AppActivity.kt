@@ -9,6 +9,7 @@ import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionThemeChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVod
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVodPlaybackSettings
 import com.dmko.bulldogvods.R
+import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.Back
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChapterChooser
@@ -35,7 +36,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     private fun handleNavigationCommand(command: NavigationCommand) {
         Timber.i("Handling navigation command $command")
         val navDirections = when (command) {
-            is Vod -> actionVod(command.vodId, command.startOffset.inWholeMilliseconds)
+            is Vod -> actionVod(command.vodId, command.startOffset?.inWholeMilliseconds?.let(::LongWrapper))
             is SearchVods -> actionSearchVods()
             is ChapterChooser -> actionChapterChooser(command.vodId)
             is VodPlaybackSettings -> actionVodPlaybackSettings(command.vodId, command.selectedVideoSourceUrl)

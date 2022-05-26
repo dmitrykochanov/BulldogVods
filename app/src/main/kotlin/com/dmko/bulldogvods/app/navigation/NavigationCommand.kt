@@ -6,7 +6,7 @@ sealed class NavigationCommand {
 
     data class Vod(
         val vodId: String,
-        val startOffset: Duration = Duration.ZERO
+        val startOffset: Duration? = null
     ) : NavigationCommand()
 
     object SearchVods : NavigationCommand()

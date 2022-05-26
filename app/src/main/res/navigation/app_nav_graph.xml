@@ -21,7 +21,8 @@
 
         <argument
             android:name="start_offset_millis"
-            app:argType="long" />
+            app:argType="com.dmko.bulldogvods.app.navigation.LongWrapper"
+            app:nullable="true" />
     </fragment>
 
     <fragment

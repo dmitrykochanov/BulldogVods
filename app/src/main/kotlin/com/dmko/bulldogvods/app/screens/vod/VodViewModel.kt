@@ -14,12 +14,14 @@ import com.dmko.bulldogvods.app.common.resource.unwrapResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.rx.getFlowable
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
+import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
 import com.dmko.bulldogvods.features.chat.domain.usecases.GetChatMessagesByPlaybackPositionUseCase
+import com.dmko.bulldogvods.features.vods.data.database.datasource.DatabaseVodsDataSource
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
@@ -46,6 +48,7 @@ class VodViewModel @Inject constructor(
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
     private val networkVodsDataSource: NetworkVodsDataSource,
+    private val databaseVodsDataSource: DatabaseVodsDataSource,
     private val defaultVideoSourceSelector: DefaultVideoSourceSelector,
     private val schedulers: Schedulers,
     @ApplicationContext context: Context
@@ -74,6 +77,11 @@ class VodViewModel @Inject constructor(
     private var updateChatDisposable: Disposable? = null
 
     init {
+        val startOffsetMillis = savedStateHandle.get<LongWrapper>(ARG_START_OFFSET_MILLIS)
+        if (startOffsetMillis != null) {
+            saveVodPlaybackPosition(startOffsetMillis.value)
+        }
+
         val vodFlowable = refreshSubject.toFlowable(BackpressureStrategy.LATEST)
             .startWithItem(Unit)
             .switchMap { networkVodsDataSource.getVod(vodId).asResource() }
@@ -98,7 +106,8 @@ class VodViewModel @Inject constructor(
             .subscribe(::onVideoSourceUrlChanged)
             .disposeOnClear()
 
-        savedStateHandle.getFlowable<Long>(ARG_START_OFFSET_MILLIS)
+        databaseVodsDataSource.getVodPlaybackPosition(vodId)
+            .distinctUntilChanged()
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(::onStartOffsetChanged)
@@ -193,7 +202,7 @@ class VodViewModel @Inject constructor(
 
     @Subscribe
     fun onChapterChooserDialogEvent(event: ChapterChooserDialogEvent) {
-        savedStateHandle.set(ARG_START_OFFSET_MILLIS, event.selectedStartOffset.inWholeMilliseconds)
+        saveVodPlaybackPosition(event.selectedStartOffset.inWholeMilliseconds)
         exoPlayer.playWhenReady = true
     }
 
@@ -209,9 +218,16 @@ class VodViewModel @Inject constructor(
     override fun onStop(owner: LifecycleOwner) {
         eventBus.unregister(this)
         savedStateHandle.set(ARG_IS_PLAYING, exoPlayer.isPlaying || exoPlayer.currentMediaItem == null)
-        savedStateHandle.set(ARG_START_OFFSET_MILLIS, exoPlayer.currentPosition)
+        saveVodPlaybackPosition(exoPlayer.currentPosition)
         exoPlayer.pause()
         updateChatDisposable?.dispose()
+    }
+
+    private fun saveVodPlaybackPosition(playbackPosition: Long) {
+        databaseVodsDataSource.saveVodPlaybackPosition(vodId, playbackPosition)
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
     }
 
     override fun onCleared() {
