@@ -58,9 +58,17 @@
         android:paddingEnd="@dimen/padding_small"
         android:textAppearance="?textAppearanceLabelSmall"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/imageVodThumbnail"
+        app:layout_constraintBottom_toTopOf="@id/progressView"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="2 days ago" />
+
+    <com.dmko.bulldogvods.app.common.views.ProgressView
+        android:id="@+id/progressView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/vod_progress_height"
+        app:layout_constraintBottom_toBottomOf="@id/imageVodThumbnail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageGameThumbnail"

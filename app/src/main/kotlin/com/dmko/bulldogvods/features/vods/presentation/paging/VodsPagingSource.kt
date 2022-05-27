@@ -2,21 +2,21 @@ package com.dmko.bulldogvods.features.vods.presentation.paging
 
 import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource
-import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
-import com.dmko.bulldogvods.features.vods.domain.entities.Vod
+import com.dmko.bulldogvods.features.vods.domain.entities.VodWithPlaybackPosition
+import com.dmko.bulldogvods.features.vods.domain.usecases.GetVodsWithPlaybackPositionUseCase
 import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 
 class VodsPagingSource(
-    private val networkVodsDataSource: NetworkVodsDataSource,
+    private val getVodsWithPlaybackPositionUseCase: GetVodsWithPlaybackPositionUseCase,
     private val searchQuery: String?
-) : RxPagingSource<Int, Vod>() {
+) : RxPagingSource<Int, VodWithPlaybackPosition>() {
 
-    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Vod>> {
+    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, VodWithPlaybackPosition>> {
         val page = params.key ?: 0
         val limit = params.loadSize
-        return networkVodsDataSource.getVods(page, limit, searchQuery)
-            .map<LoadResult<Int, Vod>> { vods ->
+        return getVodsWithPlaybackPositionUseCase.execute(page, limit, searchQuery)
+            .map<LoadResult<Int, VodWithPlaybackPosition>> { vods ->
                 LoadResult.Page(
                     data = vods,
                     prevKey = null,
@@ -33,5 +33,5 @@ class VodsPagingSource(
             }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Vod>): Int? = null
+    override fun getRefreshKey(state: PagingState<Int, VodWithPlaybackPosition>): Int? = null
 }

@@ -16,7 +16,7 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
-import com.dmko.bulldogvods.features.vods.presentation.mapping.VodToVodItemMapper
+import com.dmko.bulldogvods.features.vods.presentation.mapping.VodWithPlaybackPositionToVodItemMapper
 import com.dmko.bulldogvods.features.vods.presentation.paging.VodsPagerFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchVodsViewModel @Inject constructor(
     private val vodsPagerFactory: VodsPagerFactory,
-    private val vodToVodItemMapper: VodToVodItemMapper,
+    private val vodWithPlaybackPositionToVodItemMapper: VodWithPlaybackPositionToVodItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
@@ -45,7 +45,7 @@ class SearchVodsViewModel @Inject constructor(
             .startWithItem(Unit)
             .map { savedStateHandle.get<String>(ARG_SEARCH_QUERY).orEmpty() }
             .switchMap { searchQuery -> vodsPagerFactory.createVodsPager(searchQuery).flowable }
-            .map { pagingData -> pagingData.map(vodToVodItemMapper::map) }
+            .map { pagingData -> pagingData.map(vodWithPlaybackPositionToVodItemMapper::map) }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(vodsPagingDataMutableLiveData::setValue)

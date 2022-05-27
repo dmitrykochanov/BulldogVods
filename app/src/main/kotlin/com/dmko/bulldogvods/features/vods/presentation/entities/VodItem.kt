@@ -8,6 +8,7 @@ data class VodItem(
     val thumbnailUrl: String,
     val length: String?,
     val recordedAt: String,
+    val playbackPercentage: Int,
     val gameThumbnailUrl: String,
     val title: String,
     val stateBadge: StateBadge?,

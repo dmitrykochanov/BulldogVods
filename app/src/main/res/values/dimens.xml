@@ -18,4 +18,5 @@
     <dimen name="game_thumbnail_width">50dp</dimen>
     <dimen name="vods_list_content_extra_padding">@dimen/padding_medium</dimen>
     <dimen name="content_max_width">600dp</dimen>
+    <dimen name="vod_progress_height">3dp</dimen>
 </resources>

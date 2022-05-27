@@ -22,14 +22,16 @@ class VodItemViewHolder(
         binding.textLength.text = vodItem.length
         binding.textLength.isVisible = vodItem.length != null
         binding.textRecordedAt.text = vodItem.recordedAt
-        bindStateBadge(vodItem.stateBadge)
+        binding.progressView.progress = vodItem.playbackPercentage
+        binding.progressView.isVisible = vodItem.playbackPercentage != 0
+        showStateBadge(vodItem.stateBadge)
 
         imageLoader.load(vodItem.gameThumbnailUrl, binding.imageGameThumbnail)
         binding.textTitle.text = vodItem.title
-        bindChaptersSection(vodItem.chaptersSection)
+        showChaptersSection(vodItem.chaptersSection)
     }
 
-    private fun bindStateBadge(stateBadge: VodItem.StateBadge?) {
+    private fun showStateBadge(stateBadge: VodItem.StateBadge?) {
         if (stateBadge != null) {
             binding.textState.isVisible = true
             binding.textState.setText(stateBadge.text)
@@ -42,7 +44,7 @@ class VodItemViewHolder(
         }
     }
 
-    private fun bindChaptersSection(chaptersSection: ChaptersSection) {
+    private fun showChaptersSection(chaptersSection: ChaptersSection) {
         when (chaptersSection) {
             is NoChapters -> {
                 binding.cardChapters.isVisible = false

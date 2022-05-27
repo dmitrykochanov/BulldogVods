@@ -106,7 +106,7 @@ class VodViewModel @Inject constructor(
             .subscribe(::onVideoSourceUrlChanged)
             .disposeOnClear()
 
-        databaseVodsDataSource.getVodPlaybackPosition(vodId)
+        databaseVodsDataSource.observeVodPlaybackPosition(vodId)
             .distinctUntilChanged()
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)

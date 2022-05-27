@@ -9,9 +9,11 @@
     <color name="iron">#E0E3E3</color>
     <color name="black">#000000</color>
     <color name="black_70">#B3000000</color>
+    <color name="red">#FF0000</color>
     <color name="red_70">#B3FF0000</color>
     <color name="fruit_salad_70">#B34CAF50</color>
     <color name="clementine_70">#B3EF6C00</color>
     <color name="golden_grass">#DAA520</color>
     <color name="dodger_blue">#536DFE</color>
+    <color name="dove_gray">#717171</color>
 </resources>

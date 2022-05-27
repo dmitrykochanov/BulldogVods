@@ -2,18 +2,18 @@ package com.dmko.bulldogvods.features.vods.presentation.paging
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
-import com.dmko.bulldogvods.features.vods.domain.entities.Vod
+import com.dmko.bulldogvods.features.vods.domain.entities.VodWithPlaybackPosition
+import com.dmko.bulldogvods.features.vods.domain.usecases.GetVodsWithPlaybackPositionUseCase
 import javax.inject.Inject
 
 class VodsPagerFactory @Inject constructor(
-    private val networkVodsDataSource: NetworkVodsDataSource
+    private val getVodsWithPlaybackPositionUseCase: GetVodsWithPlaybackPositionUseCase
 ) {
 
-    fun createVodsPager(searchQuery: String? = null): Pager<Int, Vod> {
+    fun createVodsPager(searchQuery: String? = null): Pager<Int, VodWithPlaybackPosition> {
         return Pager(
             config = PagingConfig(pageSize = VODS_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { VodsPagingSource(networkVodsDataSource, searchQuery) }
+            pagingSourceFactory = { VodsPagingSource(getVodsWithPlaybackPositionUseCase, searchQuery) }
         )
     }
 

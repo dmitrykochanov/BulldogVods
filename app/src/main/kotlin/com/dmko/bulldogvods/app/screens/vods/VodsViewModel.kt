@@ -11,7 +11,7 @@ import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
-import com.dmko.bulldogvods.features.vods.presentation.mapping.VodToVodItemMapper
+import com.dmko.bulldogvods.features.vods.presentation.mapping.VodWithPlaybackPositionToVodItemMapper
 import com.dmko.bulldogvods.features.vods.presentation.paging.VodsPagerFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.greenrobot.eventbus.EventBus
@@ -21,14 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class VodsViewModel @Inject constructor(
     vodsPagerFactory: VodsPagerFactory,
-    private val vodToVodItemMapper: VodToVodItemMapper,
+    private val vodWithPlaybackPositionToVodItemMapper: VodWithPlaybackPositionToVodItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus
 ) : RxViewModel(), DefaultLifecycleObserver {
 
     val vodItemsPagingDataLiveData = vodsPagerFactory.createVodsPager().liveData
         .cachedIn(viewModelScope)
-        .map { pagingData -> pagingData.map(vodToVodItemMapper::map) }
+        .map { pagingData -> pagingData.map(vodWithPlaybackPositionToVodItemMapper::map) }
 
     fun onSettingsClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.ThemeChooser)

@@ -4,6 +4,7 @@ import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
+import com.dmko.bulldogvods.features.vods.domain.entities.VodWithPlaybackPosition
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.MultipleChapters
@@ -12,18 +13,21 @@ import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.Chapters
 import com.dmko.bulldogvods.features.vods.presentation.formatting.DurationFormat
 import com.dmko.bulldogvods.features.vods.presentation.formatting.RelativeDateFormat
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class VodToVodItemMapper @Inject constructor(
+class VodWithPlaybackPositionToVodItemMapper @Inject constructor(
     private val durationFormat: DurationFormat,
     private val relativeDateFormat: RelativeDateFormat
 ) {
 
-    fun map(vod: Vod): VodItem {
+    fun map(vodWithPlaybackPosition: VodWithPlaybackPosition): VodItem {
+        val vod = vodWithPlaybackPosition.vod
         return VodItem(
             id = vod.id,
             thumbnailUrl = DEFAULT_VOD_THUMBNAIL_URL,
             length = mapVodStateToDuration(vod.state),
             recordedAt = relativeDateFormat.format(vod.startedAtMillis),
+            playbackPercentage = getPlaybackPercentage(vod, vodWithPlaybackPosition.playbackPosition),
             gameThumbnailUrl = getLongestChapterGameThumbnail(vod.chapters) ?: DEFAULT_GAME_THUMBNAIL_URL,
             title = vod.title,
             stateBadge = mapVodStateToBadge(vod.state),
@@ -37,6 +41,12 @@ class VodToVodItemMapper @Inject constructor(
             is VodState.Processing -> durationFormat.format(vodState.length)
             is VodState.Live, is VodState.Unknown -> null
         }
+    }
+
+    private fun getPlaybackPercentage(vod: Vod, playbackPosition: Long): Int {
+        if (vod.endedAtMillis == null) return 0
+        val vodDuration = vod.endedAtMillis - vod.startedAtMillis
+        return (playbackPosition * 100.0 / vodDuration).roundToInt()
     }
 
     private fun getLongestChapterGameThumbnail(chapters: List<VodChapter>): String? {
