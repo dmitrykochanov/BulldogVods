@@ -102,6 +102,11 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         requireAppActivity().exitFullscreen()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.playerView.player = null
+    }
+
     private fun enterFullscreenIfLandscape() {
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         if (isLandscape) {
