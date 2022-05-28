@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Base.Light" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/fruit_salad</item>
         <item name="colorOnPrimary">@color/white</item>
 
@@ -11,9 +12,11 @@
         <item name="colorOnSurface">@color/shark</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/black</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <item name="dialogTheme">@style/Theme.Dialog.RoundedCorners</item>
     </style>
+
+    <style name="Theme.App" parent="Theme.Base.Light" />
 </resources>
