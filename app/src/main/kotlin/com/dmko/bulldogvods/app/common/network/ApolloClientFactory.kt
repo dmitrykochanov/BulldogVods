@@ -11,7 +11,7 @@ class ApolloClientFactory @Inject constructor() {
 
     fun createApolloClient(): ApolloClient {
         val loggingOkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply { setLevel(Level.BODY) })
+            .addInterceptor(HttpLoggingInterceptor(OkHttpTimberLogger()).apply { setLevel(Level.BODY) })
             .build()
         return ApolloClient.Builder()
             .serverUrl(BASE_URL)

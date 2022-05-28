@@ -31,6 +31,18 @@
             <meta-data
                 android:name="com.dmko.bulldogvods.app.common.startup.ThemeInitializer"
                 android:value="androidx.startup" />
+
+            <meta-data
+                android:name="com.dmko.bulldogvods.app.common.startup.TimberInitializer"
+                android:value="androidx.startup" />
+
+            <meta-data
+                android:name="com.dmko.bulldogvods.app.common.startup.StrictModeInitializer"
+                android:value="androidx.startup" />
         </provider>
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://55d5c0832d6a49c8ba571148fa525e46@o1265737.ingest.sentry.io/6449833" />
     </application>
 </manifest>

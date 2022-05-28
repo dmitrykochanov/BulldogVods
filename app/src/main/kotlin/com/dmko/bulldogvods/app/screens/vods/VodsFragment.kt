@@ -18,6 +18,7 @@ import com.dmko.bulldogvods.databinding.FragmentVodsBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 import com.dmko.bulldogvods.features.vods.presentation.recycler.vods.VodItemsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,7 +70,8 @@ class VodsFragment : Fragment(R.layout.fragment_vods) {
     }
 
     private fun showVodItemsLoadState(loadingState: CombinedLoadStates) {
-        when (loadingState.refresh) {
+        val refreshState = loadingState.refresh
+        when (refreshState) {
             is LoadState.Loading -> {
                 binding.swipeRefreshLayout.isRefreshing = true
                 binding.recyclerVods.isVisible = false
@@ -84,6 +86,7 @@ class VodsFragment : Fragment(R.layout.fragment_vods) {
                 binding.swipeRefreshLayout.isRefreshing = false
                 binding.recyclerVods.isVisible = false
                 binding.layoutError.root.isVisible = true
+                Timber.e(refreshState.error, "Failed to load vods")
             }
         }
     }

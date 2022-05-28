@@ -8,6 +8,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.dmko.bulldogvods.app.common.imageloader.coil.decoders.AnimatedWebPDecoder
 import com.dmko.bulldogvods.app.common.imageloader.coil.interceptors.AnimatedDrawableCacheInterceptor
+import com.dmko.bulldogvods.app.common.imageloader.coil.logger.CoilTimberLogger
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ class CoilImageLoaderFactory @Inject constructor(
 
     fun createCoilImageLoader(): ImageLoader {
         return ImageLoader.Builder(context)
+            .logger(CoilTimberLogger())
             .components {
                 if (SDK_INT >= VERSION_CODES.P) {
                     add(ImageDecoderDecoder.Factory())

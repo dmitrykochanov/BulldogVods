@@ -1,6 +1,5 @@
 package com.dmko.bulldogvods.app.screens.vod
 
-import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -26,11 +25,10 @@ import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDat
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.selector.DefaultVideoSourceSelector
-import com.google.android.exoplayer2.ExoPlayer
+import com.dmko.bulldogvods.features.vods.presentation.player.ExoPlayerFactory
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -51,15 +49,11 @@ class VodViewModel @Inject constructor(
     private val databaseVodsDataSource: DatabaseVodsDataSource,
     private val defaultVideoSourceSelector: DefaultVideoSourceSelector,
     private val schedulers: Schedulers,
-    @ApplicationContext context: Context
+    exoPlayerFactory: ExoPlayerFactory
 ) : RxViewModel(), DefaultLifecycleObserver {
 
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
-    private val exoPlayer = ExoPlayer.Builder(context.applicationContext)
-        .setSeekBackIncrementMs(SEEK_INCREMENT_MILLIS)
-        .setSeekForwardIncrementMs(SEEK_INCREMENT_MILLIS)
-        .build()
-        .also(ExoPlayer::prepare)
+    private val exoPlayer = exoPlayerFactory.createExoPlayer()
 
     private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
     private val playbackPositionSubject = PublishSubject.create<Long>()
@@ -158,9 +152,9 @@ class VodViewModel @Inject constructor(
                 exoPlayer.setMediaItem(MediaItem.fromUri(videoSourceUrl), exoPlayer.currentPosition)
             }
             is Resource.Error -> {
-                Timber.e(videoSourceUrlResource.error, "Failed to load video sources")
                 playerMutableLiveData.value = Resource.Error(videoSourceUrlResource.error)
                 exoPlayer.removeMediaItem(0)
+                Timber.e(videoSourceUrlResource.error, "Failed to load video sources")
             }
         }
     }
@@ -244,6 +238,5 @@ class VodViewModel @Inject constructor(
         private const val ARG_IS_AUTO_SCROLL_PAUSED = "is_auto_scroll_paused"
 
         private const val CHAT_UPDATE_INTERVAL_SECONDS = 1L
-        private const val SEEK_INCREMENT_MILLIS = 10_000L
     }
 }

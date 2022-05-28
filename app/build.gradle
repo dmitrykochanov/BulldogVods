@@ -7,6 +7,7 @@ plugins {
     id "com.apollographql.apollo3"
     id "androidx.navigation.safeargs.kotlin"
     id "kotlin-parcelize"
+    id "io.sentry.android.gradle"
     id "de.mannodermaus.android-junit5"
 }
 

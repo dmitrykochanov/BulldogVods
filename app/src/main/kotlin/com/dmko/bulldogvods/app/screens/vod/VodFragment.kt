@@ -20,6 +20,7 @@ import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
 import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessagesAdapter
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -149,6 +150,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 binding.playerView.isVisible = false
                 binding.layoutError.root.isVisible = true
                 binding.playerView.player = null
+                Timber.e(playerResource.error, "Failed to load vod player")
             }
         }
     }
@@ -170,6 +172,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 binding.recyclerChat.isVisible = false
                 binding.chatProgressBar.isVisible = false
                 binding.layoutChatError.root.isVisible = true
+                Timber.e(chatMessagesResource.error, "Failed to load chat messages")
             }
         }
     }

@@ -74,6 +74,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     fun enterFullscreen() {
+        Timber.i("Entering fullscreen")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
@@ -85,6 +86,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     fun exitFullscreen() {
+        Timber.i("Exiting fullscreen")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT

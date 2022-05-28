@@ -12,6 +12,7 @@ import com.dmko.bulldogvods.databinding.DialogFragmentVodPlaybackSettingsBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.VideoSourceItem
 import com.dmko.bulldogvods.features.vods.presentation.recycler.videosources.VideoSourceItemsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class VodPlaybackSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragment_vod_playback_settings) {
@@ -45,6 +46,7 @@ class VodPlaybackSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialo
             is Resource.Error -> {
                 binding.progressBar.isVisible = false
                 binding.layoutError.root.isVisible = true
+                Timber.e(videoSourceItems.error, "Failed to load video sources")
             }
         }
     }

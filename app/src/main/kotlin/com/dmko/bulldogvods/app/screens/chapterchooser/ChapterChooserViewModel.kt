@@ -3,12 +3,14 @@ package com.dmko.bulldogvods.app.screens.chapterchooser
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.dmko.bulldogvods.app.common.resource.Resource
+import com.dmko.bulldogvods.app.common.resource.asResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
-import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItemsState
+import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItem
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VodChapterToChapterItemMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -31,8 +33,8 @@ class ChapterChooserViewModel @Inject constructor(
 
     private val loadVodsSubject = PublishSubject.create<Unit>()
 
-    private val chapterItemsStateMutableLiveData = MutableLiveData<ChapterItemsState>()
-    val chapterItemsStateLiveData: LiveData<ChapterItemsState> = chapterItemsStateMutableLiveData
+    private val chapterItemsMutableLiveData = MutableLiveData<Resource<List<ChapterItem>>>()
+    val chapterItemsLiveData: LiveData<Resource<List<ChapterItem>>> = chapterItemsMutableLiveData
 
     init {
         loadVodsSubject.toFlowable(BackpressureStrategy.DROP)
@@ -40,14 +42,11 @@ class ChapterChooserViewModel @Inject constructor(
             .switchMap {
                 networkVodsDataSource.getVod(vodId)
                     .map { vod -> vod.chapters.map(vodChapterToChapterItemMapper::map) }
-                    .map<ChapterItemsState>(ChapterItemsState::Data)
-                    .toFlowable()
-                    .startWithItem(ChapterItemsState.Loading)
-                    .onErrorReturnItem(ChapterItemsState.Error)
+                    .asResource()
             }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
-            .subscribe(chapterItemsStateMutableLiveData::setValue)
+            .subscribe(chapterItemsMutableLiveData::setValue)
             .disposeOnClear()
     }
 
