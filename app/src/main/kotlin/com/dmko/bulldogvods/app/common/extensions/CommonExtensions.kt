@@ -7,6 +7,12 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.graphics.toColorInt
 import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.Fragment
+import com.dmko.bulldogvods.app.AppActivity
+
+fun Fragment.requireAppActivity(): AppActivity {
+    return requireActivity() as AppActivity
+}
 
 @ColorInt
 fun String.toColorIntOrNull(): Int? {

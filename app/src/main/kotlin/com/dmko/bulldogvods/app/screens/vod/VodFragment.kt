@@ -11,8 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
-import com.dmko.bulldogvods.app.common.extensions.enterFullscreen
-import com.dmko.bulldogvods.app.common.extensions.exitFullscreen
+import com.dmko.bulldogvods.app.common.extensions.requireAppActivity
 import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.app.common.resource.Resource
@@ -100,15 +99,15 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     override fun onStop() {
         super.onStop()
-        requireActivity().exitFullscreen()
+        requireAppActivity().exitFullscreen()
     }
 
     private fun enterFullscreenIfLandscape() {
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         if (isLandscape) {
-            requireActivity().enterFullscreen()
+            requireAppActivity().enterFullscreen()
         } else {
-            requireActivity().exitFullscreen()
+            requireAppActivity().exitFullscreen()
         }
     }
 

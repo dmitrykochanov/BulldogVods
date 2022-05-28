@@ -1,7 +1,12 @@
 package com.dmko.bulldogvods.app
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChapterChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionSearchVods
@@ -28,9 +33,17 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
     @Inject lateinit var navigationCommandSource: NavigationCommandSource
 
+    private var isFullscreen: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navigationCommandSource.source.observe(this, ::handleNavigationCommand)
+        isFullscreen = savedInstanceState?.getBoolean(ARG_IS_FULLSCREEN) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ARG_IS_FULLSCREEN, isFullscreen)
     }
 
     private fun handleNavigationCommand(command: NavigationCommand) {
@@ -47,5 +60,42 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             }
         }
         findNavController(R.id.fragmentNavHost).navigate(navDirections)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            if (isFullscreen) {
+                enterFullscreen()
+            } else {
+                exitFullscreen()
+            }
+        }
+    }
+
+    fun enterFullscreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        isFullscreen = true
+    }
+
+    fun exitFullscreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+        }
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        isFullscreen = false
+    }
+
+    private companion object {
+
+        private const val ARG_IS_FULLSCREEN = "is_fullscreen"
     }
 }
