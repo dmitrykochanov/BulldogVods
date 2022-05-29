@@ -16,8 +16,8 @@ import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
-import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessagesAdapter
+import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
+import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessageItemsAdapter
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -31,7 +31,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     @Inject lateinit var imageLoader: ImageLoader
 
-    private lateinit var chatMessagesAdapter: ChatMessagesAdapter
+    private lateinit var chatMessageItemsAdapter: ChatMessageItemsAdapter
 
     private val scrollChatToBottomLayoutListener = OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         scrollChatToBottom()
@@ -39,16 +39,16 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
-        chatMessagesAdapter = ChatMessagesAdapter(imageLoader)
-        binding.recyclerChat.adapter = chatMessagesAdapter
+        chatMessageItemsAdapter = ChatMessageItemsAdapter(imageLoader)
+        binding.recyclerChat.adapter = chatMessageItemsAdapter
         binding.recyclerChat.itemAnimator = null
         setupChatAutoScroll()
         setupChatVisibilityToggle()
 
         viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
-            onPlayerOrChatChanged(playerResource, viewModel.chatMessagesLiveData.value)
+            onPlayerOrChatChanged(playerResource, viewModel.chatMessageItemsLiveData.value)
         }
-        viewModel.chatMessagesLiveData.observe(viewLifecycleOwner) { chatMessages ->
+        viewModel.chatMessageItemsLiveData.observe(viewLifecycleOwner) { chatMessages ->
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
         viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
@@ -119,12 +119,12 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     private fun onPlayerOrChatChanged(
         playerResource: Resource<Player>?,
-        chatMessagesResource: Resource<List<ChatMessage>>?
+        chatMessageItemsResource: Resource<List<ChatMessageItem>>?
     ) {
-        if (playerResource != null && chatMessagesResource != null) {
+        if (playerResource != null && chatMessageItemsResource != null) {
             showPlayerResource(playerResource)
             if (playerResource is Resource.Data) {
-                showChatMessagesResource(chatMessagesResource)
+                showChatMessagesResource(chatMessageItemsResource)
             } else {
                 hideChat()
             }
@@ -155,8 +155,8 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         }
     }
 
-    private fun showChatMessagesResource(chatMessagesResource: Resource<List<ChatMessage>>) {
-        when (chatMessagesResource) {
+    private fun showChatMessagesResource(chatMessageItemsResource: Resource<List<ChatMessageItem>>) {
+        when (chatMessageItemsResource) {
             is Resource.Loading -> {
                 binding.recyclerChat.isVisible = false
                 binding.chatProgressBar.isVisible = true
@@ -166,13 +166,13 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 binding.recyclerChat.isVisible = true
                 binding.chatProgressBar.isVisible = false
                 binding.layoutChatError.root.isVisible = false
-                chatMessagesAdapter.submitList(chatMessagesResource.data)
+                chatMessageItemsAdapter.submitList(chatMessageItemsResource.data)
             }
             is Resource.Error -> {
                 binding.recyclerChat.isVisible = false
                 binding.chatProgressBar.isVisible = false
                 binding.layoutChatError.root.isVisible = true
-                Timber.e(chatMessagesResource.error, "Failed to load chat messages")
+                Timber.e(chatMessageItemsResource.error, "Failed to load chat messages")
             }
         }
     }

@@ -20,6 +20,8 @@ import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
 import com.dmko.bulldogvods.features.chat.domain.usecases.GetChatMessagesByPlaybackPositionUseCase
+import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
+import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatMessageToChatMessageItemMapper
 import com.dmko.bulldogvods.features.vods.data.database.datasource.DatabaseVodsDataSource
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
@@ -42,6 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VodViewModel @Inject constructor(
     private val getChatMessagesByPlaybackPositionUseCase: GetChatMessagesByPlaybackPositionUseCase,
+    private val chatMessageItemMapper: ChatMessageToChatMessageItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
@@ -63,8 +66,8 @@ class VodViewModel @Inject constructor(
     private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
     val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
 
-    private val chatMessagesMutableLiveData = MutableLiveData<Resource<List<ChatMessage>>>()
-    val chatMessagesLiveData: LiveData<Resource<List<ChatMessage>>> = chatMessagesMutableLiveData
+    private val chatMessageItemsMutableLiveData = MutableLiveData<Resource<List<ChatMessageItem>>>()
+    val chatMessageItemsLiveData: LiveData<Resource<List<ChatMessageItem>>> = chatMessageItemsMutableLiveData
 
     val isAutoScrollPausedLiveData: LiveData<Boolean> = savedStateHandle.getLiveData(ARG_IS_AUTO_SCROLL_PAUSED, false)
 
@@ -120,9 +123,10 @@ class VodViewModel @Inject constructor(
 
         vodFlowable
             .switchMapResource(::getChatMessagesFlowable)
+            .mapResource { chatMessages -> chatMessages.map(chatMessageItemMapper::map) }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
-            .subscribe(chatMessagesMutableLiveData::setValue)
+            .subscribe(chatMessageItemsMutableLiveData::setValue)
             .disposeOnClear()
     }
 
