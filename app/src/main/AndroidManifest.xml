@@ -44,5 +44,8 @@
         <meta-data
             android:name="io.sentry.dsn"
             android:value="https://55d5c0832d6a49c8ba571148fa525e46@o1265737.ingest.sentry.io/6449833" />
+        <meta-data
+            android:name="io.sentry.environment"
+            android:value="${sentryEnvironment}" />
     </application>
 </manifest>

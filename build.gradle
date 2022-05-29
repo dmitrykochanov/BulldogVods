@@ -17,7 +17,6 @@ plugins {
     id "com.google.devtools.ksp" version "$ksp_version" apply false
     id "com.apollographql.apollo3" version "$apollo_version" apply false
     id "androidx.navigation.safeargs.kotlin" version "$nav_component_version" apply false
-    id "io.sentry.android.gradle" version "3.1.0-beta.1" apply false
     id "de.mannodermaus.android-junit5" version "1.8.2.0" apply false
 }
 
