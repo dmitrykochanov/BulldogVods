@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class GetChatMessagesByPlaybackPositionUseCaseTest {
 
@@ -78,7 +79,8 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     @Test
     fun `Should prefetch messages after seeking`() {
         val config = ChatReplayConfig(
-            initialPreloadOffset = (MESSAGE_4.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds
+            initialPreloadOffset = (MESSAGE_4.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds,
+            playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -99,7 +101,8 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     fun `Should delete all messages if new playback position is after last loaded message`() {
         val config = ChatReplayConfig(
             pageSize = 2,
-            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_4.sentAtMillis + 1).milliseconds
+            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_4.sentAtMillis + 1).milliseconds,
+            playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -120,7 +123,8 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     fun `Should not delete messages if new playback position is before last loaded message`() {
         val config = ChatReplayConfig(
             pageSize = 5,
-            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_3.sentAtMillis + 1).milliseconds
+            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_3.sentAtMillis + 1).milliseconds,
+            playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -145,7 +149,8 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     fun `Should return correct messages if page size is less than the size of prefetched messages`() {
         val config = ChatReplayConfig(
             pageSize = 2,
-            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds
+            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds,
+            playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -165,16 +170,16 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
         @JvmStatic
         fun provideConfigsToTest(): List<ChatReplayConfig> {
             return listOf(
-                ChatReplayConfig(pageSize = 2, historySize = 2),
-                ChatReplayConfig(pageSize = 2, historySize = 3),
-                ChatReplayConfig(pageSize = 2, historySize = 4),
-                ChatReplayConfig(pageSize = 2, historySize = 5),
-                ChatReplayConfig(pageSize = 3, historySize = 3),
-                ChatReplayConfig(pageSize = 3, historySize = 4),
-                ChatReplayConfig(pageSize = 3, historySize = 5),
-                ChatReplayConfig(pageSize = 4, historySize = 4),
-                ChatReplayConfig(pageSize = 4, historySize = 5),
-                ChatReplayConfig(pageSize = 5, historySize = 5)
+                ChatReplayConfig(pageSize = 2, historySize = 2, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2, historySize = 3, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2, historySize = 4, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2, historySize = 5, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3, historySize = 3, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3, historySize = 4, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3, historySize = 5, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 4, historySize = 4, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 4, historySize = 5, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 5, historySize = 5, playbackPositionOffset = 0.seconds)
             )
         }
     }

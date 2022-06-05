@@ -1,13 +1,13 @@
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.kapt"
-    id "com.google.devtools.ksp"
+    alias(libs.plugins.android)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.parcelize)
+    alias(libs.plugins.apollo)
+    alias(libs.plugins.navComponentSafeArgs)
+    alias(libs.plugins.junit5)
     id "dagger.hilt.android.plugin"
-    id "com.apollographql.apollo3"
-    id "androidx.navigation.safeargs.kotlin"
-    id "kotlin-parcelize"
-    id "de.mannodermaus.android-junit5"
 }
 
 android {
@@ -52,67 +52,39 @@ apollo {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation(libs.material)
 
-    implementation "androidx.appcompat:appcompat:1.4.1"
-    implementation "androidx.core:core-ktx:1.8.0-rc02"
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.ktx)
+    implementation(libs.androidx.constraintLayout)
+    implementation(libs.androidx.swipeRefreshLayout)
+    implementation(libs.androidx.startup)
+    implementation(libs.bundles.androidx.lifecycle)
+    implementation(libs.bundles.androidx.datastore)
+    implementation(libs.bundles.androidx.paging)
 
-    implementation "com.google.android.material:material:1.6.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    implementation "androidx.startup:startup-runtime:1.1.1"
+    implementation(libs.bundles.androidx.room)
+    ksp(libs.androidx.room.ksp)
 
-    def lifecycle_version = "2.4.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation(libs.hilt)
+    kapt(libs.hilt.kapt)
 
-    def data_store_version = "1.0.0"
-    implementation "androidx.datastore:datastore-preferences:$data_store_version"
-    implementation "androidx.datastore:datastore-preferences-rxjava3:$data_store_version"
+    implementation(libs.bundles.coil)
+    implementation(libs.animatedWebp)
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation(libs.navComponent.fragment)
+    implementation(libs.bundles.rxJava3)
+    implementation(libs.bundles.apollo)
+    implementation(libs.okhttpLoggingInterceptor)
+    implementation(libs.liveEvent)
+    implementation(libs.exoPlayer)
+    implementation(libs.eventBus)
 
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_component_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_component_version"
+    implementation(libs.timber)
+    implementation(libs.sentry)
 
-    implementation "io.reactivex.rxjava3:rxjava:3.1.3"
-    implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    testImplementation(libs.bundles.junit5)
+    testRuntimeOnly(libs.junit5.engine)
 
-    implementation "com.apollographql.apollo3:apollo-runtime:$apollo_version"
-    implementation "com.apollographql.apollo3:apollo-rx3-support:$apollo_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
-
-    def paging_version = "3.1.1"
-    implementation "androidx.paging:paging-runtime:$paging_version"
-    implementation "androidx.paging:paging-rxjava3:$paging_version"
-
-    def room_version = "2.4.2"
-    ksp "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-rxjava3:$room_version"
-
-    def event_emitter_version = "1.2.0"
-    implementation "com.github.Zhuinden:event-emitter:$event_emitter_version"
-    implementation "com.github.Zhuinden:live-event:$event_emitter_version"
-
-    implementation "com.google.android.exoplayer:exoplayer:2.17.1"
-    implementation("org.greenrobot:eventbus:3.3.1")
-
-    def coil_version = "2.1.0"
-    implementation("io.coil-kt:coil:$coil_version")
-    implementation("io.coil-kt:coil-gif:$coil_version")
-    implementation "com.github.penfeizhou.android.animation:awebp:2.21.0"
-
-    implementation "com.jakewharton.timber:timber:5.0.1"
-
-    def sentry_version = "5.7.4"
-    implementation "io.sentry:sentry-android:$sentry_version"
-
-    def junit_version = "5.8.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    coreLibraryDesugaring(libs.desugarJdkLibs)
 }
