@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -45,6 +47,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         setupChatAutoScroll()
         setupChatVisibilityToggle()
 
+        viewModel.titleLiveData.observe(viewLifecycleOwner, ::showTitle)
         viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
             onPlayerOrChatChanged(playerResource, viewModel.chatMessageItemsLiveData.value)
         }
@@ -55,6 +58,10 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         binding.layoutChatError.buttonRetry.setOnClickListener { viewModel.onRetryChatClicked() }
+
+        binding.playerView
+            .findViewById<ImageView>(R.id.backButton)
+            .setOnClickListener { viewModel.onBackClicked() }
         binding.playerView
             .findViewById<ImageButton>(R.id.exo_chapters)
             .setOnClickListener { viewModel.onVodChaptersClicked() }
@@ -114,6 +121,23 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
             requireAppActivity().enterFullscreen()
         } else {
             requireAppActivity().exitFullscreen()
+        }
+    }
+
+    private fun showTitle(title: Resource<String>) {
+        val topControlsContainer = binding.playerView.findViewById<View>(R.id.topBarContainer)
+        when (title) {
+            is Resource.Loading -> {
+                topControlsContainer.isVisible = false
+            }
+            is Resource.Data -> {
+                topControlsContainer.isVisible = true
+                binding.playerView.findViewById<TextView>(R.id.titleTextView).text = title.data
+            }
+            is Resource.Error -> {
+                topControlsContainer.isVisible = false
+                Timber.e(title.error, "Failed to load vod title")
+            }
         }
     }
 

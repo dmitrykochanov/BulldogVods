@@ -9,6 +9,45 @@
         android:layout_height="0dp"
         android:background="@color/exo_black_opacity_60" />
 
+    <LinearLayout
+        android:id="@+id/topBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/exo_bottom_bar_background"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            style="@style/ExoStyledControls.Button.Bottom"
+            android:layout_width="@dimen/touch_target_size"
+            android:layout_height="@dimen/touch_target_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:contentDescription="@string/fragment_vod_chapters_content_description"
+            android:padding="@dimen/touch_target_icon_padding_large"
+            android:src="@drawable/ic_back"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?textAppearanceTitleMedium"
+            tools:text="At the major, back on monday KEKBye !nordpass" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@id/exo_bottom_bar"
         android:layout_width="match_parent"

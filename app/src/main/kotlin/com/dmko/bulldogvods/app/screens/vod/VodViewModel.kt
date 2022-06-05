@@ -63,6 +63,9 @@ class VodViewModel @Inject constructor(
     private val refreshSubject = PublishSubject.create<Unit>()
     private val refreshChatSubject = PublishSubject.create<Unit>()
 
+    private val titleMutableLiveData = MutableLiveData<Resource<String>>()
+    val titleLiveData: LiveData<Resource<String>> = titleMutableLiveData
+
     private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
     val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
 
@@ -122,6 +125,13 @@ class VodViewModel @Inject constructor(
             .disposeOnClear()
 
         vodFlowable
+            .mapResource(Vod::title)
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(titleMutableLiveData::setValue)
+            .disposeOnClear()
+
+        vodFlowable
             .switchMapResource(::getChatMessagesFlowable)
             .mapResource { chatMessages -> chatMessages.map(chatMessageItemMapper::map) }
             .subscribeOn(schedulers.io)
@@ -167,6 +177,10 @@ class VodViewModel @Inject constructor(
         if (exoPlayer.currentPosition != startOffsetMillis) {
             exoPlayer.seekTo(startOffsetMillis)
         }
+    }
+
+    fun onBackClicked() {
+        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
     }
 
     fun onVodPlaybackSettingsClicked() {
