@@ -47,7 +47,7 @@ class GetChatMessagesByPlaybackPositionUseCase @Inject constructor(
         val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
         val loadAfterMillis = when {
             lastLoadedMessageSentAtMillis == null -> vodPlaybackPosition - initialPreloadOffsetMillis
-            lastLoadedMessageSentAtMillis - vodPlaybackPosition < prefetchDelayMillis -> lastLoadedMessageSentAtMillis
+            lastLoadedMessageSentAtMillis - vodPlaybackPosition < prefetchDelayMillis -> lastLoadedMessageSentAtMillis + 1
             else -> null
         }
         return if (loadAfterMillis != null) {
