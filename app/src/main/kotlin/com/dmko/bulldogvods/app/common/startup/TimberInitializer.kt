@@ -1,11 +1,12 @@
 package com.dmko.bulldogvods.app.common.startup
 
 import android.content.Context
+import androidx.startup.Initializer
 import com.dmko.bulldogvods.BuildConfig
 import com.dmko.bulldogvods.app.common.logging.SentryTimberTree
 import timber.log.Timber
 
-class TimberInitializer : IndependentInitializer() {
+class TimberInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
         Timber.plant(SentryTimberTree())
@@ -13,4 +14,6 @@ class TimberInitializer : IndependentInitializer() {
             Timber.plant(Timber.DebugTree())
         }
     }
+
+    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 }
