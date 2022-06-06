@@ -1,6 +1,7 @@
 package com.dmko.bulldogvods.features.chat.presentation.mapping
 
 import android.text.Spanned
+import androidx.core.graphics.toColorInt
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.dmko.bulldogvods.app.common.extensions.toColorIntOrNull
@@ -33,7 +34,7 @@ class ChatMessageToChatMessageItemMapper @Inject constructor() {
             repeat(chatMessage.user.badges.size * SPACES_BETWEEN_BADGES) {
                 append(" ")
             }
-            color(chatMessage.user.nameColorHex.toColorIntOrNull() ?: USER_NAME_COLORS.random()) {
+            color(chatMessage.user.nameColorHex.toColorIntOrNull() ?: DEFAULT_USER_NAME_COLOR.toColorInt()) {
                 append(chatMessage.user.name)
             }
             append(": ")
@@ -81,22 +82,6 @@ class ChatMessageToChatMessageItemMapper @Inject constructor() {
 
         private const val SPACES_BETWEEN_BADGES = 1
         private const val EMOTE_REGEX = "(?<= )\\Q%s\\E(?=( |\$))"
-        private val USER_NAME_COLORS = listOf(
-            -65536,
-            -16776961,
-            -16744448,
-            -5103070,
-            -32944,
-            -6632142,
-            -47872,
-            -13726889,
-            -2448096,
-            -2987746,
-            -10510688,
-            -14774017,
-            -38476,
-            -7722014,
-            -16711809
-        )
+        private const val DEFAULT_USER_NAME_COLOR = "#DAA520"
     }
 }
