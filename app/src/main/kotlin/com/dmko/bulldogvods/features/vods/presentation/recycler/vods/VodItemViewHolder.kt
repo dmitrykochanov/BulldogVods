@@ -47,16 +47,16 @@ class VodItemViewHolder(
     private fun showChaptersSection(chaptersSection: ChaptersSection) {
         when (chaptersSection) {
             is NoChapters -> {
-                binding.cardChapters.isVisible = false
+                binding.chaptersContainer.isVisible = false
                 binding.textSingleChapterGameName.isVisible = false
             }
             is SingleChapter -> {
-                binding.cardChapters.isVisible = false
+                binding.chaptersContainer.isVisible = false
                 binding.textSingleChapterGameName.isVisible = true
                 binding.textSingleChapterGameName.text = chaptersSection.gameName
             }
             is MultipleChapters -> {
-                binding.cardChapters.isVisible = true
+                binding.chaptersContainer.isVisible = true
                 binding.textSingleChapterGameName.isVisible = false
                 binding.textChaptersCount.text = chaptersSection.chaptersCount.toString()
             }
@@ -68,6 +68,6 @@ class VodItemViewHolder(
     }
 
     fun setOnVodChaptersClickListener(onVodChaptersClickListener: () -> Unit) {
-        binding.cardChapters.setOnClickListener { onVodChaptersClickListener.invoke() }
+        binding.chaptersContainer.setOnClickListener { onVodChaptersClickListener.invoke() }
     }
 }

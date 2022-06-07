@@ -28,7 +28,7 @@
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginTop="@dimen/padding_small"
             android:layout_marginBottom="@dimen/padding_small"
-            android:contentDescription="@string/fragment_vod_chapters_content_description"
+            android:contentDescription="@string/navigate_back_content_description"
             android:padding="@dimen/touch_target_icon_padding_large"
             android:src="@drawable/ic_back"
             app:tint="@color/white" />

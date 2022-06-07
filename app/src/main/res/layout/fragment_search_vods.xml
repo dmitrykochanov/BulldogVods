@@ -15,7 +15,7 @@
             android:layout_width="@dimen/touch_target_size"
             android:layout_height="@dimen/touch_target_size"
             android:layout_marginStart="@dimen/padding_small"
-            android:contentDescription="@string/fragment_vods_image_search_content_description"
+            android:contentDescription="@string/navigate_back_content_description"
             android:padding="@dimen/touch_target_icon_padding_large"
             android:src="@drawable/ic_back"
             app:layout_constraintBottom_toBottomOf="@id/textInputLayoutSearch"

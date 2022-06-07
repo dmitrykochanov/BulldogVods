@@ -16,11 +16,14 @@
     <string name="vod_state_ready">Ready</string>
     <string name="vod_state_processing">Processing</string>
 
+    <string name="navigate_back_content_description">Go back</string>
+
     <string name="fragment_vods_image_search_content_description">Search</string>
     <string name="fragment_vods_image_settings_content_description">Settings</string>
     <string name="fragment_vods_image_vod_thumbnail_content_description">Vod thumbnail</string>
     <string name="fragment_vods_image_game_thumbnail_content_description">Game thumbnail</string>
     <string name="fragment_vods_chapters">Chapters</string>
+    <string name="fragment_vods_recycler_content_description">List of vods</string>
 
     <string name="fragment_search_vods_hint">Search vods</string>
     <string name="fragment_search_vods_no_results_title">No vods found</string>
@@ -35,5 +38,5 @@
     <string name="dialog_vod_playback_settings_title">Quality</string>
 
     <string name="dialog_theme_chooser_title">Theme</string>
-    <string name="dialog_theme_chooser_check_content_description">Selected theme</string>
+    <string name="dialog_theme_chooser_check_content_description">Checkmark</string>
 </resources>

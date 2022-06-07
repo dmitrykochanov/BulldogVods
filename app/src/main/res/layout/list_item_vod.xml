@@ -109,19 +109,19 @@
         android:layout_marginEnd="@dimen/vods_list_content_extra_padding"
         android:textAppearance="?textAppearanceLabelSmall"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/cardChapters"
+        app:layout_constraintBottom_toTopOf="@id/chaptersContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageGameThumbnail"
         app:layout_constraintTop_toBottomOf="@id/textTitle"
         tools:text="Elden Ring" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardChapters"
+    <FrameLayout
+        android:id="@+id/chaptersContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginTop="@dimen/padding_medium"
         android:layout_marginEnd="@dimen/vods_list_content_extra_padding"
+        android:minHeight="@dimen/touch_target_size"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,43 +130,50 @@
         app:layout_constraintTop_toBottomOf="@id/text_single_chapter_game_name"
         tools:visibility="visible">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardChapters"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
 
-            <ImageView
-                android:layout_width="@dimen/icon_size_normal"
-                android:layout_height="@dimen/icon_size_normal"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/padding_small"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_list" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/padding_small"
-                android:text="@string/fragment_vods_chapters"
-                android:textAppearance="?textAppearanceLabelSmall" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small">
 
-            <TextView
-                android:id="@+id/textChaptersCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/padding_small"
-                android:layout_marginEnd="@dimen/padding_medium"
-                android:background="@drawable/chapter_count_background"
-                android:maxLines="1"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_small"
-                android:textAppearance="?textAppearanceLabelSmall"
-                android:textColor="?colorOnPrimary"
-                tools:text="3" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_normal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_list" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:text="@string/fragment_vods_chapters"
+                    android:textAppearance="?textAppearanceLabelSmall" />
+
+                <TextView
+                    android:id="@+id/textChaptersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:layout_marginEnd="@dimen/padding_medium"
+                    android:background="@drawable/chapter_count_background"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:textAppearance="?textAppearanceLabelSmall"
+                    android:textColor="?colorOnPrimary"
+                    tools:text="3" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

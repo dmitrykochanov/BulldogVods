@@ -75,6 +75,7 @@
             android:id="@+id/recyclerVods"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:contentDescription="@string/fragment_vods_recycler_content_description"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="@integer/vods_list_span_count"
             tools:listitem="@layout/list_item_vod" />
