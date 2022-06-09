@@ -6,6 +6,7 @@ data class Vod(
     val startedAtMillis: Long,
     val endedAtMillis: Long?,
     val state: VodState,
+    val thumbnailUrl: String?,
     val chapters: List<VodChapter>,
     val videoSources: List<VideoSource>
 )

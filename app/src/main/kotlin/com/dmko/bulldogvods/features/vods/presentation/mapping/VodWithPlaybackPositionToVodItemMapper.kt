@@ -24,7 +24,7 @@ class VodWithPlaybackPositionToVodItemMapper @Inject constructor(
         val vod = vodWithPlaybackPosition.vod
         return VodItem(
             id = vod.id,
-            thumbnailUrl = DEFAULT_VOD_THUMBNAIL_URL,
+            thumbnailUrl = vod.thumbnailUrl ?: DEFAULT_VOD_THUMBNAIL_URL,
             length = mapVodStateToDuration(vod.state),
             recordedAt = relativeDateFormat.format(vod.startedAtMillis),
             playbackPercentage = getPlaybackPercentage(vod, vodWithPlaybackPosition.playbackPosition),

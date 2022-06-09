@@ -5,6 +5,9 @@ fragment VodSchema on Vod {
     ended_at
     state
     visibility
+    thumbnails {
+        static
+    }
     categories {
         name
         timestamp
