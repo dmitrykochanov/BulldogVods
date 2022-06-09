@@ -1,8 +1,8 @@
 package com.dmko.bulldogvods.di.modules
 
-import com.dmko.bulldogvods.app.common.imageloader.CoilImageLoader
-import com.dmko.bulldogvods.app.common.imageloader.CoilImageLoaderFactory
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.CoilImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.CoilImageLoaderFactory
+import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
 import com.dmko.bulldogvods.app.common.schedulers.SchedulersImpl
 import dagger.Binds

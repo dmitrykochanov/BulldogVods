@@ -11,7 +11,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
 import com.dmko.bulldogvods.app.common.recycler.decorations.GridSpacingItemDecoration
 import com.dmko.bulldogvods.app.common.recycler.paging.GenericLoadStateAdapter
 import com.dmko.bulldogvods.databinding.FragmentVodsBinding

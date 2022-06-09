@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.common.imageloader.coil.interceptors
+package com.dmko.bulldogvods.app.common.image.loader.coil.interceptors
 
 import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable

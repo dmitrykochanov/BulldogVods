@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.DialogFragmentChapterChooserBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItem

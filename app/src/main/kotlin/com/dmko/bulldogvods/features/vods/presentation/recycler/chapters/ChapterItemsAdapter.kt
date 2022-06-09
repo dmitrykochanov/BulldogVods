@@ -3,7 +3,7 @@ package com.dmko.bulldogvods.features.vods.presentation.recycler.chapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
 import com.dmko.bulldogvods.databinding.ListItemChapterBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.ChapterItem
 import kotlin.time.Duration

@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.common.imageloader
+package com.dmko.bulldogvods.app.common.image.loader
 
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
@@ -6,9 +6,9 @@ import android.os.Build.VERSION_CODES
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.dmko.bulldogvods.app.common.imageloader.coil.decoders.AnimatedWebPDecoder
-import com.dmko.bulldogvods.app.common.imageloader.coil.interceptors.AnimatedDrawableCacheInterceptor
-import com.dmko.bulldogvods.app.common.imageloader.coil.logger.CoilTimberLogger
+import com.dmko.bulldogvods.app.common.image.loader.coil.decoders.AnimatedWebPDecoder
+import com.dmko.bulldogvods.app.common.image.loader.coil.interceptors.AnimatedDrawableCacheInterceptor
+import com.dmko.bulldogvods.app.common.image.loader.coil.logger.CoilTimberLogger
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

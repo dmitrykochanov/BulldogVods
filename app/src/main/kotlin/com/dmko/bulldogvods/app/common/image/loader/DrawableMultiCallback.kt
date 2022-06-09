@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.common.imageloader
+package com.dmko.bulldogvods.app.common.image.loader
 
 import android.graphics.drawable.Drawable
 import android.view.View

@@ -1,5 +1,6 @@
 package com.dmko.bulldogvods.features.chat.domain.usecases
 
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessageWithDrawables
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_1
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_2
@@ -8,19 +9,18 @@ import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSou
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_5
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.VOD
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-class GetChatMessagesByPlaybackPositionUseCaseTest {
+class ReplayChatMessagesUseCaseTest {
 
     @Test
     fun `Should not return messages when playback position is not specified`() {
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(
-            FakeNetworkChatDataSource(),
+        val getChatMessagesUseCase = ReplayChatMessagesUseCase(
+            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
             ChatReplayConfig()
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -35,11 +35,15 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
     @ParameterizedTest
     @MethodSource("provideConfigsToTest")
     fun `Should return correct messages when playback position is passed`(config: ChatReplayConfig) {
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
+        val getChatMessagesUseCase = ReplayChatMessagesUseCase(
+            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            config
+        )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
         playbackPositionSubject.onNext(MESSAGE_2.sentAtMillis - VOD.startedAtMillis)
@@ -82,11 +86,15 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
             initialPreloadOffset = (MESSAGE_4.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds,
             playbackPositionOffset = 0.seconds
         )
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
+        val getChatMessagesUseCase = ReplayChatMessagesUseCase(
+            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            config
+        )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_4.sentAtMillis - VOD.startedAtMillis)
         playbackPositionSubject.onNext(MESSAGE_5.sentAtMillis - VOD.startedAtMillis)
@@ -104,11 +112,15 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
             initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_4.sentAtMillis + 1).milliseconds,
             playbackPositionOffset = 0.seconds
         )
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
+        val getChatMessagesUseCase = ReplayChatMessagesUseCase(
+            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            config
+        )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
         playbackPositionSubject.onNext(MESSAGE_5.sentAtMillis - VOD.startedAtMillis)
@@ -126,11 +138,15 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
             initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_3.sentAtMillis + 1).milliseconds,
             playbackPositionOffset = 0.seconds
         )
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
+        val getChatMessagesUseCase = ReplayChatMessagesUseCase(
+            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            config
+        )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
         playbackPositionSubject.onNext(MESSAGE_5.sentAtMillis - VOD.startedAtMillis)
@@ -138,30 +154,6 @@ class GetChatMessagesByPlaybackPositionUseCaseTest {
         testSubscriber.assertValues(
             listOf(MESSAGE_1),
             listOf(MESSAGE_1, MESSAGE_2, MESSAGE_3, MESSAGE_4, MESSAGE_5)
-        )
-    }
-
-    @Test
-    @Disabled(
-        """If page size is less than the amount of preloaded messages then only the messages before the current
-            playback position will be loaded. Should not cause any problems in a real world scenario."""
-    )
-    fun `Should return correct messages if page size is less than the size of prefetched messages`() {
-        val config = ChatReplayConfig(
-            pageSize = 2,
-            initialPreloadOffset = (MESSAGE_5.sentAtMillis - MESSAGE_2.sentAtMillis + 1).milliseconds,
-            playbackPositionOffset = 0.seconds
-        )
-        val getChatMessagesUseCase = GetChatMessagesByPlaybackPositionUseCase(FakeNetworkChatDataSource(), config)
-        val playbackPositionSubject = PublishSubject.create<Long>()
-
-        val testSubscriber = getChatMessagesUseCase
-            .execute(VOD, playbackPositionSubject)
-            .test()
-        playbackPositionSubject.onNext(MESSAGE_5.sentAtMillis - VOD.startedAtMillis)
-
-        testSubscriber.assertValues(
-            listOf(MESSAGE_2, MESSAGE_3, MESSAGE_4, MESSAGE_5)
         )
     }
 

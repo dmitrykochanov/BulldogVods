@@ -15,7 +15,6 @@ import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.requireAppActivity
 import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
@@ -23,15 +22,12 @@ import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMes
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class VodFragment : Fragment(R.layout.fragment_vod) {
 
     private val viewModel: VodViewModel by viewModels()
     private val binding by viewBinding(FragmentVodBinding::bind)
-
-    @Inject lateinit var imageLoader: ImageLoader
 
     private lateinit var chatMessageItemsAdapter: ChatMessageItemsAdapter
 
@@ -41,7 +37,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
-        chatMessageItemsAdapter = ChatMessageItemsAdapter(imageLoader)
+        chatMessageItemsAdapter = ChatMessageItemsAdapter()
         binding.recyclerChat.adapter = chatMessageItemsAdapter
         binding.recyclerChat.itemAnimator = null
         setupChatAutoScroll()

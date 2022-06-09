@@ -18,8 +18,8 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
 import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
-import com.dmko.bulldogvods.features.chat.domain.usecases.GetChatMessagesByPlaybackPositionUseCase
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessageWithDrawables
+import com.dmko.bulldogvods.features.chat.domain.usecases.ReplayChatMessagesUseCase
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatMessageToChatMessageItemMapper
 import com.dmko.bulldogvods.features.vods.data.database.datasource.DatabaseVodsDataSource
@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VodViewModel @Inject constructor(
-    private val getChatMessagesByPlaybackPositionUseCase: GetChatMessagesByPlaybackPositionUseCase,
+    private val replayChatMessagesUseCase: ReplayChatMessagesUseCase,
     private val chatMessageItemMapper: ChatMessageToChatMessageItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
@@ -140,11 +140,11 @@ class VodViewModel @Inject constructor(
             .disposeOnClear()
     }
 
-    private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessage>>> {
+    private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessageWithDrawables>>> {
         return refreshChatSubject.toFlowable(BackpressureStrategy.LATEST)
             .startWithItem(Unit)
             .switchMap {
-                getChatMessagesByPlaybackPositionUseCase.execute(vod, playbackPositionSubject).asResource()
+                replayChatMessagesUseCase.execute(vod, playbackPositionSubject).asResource()
             }
     }
 

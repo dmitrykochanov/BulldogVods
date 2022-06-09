@@ -3,7 +3,7 @@ package com.dmko.bulldogvods.features.vods.presentation.recycler.vods
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import com.dmko.bulldogvods.app.common.imageloader.ImageLoader
+import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
 import com.dmko.bulldogvods.databinding.ListItemVodBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
 

@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.common.imageloader.coil.logger
+package com.dmko.bulldogvods.app.common.image.loader.coil.logger
 
 import android.util.Log
 import coil.util.Logger

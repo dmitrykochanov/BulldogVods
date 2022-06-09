@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.common.imageloader.coil.decoders
+package com.dmko.bulldogvods.app.common.image.loader.coil.decoders
 
 import coil.ImageLoader
 import coil.decode.DecodeResult

@@ -29,7 +29,7 @@ class MessageSchemaToChatMessageMapper @Inject constructor(
     private fun mapBadge(badgeSchema: ChatMessagesQuery.Badge): ChatUserBadge {
         return ChatUserBadge(
             name = badgeSchema.name,
-            urls = badgeSchema.urls
+            url = badgeSchema.urls.first()
         )
     }
 
@@ -37,7 +37,7 @@ class MessageSchemaToChatMessageMapper @Inject constructor(
         return ChatEmote(
             name = emoteSchema.name,
             isZeroWidth = emoteSchema.zero_width,
-            urls = emoteSchema.urls
+            url = emoteSchema.urls.first()
         )
     }
 }
