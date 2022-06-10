@@ -32,7 +32,7 @@ This app allows you to search and watch AdmiralBulldog twitch vods including cha
 </div>
 
 <div align="center" style="display:flex">
-<img src="https://lh3.googleusercontent.com/45CfpOCHgDbptcJ_0lgy-VqW_RjA8n-OSRsyNfJPsDAAlSvpWIsvcz9cGLZJzrhSWS8=h1024-rw" width="60%">
+<img src="https://user-images.githubusercontent.com/18248775/173076178-080b43ec-c90b-45a3-ae44-65f28ade0093.gif" width="60%">
 </div>
 
 ### Libraries used
