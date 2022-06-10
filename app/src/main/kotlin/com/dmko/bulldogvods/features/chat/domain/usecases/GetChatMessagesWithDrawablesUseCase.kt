@@ -19,11 +19,12 @@ class GetChatMessagesWithDrawablesUseCase @Inject constructor(
         return networkChatDataSource.getChatMessages(request)
             .toFlowable()
             .flatMapIterable { it }
-            .flatMapSingle(::getEmoteWithDrawables)
+            .flatMapSingle(::getMessageWithDrawables)
             .toList()
+            .map { messages -> messages.sortedBy { it.message.sentAtMillis } }
     }
 
-    private fun getEmoteWithDrawables(message: ChatMessage): Single<ChatMessageWithDrawables> {
+    private fun getMessageWithDrawables(message: ChatMessage): Single<ChatMessageWithDrawables> {
         val badgesMaybes = message.user.badges.map { badge ->
             imageLoader.load(badge.url)
                 .map { drawable -> badge.url to drawable }

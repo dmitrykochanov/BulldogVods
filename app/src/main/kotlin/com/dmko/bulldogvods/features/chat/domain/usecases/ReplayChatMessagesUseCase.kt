@@ -33,7 +33,7 @@ class ReplayChatMessagesUseCase @Inject constructor(
                     .map { loadedMessages -> removeOutdatedMessages(vod, playbackPosition, loadedMessages) }
                     .doOnSuccess(loadedMessagesSubject::onNext)
             }
-        return playbackPositionFlowable.withLatestFrom(messagesFlowable)  { playbackPosition, loadedMessages ->
+        return playbackPositionFlowable.withLatestFrom(messagesFlowable) { playbackPosition, loadedMessages ->
             getMessagesToShow(vod, playbackPosition, loadedMessages)
         }
             .distinctUntilChanged()
@@ -48,8 +48,12 @@ class ReplayChatMessagesUseCase @Inject constructor(
         val lastLoadedMessageSentAtMillis = currentlyLoadedMessages.lastOrNull()?.message?.sentAtMillis
         val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
         val loadAfterMillis = when {
-            lastLoadedMessageSentAtMillis == null -> vodPlaybackPosition - initialPreloadOffsetMillis
-            lastLoadedMessageSentAtMillis - vodPlaybackPosition < prefetchDelayMillis -> lastLoadedMessageSentAtMillis + 1
+            lastLoadedMessageSentAtMillis == null -> {
+                vodPlaybackPosition - initialPreloadOffsetMillis
+            }
+            lastLoadedMessageSentAtMillis - vodPlaybackPosition < prefetchDelayMillis -> {
+                lastLoadedMessageSentAtMillis + 1
+            }
             else -> null
         }
         return if (loadAfterMillis != null) {
@@ -90,7 +94,7 @@ class ReplayChatMessagesUseCase @Inject constructor(
     ): List<ChatMessageWithDrawables> {
         val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
         val historyMessages = loadedMessages.filter { message -> message.message.sentAtMillis <= vodPlaybackPosition }
-        val futureMessages = loadedMessages - historyMessages.toSet()
+        val futureMessages = loadedMessages.filter { message -> message.message.sentAtMillis > vodPlaybackPosition }
         return historyMessages.takeLast(config.historySize) + futureMessages
     }
 
