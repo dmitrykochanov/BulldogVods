@@ -72,11 +72,15 @@ class VodViewModel @Inject constructor(
     private val chatMessageItemsMutableLiveData = MutableLiveData<Resource<List<ChatMessageItem>>>()
     val chatMessageItemsLiveData: LiveData<Resource<List<ChatMessageItem>>> = chatMessageItemsMutableLiveData
 
+    private val keepScreenOnMutableLiveData = MutableLiveData<Boolean>()
+    val keepScreenOnLiveData: LiveData<Boolean> = keepScreenOnMutableLiveData
+
     val isAutoScrollPausedLiveData: LiveData<Boolean> = savedStateHandle.getLiveData(ARG_IS_AUTO_SCROLL_PAUSED, false)
 
     private var updateChatDisposable: Disposable? = null
 
     init {
+        setupPlayerStateListener()
         val startOffsetMillis = savedStateHandle.get<LongWrapper>(ARG_START_OFFSET_MILLIS)
         if (startOffsetMillis != null) {
             saveVodPlaybackPosition(startOffsetMillis.value)
@@ -138,6 +142,16 @@ class VodViewModel @Inject constructor(
             .observeOn(schedulers.ui)
             .subscribe(chatMessageItemsMutableLiveData::setValue)
             .disposeOnClear()
+    }
+
+    private fun setupPlayerStateListener() {
+        exoPlayer.addListener(
+            object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    keepScreenOnMutableLiveData.value = isPlaying
+                }
+            }
+        )
     }
 
     private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessageWithDrawables>>> {

@@ -50,6 +50,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         viewModel.chatMessageItemsLiveData.observe(viewLifecycleOwner) { chatMessages ->
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
+        viewModel.keepScreenOnLiveData.observe(viewLifecycleOwner, binding.playerView::setKeepScreenOn)
         viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
 
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
