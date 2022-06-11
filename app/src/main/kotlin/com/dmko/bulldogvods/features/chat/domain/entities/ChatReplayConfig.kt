@@ -5,8 +5,8 @@ import kotlin.time.Duration.Companion.seconds
 
 data class ChatReplayConfig(
     val pageSize: Int = 40,
-    val historySize: Int = 100,
+    val historySize: Int = 200,
     val prefetchDelay: Duration = 5.seconds,
-    val initialPreloadOffset: Duration = 20.seconds,
-    val playbackPositionOffset: Duration = 12.seconds
+    val initialPreloadOffset: Duration = 5.seconds,
+    val playbackPositionOffset: Duration = 6.5.seconds
 )
