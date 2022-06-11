@@ -56,7 +56,7 @@
             android:layout_marginStart="@dimen/padding_medium"
             android:layout_marginTop="@dimen/padding_normal"
             android:layout_marginEnd="@dimen/padding_normal"
-            android:layout_marginBottom="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_medium"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/list_item_chat_message"

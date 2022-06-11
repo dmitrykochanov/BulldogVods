@@ -8,8 +8,8 @@
         android:id="@+id/messageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_medium"
         android:autoLink="web"
+        android:paddingBottom="@dimen/padding_medium"
         android:textAppearance="?textAppearanceTitleSmall"
         android:textColorLink="@color/dodger_blue"
         tools:text="BlackPotato: TriHard" />
