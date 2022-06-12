@@ -148,10 +148,27 @@ class VodViewModel @Inject constructor(
         exoPlayer.addListener(
             object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
-                    keepScreenOnMutableLiveData.value = isPlaying
+                    if (isPlaying) {
+                        onVodPlaybackStarted()
+                    } else {
+                        onVodPlaybackStopped()
+                    }
                 }
             }
         )
+    }
+
+    private fun onVodPlaybackStarted() {
+        keepScreenOnMutableLiveData.value = true
+        updateChatDisposable = Flowable.interval(CHAT_UPDATE_INTERVAL_SECONDS, TimeUnit.SECONDS)
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe { playbackPositionSubject.onNext(exoPlayer.currentPosition) }
+    }
+
+    private fun onVodPlaybackStopped() {
+        keepScreenOnMutableLiveData.value = false
+        updateChatDisposable?.dispose()
     }
 
     private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessageWithDrawables>>> {
@@ -235,10 +252,6 @@ class VodViewModel @Inject constructor(
     override fun onStart(owner: LifecycleOwner) {
         eventBus.register(this)
         exoPlayer.playWhenReady = savedStateHandle.get<Boolean>(ARG_IS_PLAYING) ?: true
-        updateChatDisposable = Flowable.interval(CHAT_UPDATE_INTERVAL_SECONDS, TimeUnit.SECONDS)
-            .subscribeOn(schedulers.io)
-            .observeOn(schedulers.ui)
-            .subscribe { playbackPositionSubject.onNext(exoPlayer.currentPosition) }
     }
 
     override fun onStop(owner: LifecycleOwner) {
@@ -246,7 +259,6 @@ class VodViewModel @Inject constructor(
         savedStateHandle.set(ARG_IS_PLAYING, exoPlayer.isPlaying || exoPlayer.currentMediaItem == null)
         saveVodPlaybackPosition(exoPlayer.currentPosition)
         exoPlayer.pause()
-        updateChatDisposable?.dispose()
     }
 
     private fun saveVodPlaybackPosition(playbackPosition: Long) {
