@@ -10,6 +10,6 @@ class ExoPlayerTimberLogger : EventLogger(null) {
     }
 
     override fun loge(message: String) {
-        Timber.e(message)
+        Timber.w(message)
     }
 }
