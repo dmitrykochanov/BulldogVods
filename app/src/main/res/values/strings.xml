@@ -39,4 +39,5 @@
 
     <string name="dialog_theme_chooser_title">Theme</string>
     <string name="dialog_theme_chooser_check_content_description">Checkmark</string>
+    <string name="dialog_theme_chooser_app_version">v%1$s</string>
 </resources>

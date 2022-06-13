@@ -117,11 +117,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_large"
         android:layout_marginEnd="@dimen/padding_large"
-        android:layout_marginBottom="@dimen/padding_large"
         android:gravity="center_vertical"
         android:minHeight="@dimen/touch_target_size"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/appVersionText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutThemeLight">
@@ -153,4 +152,17 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_arrow_right" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/appVersionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_large"
+        android:layout_marginEnd="@dimen/padding_large"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:textAppearance="?textAppearanceLabelSmall"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="v1.1.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>
