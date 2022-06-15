@@ -1,5 +1,6 @@
 package com.dmko.bulldogvods.features.chat.presentation.mapping
 
+import android.graphics.drawable.Animatable
 import android.text.SpannableStringBuilder
 import androidx.core.graphics.toColorInt
 import androidx.core.text.buildSpannedString
@@ -22,7 +23,7 @@ class ChatMessageToChatMessageItemMapper @Inject constructor() {
                 appendUserName(messageWithDrawables.message.user)
                 appendTextWithEmotes(messageWithDrawables)
             },
-            drawables = messageWithDrawables.drawables
+            animatedDrawables = messageWithDrawables.drawables.values.filter { it is Animatable }
         )
     }
 

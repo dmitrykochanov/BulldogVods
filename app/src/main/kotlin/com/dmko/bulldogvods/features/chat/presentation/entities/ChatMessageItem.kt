@@ -6,5 +6,5 @@ import android.text.Spanned
 data class ChatMessageItem(
     val id: String,
     val text: Spanned,
-    val drawables: Map<String, Drawable>
+    val animatedDrawables: List<Drawable>
 )

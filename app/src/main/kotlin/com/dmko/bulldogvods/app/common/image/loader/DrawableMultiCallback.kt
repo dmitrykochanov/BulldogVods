@@ -11,6 +11,9 @@ class DrawableMultiCallback(
 
     private val callbacks = CopyOnWriteArrayList<CallbackWeakReference>()
 
+    val viewCount: Int
+        get() = callbacks.size
+
     override fun invalidateDrawable(drawable: Drawable) {
         for (reference in callbacks) {
             val callback = reference.get()
