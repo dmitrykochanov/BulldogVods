@@ -7,20 +7,17 @@ import coil.decode.DataSource
 import coil.intercept.Interceptor
 import coil.request.ImageResult
 import coil.request.SuccessResult
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class AnimatedDrawableCacheInterceptor : Interceptor {
 
     private val cache = LruCache<String, Drawable>(100)
-
-    private val cacheMutex = Mutex()
+    private val cacheSynchronizer = KeyedSynchronizer<String>()
 
     override suspend fun intercept(chain: Interceptor.Chain): ImageResult {
-        cacheMutex.withLock {
-            val cacheKey = chain.request.data.toString()
+        val cacheKey = chain.request.data.toString()
+        return cacheSynchronizer.synchronizedFor(cacheKey) {
             val cachedDrawable = cache.get(cacheKey)
-            return if (cachedDrawable != null) {
+            if (cachedDrawable != null) {
                 SuccessResult(
                     drawable = cachedDrawable,
                     request = chain.request,
