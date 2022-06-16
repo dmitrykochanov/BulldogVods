@@ -34,8 +34,8 @@ query VodQuery($id: ObjectID!) {
     }
 }
 
-query ChatMessagesQuery($vodId: ObjectID!, $limit: Int!, $before: Time!, $after: Time!) {
-    messages(vod_id: $vodId, limit: $limit, before: $before, after: $after, page: 0) {
+query ChatMessagesQuery($vodId: ObjectID!, $after: Time!, $before: Time!) {
+    messages(vod_id: $vodId, after: $after, before: $before, limit: 2147483647, page: 0) {
         id
         content
         timestamp

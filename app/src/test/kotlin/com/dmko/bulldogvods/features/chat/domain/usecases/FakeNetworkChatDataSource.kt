@@ -3,7 +3,6 @@ package com.dmko.bulldogvods.features.chat.domain.usecases
 import com.dmko.bulldogvods.features.chat.data.network.datasource.NetworkChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatUser
-import com.dmko.bulldogvods.features.chat.domain.entities.GetChatMessagesRequest
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
 import io.reactivex.rxjava3.core.Single
@@ -12,11 +11,10 @@ import kotlin.time.Duration.Companion.seconds
 
 class FakeNetworkChatDataSource : NetworkChatDataSource {
 
-    override fun getChatMessages(request: GetChatMessagesRequest): Single<List<ChatMessage>> {
+    override fun getChatMessages(vodId: String, afterMillis: Long, beforeMillis: Long): Single<List<ChatMessage>> {
         val messages = listOf(MESSAGE_1, MESSAGE_2, MESSAGE_3, MESSAGE_4, MESSAGE_5)
-            .filter { it.sentAtMillis > request.afterMillis }
-            .filter { it.sentAtMillis < request.beforeMillis }
-            .take(request.limit)
+            .filter { it.sentAtMillis > afterMillis }
+            .filter { it.sentAtMillis < beforeMillis }
         return Single.just(messages)
     }
 

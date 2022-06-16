@@ -1,5 +1,7 @@
 package com.dmko.bulldogvods.features.chat.domain.usecases
 
+import com.dmko.bulldogvods.app.common.resource.map
+import com.dmko.bulldogvods.app.common.resource.unwrapResource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessageWithDrawables
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
 import com.dmko.bulldogvods.features.chat.domain.usecases.FakeNetworkChatDataSource.Companion.MESSAGE_1
@@ -20,7 +22,8 @@ class ReplayChatMessagesUseCaseTest {
     @Test
     fun `Should not return messages when playback position is not specified`() {
         val getChatMessagesUseCase = ReplayChatMessagesUseCase(
-            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            FakeNetworkChatDataSource(),
+            GetChatMessagesWithDrawablesUseCase(FakeImageLoader()),
             ChatReplayConfig()
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
@@ -36,13 +39,15 @@ class ReplayChatMessagesUseCaseTest {
     @MethodSource("provideConfigsToTest")
     fun `Should return correct messages when playback position is passed`(config: ChatReplayConfig) {
         val getChatMessagesUseCase = ReplayChatMessagesUseCase(
-            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            FakeNetworkChatDataSource(),
+            GetChatMessagesWithDrawablesUseCase(FakeImageLoader()),
             config
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .unwrapResource()
             .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
@@ -87,13 +92,15 @@ class ReplayChatMessagesUseCaseTest {
             playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = ReplayChatMessagesUseCase(
-            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            FakeNetworkChatDataSource(),
+            GetChatMessagesWithDrawablesUseCase(FakeImageLoader()),
             config
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .unwrapResource()
             .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_4.sentAtMillis - VOD.startedAtMillis)
@@ -113,13 +120,15 @@ class ReplayChatMessagesUseCaseTest {
             playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = ReplayChatMessagesUseCase(
-            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            FakeNetworkChatDataSource(),
+            GetChatMessagesWithDrawablesUseCase(FakeImageLoader()),
             config
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .unwrapResource()
             .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
@@ -139,13 +148,15 @@ class ReplayChatMessagesUseCaseTest {
             playbackPositionOffset = 0.seconds
         )
         val getChatMessagesUseCase = ReplayChatMessagesUseCase(
-            GetChatMessagesWithDrawablesUseCase(FakeNetworkChatDataSource(), FakeImageLoader()),
+            FakeNetworkChatDataSource(),
+            GetChatMessagesWithDrawablesUseCase(FakeImageLoader()),
             config
         )
         val playbackPositionSubject = PublishSubject.create<Long>()
 
         val testSubscriber = getChatMessagesUseCase
             .execute(VOD, playbackPositionSubject)
+            .unwrapResource()
             .map { messages -> messages.map(ChatMessageWithDrawables::message) }
             .test()
         playbackPositionSubject.onNext(MESSAGE_1.sentAtMillis - VOD.startedAtMillis)
@@ -162,16 +173,16 @@ class ReplayChatMessagesUseCaseTest {
         @JvmStatic
         fun provideConfigsToTest(): List<ChatReplayConfig> {
             return listOf(
-                ChatReplayConfig(pageSize = 2, historySize = 2, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 2, historySize = 3, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 2, historySize = 4, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 2, historySize = 5, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 3, historySize = 3, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 3, historySize = 4, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 3, historySize = 5, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 4, historySize = 4, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 4, historySize = 5, playbackPositionOffset = 0.seconds),
-                ChatReplayConfig(pageSize = 5, historySize = 5, playbackPositionOffset = 0.seconds)
+                ChatReplayConfig(pageSize = 2.seconds, historySize = 2.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2.seconds, historySize = 3.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2.seconds, historySize = 4.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 2.seconds, historySize = 5.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3.seconds, historySize = 3.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3.seconds, historySize = 4.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 3.seconds, historySize = 5.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 4.seconds, historySize = 4.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 4.seconds, historySize = 5.seconds, playbackPositionOffset = 0.seconds),
+                ChatReplayConfig(pageSize = 5.seconds, historySize = 5.seconds, playbackPositionOffset = 0.seconds)
             )
         }
     }

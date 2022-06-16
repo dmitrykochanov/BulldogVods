@@ -6,7 +6,6 @@ import com.apollographql.apollo3.rx3.rxSingle
 import com.dmko.bulldogvods.features.chat.data.network.mapping.MessageSchemaToChatMessageMapper
 import com.dmko.bulldogvods.features.chat.data.network.mapping.TimestampToDateStringMapper
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessage
-import com.dmko.bulldogvods.features.chat.domain.entities.GetChatMessagesRequest
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -16,12 +15,11 @@ class ApolloNetworkChatDataSource @Inject constructor(
     private val timestampToDateStringMapper: TimestampToDateStringMapper
 ) : NetworkChatDataSource {
 
-    override fun getChatMessages(request: GetChatMessagesRequest): Single<List<ChatMessage>> {
+    override fun getChatMessages(vodId: String, afterMillis: Long, beforeMillis: Long): Single<List<ChatMessage>> {
         val query = ChatMessagesQuery(
-            vodId = request.vodId,
-            limit = request.limit,
-            before = timestampToDateStringMapper.map(request.beforeMillis),
-            after = timestampToDateStringMapper.map(request.afterMillis)
+            vodId = vodId,
+            after = timestampToDateStringMapper.map(afterMillis),
+            before = timestampToDateStringMapper.map(beforeMillis)
         )
         return apolloClient.query(query)
             .rxSingle()

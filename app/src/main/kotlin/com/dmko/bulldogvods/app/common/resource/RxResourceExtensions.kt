@@ -3,6 +3,18 @@ package com.dmko.bulldogvods.app.common.resource
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 
+fun <T : Any, R : Any> Resource<T>.map(transform: (T) -> R): Resource<R> {
+    return when (this) {
+        is Resource.Loading -> this
+        is Resource.Data -> try {
+            Resource.Data(transform(this.data))
+        } catch (e: Throwable) {
+            Resource.Error(e)
+        }
+        is Resource.Error -> this
+    }
+}
+
 fun <T : Any> Single<T>.asResource(): Flowable<Resource<T>> {
     return map<Resource<T>> { data -> Resource.Data(data) }
         .onErrorReturn { throwable -> Resource.Error(throwable) }

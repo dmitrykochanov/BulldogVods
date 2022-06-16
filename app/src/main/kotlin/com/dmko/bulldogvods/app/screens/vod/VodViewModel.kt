@@ -154,6 +154,14 @@ class VodViewModel @Inject constructor(
                         onVodPlaybackStopped()
                     }
                 }
+
+                override fun onPositionDiscontinuity(
+                    oldPosition: Player.PositionInfo,
+                    newPosition: Player.PositionInfo,
+                    reason: Int
+                ) {
+                    playbackPositionSubject.onNext(exoPlayer.currentPosition)
+                }
             }
         )
     }
@@ -174,9 +182,7 @@ class VodViewModel @Inject constructor(
     private fun getChatMessagesFlowable(vod: Vod): Flowable<Resource<List<ChatMessageWithDrawables>>> {
         return refreshChatSubject.toFlowable(BackpressureStrategy.LATEST)
             .startWithItem(Unit)
-            .switchMap {
-                replayChatMessagesUseCase.execute(vod, playbackPositionSubject).asResource()
-            }
+            .switchMap { replayChatMessagesUseCase.execute(vod, playbackPositionSubject) }
     }
 
     private fun getDefaultVideoSourceUrl(vod: Vod): String {

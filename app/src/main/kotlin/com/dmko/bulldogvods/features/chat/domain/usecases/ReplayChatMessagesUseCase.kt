@@ -1,109 +1,129 @@
 package com.dmko.bulldogvods.features.chat.domain.usecases
 
+import com.dmko.bulldogvods.app.common.resource.Resource
+import com.dmko.bulldogvods.app.common.resource.asResource
+import com.dmko.bulldogvods.app.common.resource.map
+import com.dmko.bulldogvods.app.common.resource.switchMapResource
+import com.dmko.bulldogvods.features.chat.data.network.datasource.NetworkChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessageWithDrawables
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatReplayConfig
-import com.dmko.bulldogvods.features.chat.domain.entities.GetChatMessagesRequest
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
+import kotlin.math.max
+import kotlin.math.min
 
 class ReplayChatMessagesUseCase @Inject constructor(
+    private val networkChatDataSource: NetworkChatDataSource,
     private val getChatMessagesWithDrawablesUseCase: GetChatMessagesWithDrawablesUseCase,
     private val config: ChatReplayConfig
 ) {
 
-    private val initialPreloadOffsetMillis = config.initialPreloadOffset.inWholeMilliseconds
-    private val prefetchDelayMillis = config.prefetchDelay.inWholeMilliseconds
-
-    fun execute(vod: Vod, playbackPositionSubject: PublishSubject<Long>): Flowable<List<ChatMessageWithDrawables>> {
-        val loadedMessagesSubject = BehaviorSubject.createDefault<List<ChatMessageWithDrawables>>(emptyList())
-        val loadedMessagesFlowable = loadedMessagesSubject.toFlowable(BackpressureStrategy.LATEST)
+    fun execute(
+        vod: Vod,
+        playbackPositionSubject: PublishSubject<Long>
+    ): Flowable<Resource<List<ChatMessageWithDrawables>>> {
         val playbackPositionFlowable = playbackPositionSubject.toFlowable(BackpressureStrategy.LATEST)
             .distinctUntilChanged()
-            .map { playbackPosition -> playbackPosition + config.playbackPositionOffset.inWholeMilliseconds }
-        val messagesFlowable = playbackPositionFlowable
-            .concatMapSingle { playbackPosition ->
-                loadedMessagesFlowable.firstOrError()
-                    .map { loadedMessages -> clearMessagesOnSeek(vod, playbackPosition, loadedMessages) }
-                    .flatMap { loadedMessages -> loadMoreMessagesIfNeeded(vod, playbackPosition, loadedMessages) }
-                    .map { loadedMessages -> removeOutdatedMessages(vod, playbackPosition, loadedMessages) }
-                    .doOnSuccess(loadedMessagesSubject::onNext)
+            .map { playbackPosition ->
+                playbackPosition + vod.startedAtMillis + config.playbackPositionOffset.inWholeMilliseconds
             }
-        return playbackPositionFlowable.withLatestFrom(messagesFlowable) { playbackPosition, loadedMessages ->
-            getMessagesToShow(vod, playbackPosition, loadedMessages)
-        }
+        val messagesFlowable = playbackPositionFlowable
+            .scan(LongRange.EMPTY, ::updateMessagesTimeRange)
+            .skip(1)
+            .distinctUntilChanged()
+            .scan(
+                Flowable.just(emptyList<ChatMessageWithDrawables>()).asResource()
+            ) { currentMessagesFlowable, messagesTimeRange ->
+                syncTimeRangeWithCurrentMessagesFlowable(currentMessagesFlowable, messagesTimeRange, vod)
+            }
+            .skip(1)
+            .concatMap { it }
+        return Flowable.combineLatest(playbackPositionFlowable, messagesFlowable, ::filterMessagesToShow)
             .distinctUntilChanged()
     }
 
-    private fun loadMoreMessagesIfNeeded(
-        vod: Vod,
-        playbackPosition: Long,
-        currentlyLoadedMessages: List<ChatMessageWithDrawables>
+    private fun updateMessagesTimeRange(currentRange: LongRange, vodPlaybackPosition: Long): LongRange {
+        val pageSizeMillis = config.pageSize.inWholeMilliseconds
+        val prefetchDelayMillis = config.prefetchDelay.inWholeMilliseconds
+        val initialPreloadOffsetMillis = config.initialPreloadOffset.inWholeMilliseconds
+        return when {
+            currentRange.isEmpty() ||
+                    vodPlaybackPosition < currentRange.first ||
+                    vodPlaybackPosition > currentRange.last -> {
+                (vodPlaybackPosition - initialPreloadOffsetMillis)..(vodPlaybackPosition + pageSizeMillis)
+            }
+            currentRange.last - vodPlaybackPosition < prefetchDelayMillis -> {
+                val last = currentRange.last + pageSizeMillis
+                val first = max(currentRange.first, last - config.historySize.inWholeMilliseconds)
+                first..last
+            }
+            vodPlaybackPosition - currentRange.first < prefetchDelayMillis -> {
+                val first = currentRange.first - pageSizeMillis
+                val last = min(currentRange.last, first + config.historySize.inWholeMilliseconds)
+                first..last
+            }
+            else -> currentRange
+        }
+    }
+
+    private fun syncTimeRangeWithCurrentMessagesFlowable(
+        currentMessagesFlowable: Flowable<Resource<List<ChatMessageWithDrawables>>>,
+        messagesTimeRange: LongRange,
+        vod: Vod
+    ): Flowable<Resource<List<ChatMessageWithDrawables>>> {
+        return currentMessagesFlowable.switchMapResource { currentMessages ->
+            syncTimeRangeWithCurrentMessages(currentMessages, messagesTimeRange, vod)
+        }
+            .replay(1)
+            .autoConnect()
+    }
+
+    private fun syncTimeRangeWithCurrentMessages(
+        currentMessages: List<ChatMessageWithDrawables>,
+        messagesTimeRange: LongRange,
+        vod: Vod
+    ): Flowable<Resource<List<ChatMessageWithDrawables>>> {
+        val firstMessageSentAt = currentMessages.firstOrNull()?.message?.sentAtMillis
+        val lastMessageSentAt = currentMessages.lastOrNull()?.message?.sentAtMillis
+        return when {
+            firstMessageSentAt == null ||
+                    lastMessageSentAt == null ||
+                    messagesTimeRange.first > lastMessageSentAt ||
+                    messagesTimeRange.last < firstMessageSentAt -> {
+                loadMessages(vod.id, messagesTimeRange.first, messagesTimeRange.last).asResource()
+            }
+            else -> {
+                val messagesInRange = currentMessages.filter { it.message.sentAtMillis in messagesTimeRange }
+                val prependMessagesSingle = loadMessages(vod.id, messagesTimeRange.first, firstMessageSentAt - 1)
+                val appendMessagesSingle = loadMessages(vod.id, lastMessageSentAt + 1, messagesTimeRange.last)
+                Single.zip(prependMessagesSingle, appendMessagesSingle) { prependMessages, appendMessages ->
+                    prependMessages + messagesInRange + appendMessages
+                }
+                    .asResource()
+                    .filter { it !is Resource.Loading }
+            }
+        }
+    }
+
+    private fun loadMessages(
+        vodId: String,
+        afterMillis: Long,
+        beforeMillis: Long
     ): Single<List<ChatMessageWithDrawables>> {
-        requireNotNull(vod.endedAtMillis)
-        val lastLoadedMessageSentAtMillis = currentlyLoadedMessages.lastOrNull()?.message?.sentAtMillis
-        val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
-        val loadAfterMillis = when {
-            lastLoadedMessageSentAtMillis == null -> {
-                vodPlaybackPosition - initialPreloadOffsetMillis
-            }
-            lastLoadedMessageSentAtMillis - vodPlaybackPosition < prefetchDelayMillis -> {
-                lastLoadedMessageSentAtMillis + 1
-            }
-            else -> null
-        }
-        return if (loadAfterMillis != null) {
-            val request = GetChatMessagesRequest(
-                vodId = vod.id,
-                limit = config.pageSize,
-                beforeMillis = vod.endedAtMillis,
-                afterMillis = loadAfterMillis
-            )
-            getChatMessagesWithDrawablesUseCase.execute(request)
-                .map { loadedMessages -> currentlyLoadedMessages + loadedMessages }
-        } else {
-            Single.just(currentlyLoadedMessages)
-        }
+        return networkChatDataSource.getChatMessages(vodId, afterMillis, beforeMillis)
+            .flatMap(getChatMessagesWithDrawablesUseCase::execute)
     }
 
-    private fun clearMessagesOnSeek(
-        vod: Vod,
+    private fun filterMessagesToShow(
         playbackPosition: Long,
-        loadedMessages: List<ChatMessageWithDrawables>
-    ): List<ChatMessageWithDrawables> {
-        val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
-        val lastLoadedMessageSentAtMillis = loadedMessages.lastOrNull()?.message?.sentAtMillis
-        val firstLoadedMessageSentAtMillis = loadedMessages.firstOrNull()?.message?.sentAtMillis
-        return if (lastLoadedMessageSentAtMillis != null && vodPlaybackPosition > lastLoadedMessageSentAtMillis) {
-            emptyList()
-        } else if (firstLoadedMessageSentAtMillis != null && vodPlaybackPosition < firstLoadedMessageSentAtMillis) {
-            emptyList()
-        } else {
-            loadedMessages
+        loadedMessagesResource: Resource<List<ChatMessageWithDrawables>>
+    ): Resource<List<ChatMessageWithDrawables>> {
+        return loadedMessagesResource.map { loadedMessages ->
+            loadedMessages.filter { message -> message.message.sentAtMillis <= playbackPosition }
         }
-    }
-
-    private fun removeOutdatedMessages(
-        vod: Vod,
-        playbackPosition: Long,
-        loadedMessages: List<ChatMessageWithDrawables>
-    ): List<ChatMessageWithDrawables> {
-        val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
-        val historyMessages = loadedMessages.filter { message -> message.message.sentAtMillis <= vodPlaybackPosition }
-        val futureMessages = loadedMessages.filter { message -> message.message.sentAtMillis > vodPlaybackPosition }
-        return historyMessages.takeLast(config.historySize) + futureMessages
-    }
-
-    private fun getMessagesToShow(
-        vod: Vod,
-        playbackPosition: Long,
-        loadedMessages: List<ChatMessageWithDrawables>
-    ): List<ChatMessageWithDrawables> {
-        val vodPlaybackPosition = vod.startedAtMillis + playbackPosition
-        return loadedMessages.filter { message -> message.message.sentAtMillis <= vodPlaybackPosition }
     }
 }
