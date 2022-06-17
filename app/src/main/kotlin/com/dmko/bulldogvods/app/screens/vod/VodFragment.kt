@@ -63,7 +63,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
             .findViewById<ImageButton>(R.id.exo_chapters)
             .setOnClickListener { viewModel.onVodChaptersClicked() }
         binding.playerView
-            .findViewById<ImageButton>(com.google.android.exoplayer2.R.id.exo_settings)
+            .findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_settings)
             .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }
     }
 

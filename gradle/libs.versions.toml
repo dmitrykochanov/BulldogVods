@@ -10,6 +10,7 @@ androidx_paging = "3.1.1"
 androidx_room = "2.4.2"
 hilt = "2.42"
 liveEvent = "1.2.0"
+exoPlayer = "2.18.0"
 coil = "2.1.0"
 junit5Plugin = "1.8.2.0"
 junit5 = "5.8.2"
@@ -63,9 +64,12 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil_gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
 animatedWebp = "com.github.penfeizhou.android.animation:awebp:2.21.0"
 
+exoPlayer_core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoPlayer" }
+exoPlayer_ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoPlayer" }
+exoPlayer_hls = { module = "com.google.android.exoplayer:exoplayer-hls", version.ref = "exoPlayer" }
+
 okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
 liveEvent = { module = "com.github.Zhuinden:live-event", version.ref = "liveEvent" }
-exoPlayer = "com.google.android.exoplayer:exoplayer:2.17.1"
 eventBus = "org.greenrobot:eventbus:3.3.1"
 
 timber = "com.jakewharton.timber:timber:5.0.1"
@@ -85,4 +89,5 @@ androidx_room = ["androidx_room", "androidx_room_rxJava3"]
 rxJava3 = ["rxJava3", "rxJava3_rxAndroid", "rxJava3_rxKotlin"]
 apollo = ["apollo", "apollo_rxJava3"]
 coil = ["coil", "coil_gif"]
+exoPlayer = ["exoPlayer_core", "exoPlayer_ui", "exoPlayer_hls"]
 junit5 = ["junit5", "junit5_params"]

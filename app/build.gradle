@@ -79,7 +79,7 @@ dependencies {
     implementation(libs.bundles.apollo)
     implementation(libs.okhttpLoggingInterceptor)
     implementation(libs.liveEvent)
-    implementation(libs.exoPlayer)
+    implementation(libs.bundles.exoPlayer)
     implementation(libs.eventBus)
 
     implementation(libs.timber)
