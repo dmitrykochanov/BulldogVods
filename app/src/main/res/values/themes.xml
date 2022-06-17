@@ -7,6 +7,7 @@
 
         <item name="android:colorBackground">@color/aqua_haze</item>
         <item name="colorOnBackground">@color/shark</item>
+        <item name="fullscreenPlayerBackgroundColor">@color/aqua_haze</item>
 
         <item name="colorSurface">@color/aqua_haze</item>
         <item name="colorOnSurface">@color/shark</item>

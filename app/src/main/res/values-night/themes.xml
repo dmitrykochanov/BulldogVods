@@ -7,6 +7,7 @@
 
         <item name="android:colorBackground">@color/shark</item>
         <item name="colorOnBackground">@color/iron</item>
+        <item name="fullscreenPlayerBackgroundColor">@color/black</item>
 
         <item name="colorSurface">@color/shark</item>
         <item name="colorOnSurface">@color/white</item>
