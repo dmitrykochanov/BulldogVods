@@ -1,12 +1,12 @@
 {
   "name": "Untitled GraphQL Schema",
-  "schemaPath": "schema.json",
+  "schemaPath": "schema.graphqls",
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
         "url": "https://vods.admiralbulldog.live/api/gql",
         "headers": {
-          "user-agent": "JS GraphQL"
+          "user-agent": "Android GraphQL"
         },
         "introspect": false
       }

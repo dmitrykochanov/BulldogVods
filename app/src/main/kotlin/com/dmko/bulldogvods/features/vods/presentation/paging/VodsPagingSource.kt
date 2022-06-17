@@ -15,7 +15,8 @@ class VodsPagingSource(
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, VodWithPlaybackPosition>> {
         val page = params.key ?: 0
         val limit = params.loadSize
-        return getVodsWithPlaybackPositionUseCase.execute(page, limit, searchQuery)
+        val forceRefresh = params is LoadParams.Refresh || searchQuery != null
+        return getVodsWithPlaybackPositionUseCase.execute(page, limit, searchQuery, forceRefresh)
             .map<LoadResult<Int, VodWithPlaybackPosition>> { vods ->
                 LoadResult.Page(
                     data = vods,

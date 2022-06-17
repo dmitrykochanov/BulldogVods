@@ -13,8 +13,13 @@ class GetVodsWithPlaybackPositionUseCase @Inject constructor(
     private val databaseVodsDataSource: DatabaseVodsDataSource
 ) {
 
-    fun execute(page: Int, limit: Int, searchQuery: String?): Single<List<VodWithPlaybackPosition>> {
-        return networkVodsDataSource.getVods(page, limit, searchQuery)
+    fun execute(
+        page: Int,
+        limit: Int,
+        searchQuery: String?,
+        forceRefresh: Boolean
+    ): Single<List<VodWithPlaybackPosition>> {
+        return networkVodsDataSource.getVods(page, limit, searchQuery, forceRefresh)
             .flatMap(::loadVodPlaybackPositions)
     }
 

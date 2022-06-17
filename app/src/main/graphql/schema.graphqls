@@ -1,0 +1,153 @@
+type Chat {
+  id: ObjectID!
+
+  vod_id: ObjectID!
+
+  twitch: ChatTwitch!
+
+  timestamp: Time!
+
+  content: String!
+
+  badges: [ChatBadge!]!
+
+  emotes: [ChatEmote!]!
+}
+
+type ChatBadge {
+  name: String!
+
+  urls: [String!]!
+}
+
+type ChatEmote {
+  name: String!
+
+  zero_width: Boolean!
+
+  urls: [String!]!
+}
+
+type ChatTwitch {
+  id: String!
+
+  user_id: String!
+
+  login: String!
+
+  display_name: String!
+
+  color: String!
+}
+
+scalar ObjectID
+
+type Query {
+  messages("" vod_id: ObjectID!, "" limit: Int!, "" page: Int!, "" after: Time!, "" before: Time!): [Chat!]
+
+  user("" id: ObjectID!): User
+
+  vod("" id: ObjectID!): Vod
+
+  vods("" user_id: ObjectID!, "" limit: Int!, "" page: Int!, "" search: String, "" after: Time, "" before: Time): [Vod!]
+}
+
+scalar Time
+
+type User {
+  id: ObjectID!
+
+  twitch: UserTwitch!
+
+  vods("" limit: Int!, "" page: Int!, "" search: String, "" after: Time, "" before: Time): [Vod!]!
+}
+
+type UserTwitch {
+  id: String!
+
+  login: String!
+
+  display_name: String!
+
+  profile_picture: String!
+}
+
+type Vod {
+  id: ObjectID!
+
+  user_id: ObjectID!
+
+  title: String!
+
+  categories: [VodCategory!]!
+
+  state: VodState!
+
+  visibility: VodVisibility!
+
+  variants: [VodVariant!]!
+
+  started_at: Time!
+
+  ended_at: Time
+
+  thumbnails: VodThumbnails!
+
+  user: User!
+}
+
+type VodCategory {
+  timestamp: Time!
+
+  name: String!
+
+  id: String!
+
+  url: String!
+}
+
+enum VodState {
+  Live
+
+  Queued
+
+  Processing
+
+  Ready
+
+  Storage
+
+  Failed
+
+  Canceled
+}
+
+type VodThumbnails {
+  static: String!
+
+  animated: String!
+}
+
+type VodVariant {
+  name: String!
+
+  width: Int!
+
+  height: Int!
+
+  fps: Int!
+
+  bitrate: Int!
+
+  ready: Boolean!
+}
+
+enum VodVisibility {
+  Public
+
+  Deleted
+}
+
+schema {
+  query: Query
+}

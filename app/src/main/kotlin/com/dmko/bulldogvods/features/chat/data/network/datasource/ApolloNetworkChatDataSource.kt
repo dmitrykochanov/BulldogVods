@@ -2,6 +2,7 @@ package com.dmko.bulldogvods.features.chat.data.network.datasource
 
 import apollo.ChatMessagesQuery
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.doNotStore
 import com.apollographql.apollo3.rx3.rxSingle
 import com.dmko.bulldogvods.features.chat.data.network.mapping.MessageSchemaToChatMessageMapper
 import com.dmko.bulldogvods.features.chat.data.network.mapping.TimestampToDateStringMapper
@@ -22,6 +23,7 @@ class ApolloNetworkChatDataSource @Inject constructor(
             before = timestampToDateStringMapper.map(beforeMillis)
         )
         return apolloClient.query(query)
+            .doNotStore(true)
             .rxSingle()
             .map { apolloResponse -> requireNotNull(apolloResponse.data?.messages) }
             .map { chatMessages -> chatMessages.map(messageSchemaToChatMessageMapper::map) }

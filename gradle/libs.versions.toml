@@ -2,7 +2,7 @@
 kotlin = "1.7.0"
 androidPlugin = "7.2.1"
 ksp = "1.7.0-1.0.6"
-apollo = "3.1.0"
+apollo = "3.3.1"
 navComponent = "2.4.2"
 androidx_lifecycle = "2.4.1"
 androidx_datastore = "1.0.0"
@@ -59,6 +59,8 @@ rxJava3_rxKotlin = "io.reactivex.rxjava3:rxkotlin:3.0.1"
 
 apollo = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
 apollo_rxJava3 = { module = "com.apollographql.apollo3:apollo-rx3-support", version.ref = "apollo" }
+apollo_memoryCache = { module = "com.apollographql.apollo3:apollo-normalized-cache", version.ref = "apollo" }
+apollo_sqliteCache = { module = "com.apollographql.apollo3:apollo-normalized-cache-sqlite", version.ref = "apollo" }
 
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil_gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
@@ -87,7 +89,7 @@ androidx_datastore = ["androidx_datastore", "androidx_datastore_rxjava3"]
 androidx_paging = ["androidx_paging", "androidx_paging_rxJava3"]
 androidx_room = ["androidx_room", "androidx_room_rxJava3"]
 rxJava3 = ["rxJava3", "rxJava3_rxAndroid", "rxJava3_rxKotlin"]
-apollo = ["apollo", "apollo_rxJava3"]
+apollo = ["apollo", "apollo_rxJava3", "apollo_memoryCache", "apollo_sqliteCache"]
 coil = ["coil", "coil_gif"]
 exoPlayer = ["exoPlayer_core", "exoPlayer_ui", "exoPlayer_hls"]
 junit5 = ["junit5", "junit5_params"]

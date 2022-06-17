@@ -1,0 +1,2 @@
+extend type Vod @typePolicy(keyFields: "id")
+extend type Query @fieldPolicy(forField: "vod", keyArgs: "id")
