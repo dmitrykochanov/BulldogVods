@@ -4,10 +4,14 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnLayoutChangeListener
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -17,9 +21,11 @@ import com.dmko.bulldogvods.app.common.extensions.requireAppActivity
 import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessageItemsAdapter
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -50,6 +56,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         viewModel.chatMessageItemsLiveData.observe(viewLifecycleOwner) { chatMessages ->
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
+        viewModel.chatPositionLiveData.observe(viewLifecycleOwner, ::setChatPosition)
         viewModel.keepScreenOnLiveData.observe(viewLifecycleOwner, binding.playerView::setKeepScreenOn)
         viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
 
@@ -64,7 +71,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
             .setOnClickListener { viewModel.onVodChaptersClicked() }
         binding.playerView
             .findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_settings)
-            .setOnClickListener { viewModel.onVodPlaybackSettingsClicked() }
+            .setOnClickListener { viewModel.onVodSettingsClicked() }
     }
 
     private fun setupChatAutoScroll() {
@@ -91,9 +98,9 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
     private fun setupChatVisibilityToggle() {
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         if (isLandscape) {
-            binding.playerView.setOnDoubleClickListener {
-                binding.chatContainer.isVisible = !binding.chatContainer.isVisible
-            }
+            binding.playerView.setOnDoubleClickListener { viewModel.onLandscapePlayerDoubleClicked() }
+        } else {
+            binding.playerView.setOnDoubleClickListener { viewModel.onPortraitPlayerDoubleClicked() }
         }
     }
 
@@ -110,6 +117,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.playerView.player = null
+        stopSyncChatHeightWithPlayerControls()
     }
 
     private fun enterFullscreenIfLandscape() {
@@ -216,5 +224,217 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     private fun scrollChatToBottom() {
         binding.recyclerChat.scrollBy(0, Int.MAX_VALUE)
+    }
+
+    private fun setChatPosition(chatPosition: ChatPosition) {
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (isLandscape) {
+            setLandscapeChatPosition(chatPosition.landscapePosition, chatPosition.isVisibleInLandscape)
+        } else {
+            setPortraitChatPosition(chatPosition.portraitPosition, chatPosition.isVisibleInPortrait)
+        }
+    }
+
+    private fun setLandscapeChatPosition(position: ChatPosition.Landscape, isVisible: Boolean) {
+        if (isVisible) {
+            binding.chatContainer.isVisible = true
+            when (position) {
+                ChatPosition.Landscape.LEFT -> {
+                    setLandscapePlayerRight()
+                    setLandscapeChatLeft()
+                    removeChatBackground()
+                    stopSyncChatHeightWithPlayerControls()
+                }
+                ChatPosition.Landscape.RIGHT -> {
+                    setLandscapePlayerLeft()
+                    setLandscapeChatRight()
+                    removeChatBackground()
+                    stopSyncChatHeightWithPlayerControls()
+                }
+                ChatPosition.Landscape.LEFT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatLeft()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                }
+                ChatPosition.Landscape.RIGHT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatRight()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                }
+                ChatPosition.Landscape.TOP_LEFT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatLeft()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                    binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        bottomToBottom = R.id.middleChatGuideline
+                    }
+                }
+                ChatPosition.Landscape.TOP_RIGHT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatRight()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                    binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        bottomToBottom = R.id.middleChatGuideline
+                    }
+                }
+                ChatPosition.Landscape.BOTTOM_LEFT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatLeft()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                    binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        topToTop = R.id.middleChatGuideline
+                    }
+                }
+                ChatPosition.Landscape.BOTTOM_RIGHT_OVERLAY -> {
+                    setLandscapePlayerFullscreen()
+                    setLandscapeChatRight()
+                    setOverlayChatBackground()
+                    startSyncChatHeightWithPlayerControls()
+                    binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                        topToTop = R.id.middleChatGuideline
+                    }
+                }
+            }
+        } else {
+            binding.chatContainer.isVisible = false
+        }
+    }
+
+    private fun setOverlayChatBackground() {
+        val overlayChatColor = ContextCompat.getColor(requireContext(), R.color.black_50)
+        binding.chatContainer.setBackgroundColor(overlayChatColor)
+    }
+
+    private fun removeChatBackground() {
+        binding.chatContainer.setBackgroundColor(0)
+    }
+
+    private fun setLandscapePlayerFullscreen() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun setLandscapePlayerLeft() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            endToEnd = R.id.rightChatGuideline
+        }
+    }
+
+    private fun setLandscapePlayerRight() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = R.id.leftChatGuideline
+            endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun setLandscapeChatLeft() {
+        binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            endToEnd = R.id.leftChatGuideline
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun setLandscapeChatRight() {
+        binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = R.id.rightChatGuideline
+            endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun startSyncChatHeightWithPlayerControls() {
+        binding.playerView.setControllerVisibilityListener(
+            StyledPlayerView.ControllerVisibilityListener { visibility ->
+                binding.chatContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = if (visibility == View.VISIBLE) {
+                        binding.playerView
+                            .findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_bottom_bar)
+                            .height
+                    } else {
+                        0
+                    }
+                    topMargin = if (visibility == View.VISIBLE) {
+                        binding.playerView
+                            .findViewById<View>(R.id.topBarContainer)
+                            .height
+                    } else {
+                        0
+                    }
+                }
+            }
+        )
+    }
+
+    private fun stopSyncChatHeightWithPlayerControls() {
+        binding.playerView.setControllerVisibilityListener(null as StyledPlayerView.ControllerVisibilityListener?)
+        binding.chatContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = 0
+            topMargin = 0
+        }
+    }
+
+    private fun setPortraitChatPosition(position: ChatPosition.Portrait, isVisible: Boolean) {
+        if (isVisible) {
+            binding.chatContainer.isVisible = true
+            when (position) {
+                ChatPosition.Portrait.TOP -> {
+                    setPortraitChatTop()
+                    setPortraitPlayerBottom()
+                }
+                ChatPosition.Portrait.BOTTOM -> {
+                    setPortraitPlayerTop()
+                    setPortraitChatBottom()
+                }
+            }
+        } else {
+            binding.chatContainer.isVisible = false
+            binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            }
+        }
+    }
+
+    private fun setPortraitPlayerTop() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun setPortraitPlayerBottom() {
+        binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToTop = R.id.playerView
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+            topToBottom = ConstraintLayout.LayoutParams.UNSET
+        }
+    }
+
+    private fun setPortraitChatTop() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            topToTop = ConstraintLayout.LayoutParams.UNSET
+        }
+    }
+
+    private fun setPortraitChatBottom() {
+        binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            topToBottom = R.id.playerView
+            bottomToTop = ConstraintLayout.LayoutParams.UNSET
+            topToTop = ConstraintLayout.LayoutParams.UNSET
+        }
     }
 }

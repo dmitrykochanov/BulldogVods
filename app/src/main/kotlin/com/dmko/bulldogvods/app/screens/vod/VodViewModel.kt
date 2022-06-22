@@ -17,8 +17,10 @@ import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.app.screens.chapterchooser.ChapterChooserDialogEvent
-import com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogEvent
+import com.dmko.bulldogvods.app.screens.videosourcechooser.VideoSourceChooserDialogEvent
+import com.dmko.bulldogvods.features.chat.data.local.LocalChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatMessageWithDrawables
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.domain.usecases.ReplayChatMessagesUseCase
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatMessageToChatMessageItemMapper
@@ -50,6 +52,7 @@ class VodViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val networkVodsDataSource: NetworkVodsDataSource,
     private val databaseVodsDataSource: DatabaseVodsDataSource,
+    private val localChatDataSource: LocalChatDataSource,
     private val defaultVideoSourceSelector: DefaultVideoSourceSelector,
     private val schedulers: Schedulers,
     exoPlayerFactory: ExoPlayerFactory
@@ -58,7 +61,7 @@ class VodViewModel @Inject constructor(
     private val vodId = requireNotNull(savedStateHandle.get<String>(ARG_VOD_ID))
     private val exoPlayer = exoPlayerFactory.createExoPlayer()
 
-    private val vodPlaybackSettingsClickedSubject = PublishSubject.create<Unit>()
+    private val vodSettingsClickedSubject = PublishSubject.create<Unit>()
     private val playbackPositionSubject = PublishSubject.create<Long>()
     private val refreshSubject = PublishSubject.create<Unit>()
     private val refreshChatSubject = PublishSubject.create<Unit>()
@@ -71,6 +74,9 @@ class VodViewModel @Inject constructor(
 
     private val chatMessageItemsMutableLiveData = MutableLiveData<Resource<List<ChatMessageItem>>>()
     val chatMessageItemsLiveData: LiveData<Resource<List<ChatMessageItem>>> = chatMessageItemsMutableLiveData
+
+    private val chatPositionMutableLiveData = MutableLiveData<ChatPosition>()
+    val chatPositionLiveData: LiveData<ChatPosition> = chatPositionMutableLiveData
 
     private val keepScreenOnMutableLiveData = MutableLiveData<Boolean>()
     val keepScreenOnLiveData: LiveData<Boolean> = keepScreenOnMutableLiveData
@@ -117,14 +123,12 @@ class VodViewModel @Inject constructor(
             .subscribe(::onStartOffsetChanged)
             .disposeOnClear()
 
-        vodPlaybackSettingsClickedSubject.toFlowable(BackpressureStrategy.LATEST)
+        vodSettingsClickedSubject.toFlowable(BackpressureStrategy.LATEST)
             .switchMapSingle { selectedVideoSourceUrlFlowable.unwrapResource().firstOrError() }
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe { selectedVideoSourceUrl ->
-                navigationCommandDispatcher.dispatch(
-                    NavigationCommand.VodPlaybackSettings(vodId, selectedVideoSourceUrl)
-                )
+                navigationCommandDispatcher.dispatch(NavigationCommand.VodSettings(vodId, selectedVideoSourceUrl))
             }
             .disposeOnClear()
 
@@ -141,6 +145,13 @@ class VodViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(chatMessageItemsMutableLiveData::setValue)
+            .disposeOnClear()
+
+        localChatDataSource.chatPositionFlowable
+            .distinctUntilChanged()
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(chatPositionMutableLiveData::setValue)
             .disposeOnClear()
     }
 
@@ -220,12 +231,34 @@ class VodViewModel @Inject constructor(
         navigationCommandDispatcher.dispatch(NavigationCommand.Back)
     }
 
-    fun onVodPlaybackSettingsClicked() {
-        vodPlaybackSettingsClickedSubject.onNext(Unit)
+    fun onVodSettingsClicked() {
+        vodSettingsClickedSubject.onNext(Unit)
     }
 
     fun onVodChaptersClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.ChapterChooser(vodId))
+    }
+
+    fun onLandscapePlayerDoubleClicked() {
+        localChatDataSource.chatPositionFlowable
+            .firstOrError()
+            .flatMapCompletable { chatPosition ->
+                localChatDataSource.saveLandscapeChatVisibility(!chatPosition.isVisibleInLandscape)
+            }
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
+    }
+
+    fun onPortraitPlayerDoubleClicked() {
+        localChatDataSource.chatPositionFlowable
+            .firstOrError()
+            .flatMapCompletable { chatPosition ->
+                localChatDataSource.savePortraitChatVisibility(!chatPosition.isVisibleInPortrait)
+            }
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
     }
 
     fun onAutoScrollPaused() {
@@ -245,7 +278,7 @@ class VodViewModel @Inject constructor(
     }
 
     @Subscribe
-    fun onVodPlaybackSettingsDialogEvent(event: VodPlaybackSettingsDialogEvent) {
+    fun onVodPlaybackSettingsDialogEvent(event: VideoSourceChooserDialogEvent) {
         savedStateHandle.set(ARG_VIDEO_SOURCE_URL, event.selectedVideoSourceUrl)
     }
 

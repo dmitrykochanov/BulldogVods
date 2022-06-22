@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.screens.vodplaybacksettings
+package com.dmko.bulldogvods.app.screens.videosourcechooser
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 @HiltViewModel
-class VodPlaybackSettingsViewModel @Inject constructor(
+class VideoSourceChooserViewModel @Inject constructor(
     private val videoSourceToVideoSourceItemMapper: VideoSourceToVideoSourceItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
@@ -60,7 +60,7 @@ class VodPlaybackSettingsViewModel @Inject constructor(
 
     fun onVideoSourceClicked(videoSourceUrl: String) {
         navigationCommandDispatcher.dispatch(NavigationCommand.Back)
-        eventBus.post(VodPlaybackSettingsDialogEvent(videoSourceUrl))
+        eventBus.post(VideoSourceChooserDialogEvent(videoSourceUrl))
     }
 
     fun onRetryClicked() {

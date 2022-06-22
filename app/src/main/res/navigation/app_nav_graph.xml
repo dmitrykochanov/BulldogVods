@@ -41,9 +41,9 @@
     </dialog>
 
     <dialog
-        android:id="@+id/dialogVodPlaybackSettings"
-        android:name="com.dmko.bulldogvods.app.screens.vodplaybacksettings.VodPlaybackSettingsDialogFragment"
-        tools:layout="@layout/dialog_fragment_vod_playback_settings">
+        android:id="@+id/dialogVodSettings"
+        android:name="com.dmko.bulldogvods.app.screens.vodsettings.VodSettingsDialogFragment"
+        tools:layout="@layout/dialog_fragment_vod_settings">
 
         <argument
             android:name="vod_id"
@@ -53,6 +53,25 @@
             android:name="selected_video_source_url"
             app:argType="string" />
     </dialog>
+
+    <dialog
+        android:id="@+id/dialogVideoSourceChooser"
+        android:name="com.dmko.bulldogvods.app.screens.videosourcechooser.VideoSourceChooserDialogFragment"
+        tools:layout="@layout/dialog_fragment_video_source_chooser">
+
+        <argument
+            android:name="vod_id"
+            app:argType="string" />
+
+        <argument
+            android:name="selected_video_source_url"
+            app:argType="string" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/dialogChatPositionChooser"
+        android:name="com.dmko.bulldogvods.app.screens.chatpositionchooser.ChatPositionChooserDialogFragment"
+        tools:layout="@layout/dialog_fragment_chat_position_chooser" />
 
     <dialog
         android:id="@+id/dialogThemeChooser"
@@ -72,8 +91,16 @@
         app:destination="@id/dialogChapterChooser" />
 
     <action
-        android:id="@+id/actionVodPlaybackSettings"
-        app:destination="@id/dialogVodPlaybackSettings" />
+        android:id="@+id/actionVodSettings"
+        app:destination="@id/dialogVodSettings" />
+
+    <action
+        android:id="@+id/actionVideoSourceChooser"
+        app:destination="@id/dialogVideoSourceChooser" />
+
+    <action
+        android:id="@+id/actionChatPositionChooser"
+        app:destination="@id/dialogChatPositionChooser" />
 
     <action
         android:id="@+id/actionThemeChooser"

@@ -1,4 +1,4 @@
-package com.dmko.bulldogvods.app.screens.vodplaybacksettings
+package com.dmko.bulldogvods.app.screens.videosourcechooser
 
 import android.os.Bundle
 import android.view.View
@@ -8,17 +8,17 @@ import androidx.fragment.app.viewModels
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.resource.Resource
-import com.dmko.bulldogvods.databinding.DialogFragmentVodPlaybackSettingsBinding
+import com.dmko.bulldogvods.databinding.DialogFragmentVideoSourceChooserBinding
 import com.dmko.bulldogvods.features.vods.presentation.entities.VideoSourceItem
 import com.dmko.bulldogvods.features.vods.presentation.recycler.videosources.VideoSourceItemsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class VodPlaybackSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragment_vod_playback_settings) {
+class VideoSourceChooserDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragment_video_source_chooser) {
 
-    private val viewModel: VodPlaybackSettingsViewModel by viewModels()
-    private val binding by viewBinding(DialogFragmentVodPlaybackSettingsBinding::bind)
+    private val viewModel: VideoSourceChooserViewModel by viewModels()
+    private val binding by viewBinding(DialogFragmentVideoSourceChooserBinding::bind)
 
     private lateinit var videoSourceItemsAdapter: VideoSourceItemsAdapter
 

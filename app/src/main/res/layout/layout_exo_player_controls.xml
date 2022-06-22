@@ -45,6 +45,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="@color/exo_white"
             tools:text="At the major, back on monday KEKBye !nordpass" />
     </LinearLayout>
 

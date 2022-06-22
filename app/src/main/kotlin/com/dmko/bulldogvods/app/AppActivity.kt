@@ -9,19 +9,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChapterChooser
+import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChatPositionChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionSearchVods
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionThemeChooser
+import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVideoSourceChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVod
-import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVodPlaybackSettings
+import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVodSettings
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.Back
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChapterChooser
+import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChatPositionChooser
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.SearchVods
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ThemeChooser
+import com.dmko.bulldogvods.app.navigation.NavigationCommand.VideoSourceChooser
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.Vod
-import com.dmko.bulldogvods.app.navigation.NavigationCommand.VodPlaybackSettings
+import com.dmko.bulldogvods.app.navigation.NavigationCommand.VodSettings
 import com.dmko.bulldogvods.app.navigation.NavigationCommandSource
 import com.zhuinden.liveevent.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +56,9 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             is Vod -> actionVod(command.vodId, command.startOffset?.inWholeMilliseconds?.let(::LongWrapper))
             is SearchVods -> actionSearchVods()
             is ChapterChooser -> actionChapterChooser(command.vodId)
-            is VodPlaybackSettings -> actionVodPlaybackSettings(command.vodId, command.selectedVideoSourceUrl)
+            is VodSettings -> actionVodSettings(command.vodId, command.selectedVideoSourceUrl)
+            is VideoSourceChooser -> actionVideoSourceChooser(command.vodId, command.selectedVideoSourceUrl)
+            is ChatPositionChooser -> actionChatPositionChooser()
             is ThemeChooser -> actionThemeChooser()
             is Back -> {
                 findNavController(R.id.fragmentNavHost).navigateUp()

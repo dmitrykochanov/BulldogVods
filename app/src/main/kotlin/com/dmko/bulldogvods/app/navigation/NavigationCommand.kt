@@ -15,10 +15,17 @@ sealed class NavigationCommand {
         val vodId: String
     ) : NavigationCommand()
 
-    data class VodPlaybackSettings(
+    data class VodSettings(
         val vodId: String,
         val selectedVideoSourceUrl: String
     ) : NavigationCommand()
+
+    data class VideoSourceChooser(
+        val vodId: String,
+        val selectedVideoSourceUrl: String
+    ) : NavigationCommand()
+
+    object ChatPositionChooser : NavigationCommand()
 
     object ThemeChooser : NavigationCommand()
 

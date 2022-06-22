@@ -8,6 +8,7 @@
     <color name="fruit_salad">#4CAF50</color>
     <color name="iron">#E0E3E3</color>
     <color name="black">#000000</color>
+    <color name="black_50">#80000000</color>
     <color name="black_70">#B3000000</color>
     <color name="red">#FF0000</color>
     <color name="red_70">#B3FF0000</color>
