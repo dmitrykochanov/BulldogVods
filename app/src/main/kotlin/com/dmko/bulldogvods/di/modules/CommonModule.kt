@@ -1,7 +1,5 @@
 package com.dmko.bulldogvods.di.modules
 
-import com.dmko.bulldogvods.app.common.device.orientation.AndroidDeviceOrientationProvider
-import com.dmko.bulldogvods.app.common.device.orientation.DeviceOrientationProvider
 import com.dmko.bulldogvods.app.common.image.loader.CoilImageLoader
 import com.dmko.bulldogvods.app.common.image.loader.CoilImageLoaderFactory
 import com.dmko.bulldogvods.app.common.image.loader.ImageLoader
@@ -26,12 +24,6 @@ interface CommonModule {
     @Binds
     @Singleton
     fun provideSchedulers(schedulersImpl: SchedulersImpl): Schedulers
-
-    @Binds
-    @Singleton
-    fun provideDeviceOrientationProvider(
-        androidDeviceOrientationProvider: AndroidDeviceOrientationProvider
-    ): DeviceOrientationProvider
 
     companion object {
 

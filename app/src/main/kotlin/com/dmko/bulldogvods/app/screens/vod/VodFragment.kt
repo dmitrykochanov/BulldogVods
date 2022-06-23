@@ -270,7 +270,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                     setLandscapePlayerFullscreen()
                     setLandscapeChatLeft()
                     setOverlayChatBackground()
-                    startSyncChatHeightWithPlayerControls()
+                    startSyncChatHeightWithPlayerControls(syncBottom = false)
                     binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
                         bottomToBottom = R.id.middleChatGuideline
                     }
@@ -279,7 +279,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                     setLandscapePlayerFullscreen()
                     setLandscapeChatRight()
                     setOverlayChatBackground()
-                    startSyncChatHeightWithPlayerControls()
+                    startSyncChatHeightWithPlayerControls(syncBottom = false)
                     binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
                         bottomToBottom = R.id.middleChatGuideline
                     }
@@ -288,7 +288,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                     setLandscapePlayerFullscreen()
                     setLandscapeChatLeft()
                     setOverlayChatBackground()
-                    startSyncChatHeightWithPlayerControls()
+                    startSyncChatHeightWithPlayerControls(syncTop = false)
                     binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
                         topToTop = R.id.middleChatGuideline
                     }
@@ -297,7 +297,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                     setLandscapePlayerFullscreen()
                     setLandscapeChatRight()
                     setOverlayChatBackground()
-                    startSyncChatHeightWithPlayerControls()
+                    startSyncChatHeightWithPlayerControls(syncTop = false)
                     binding.chatContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
                         topToTop = R.id.middleChatGuideline
                     }
@@ -356,20 +356,20 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         }
     }
 
-    private fun startSyncChatHeightWithPlayerControls() {
+    private fun startSyncChatHeightWithPlayerControls(syncTop: Boolean = true, syncBottom: Boolean = true) {
         binding.playerView.setControllerVisibilityListener(
             StyledPlayerView.ControllerVisibilityListener { visibility ->
                 binding.chatContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = if (visibility == View.VISIBLE) {
+                    topMargin = if (syncTop && visibility == View.VISIBLE) {
                         binding.playerView
-                            .findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_bottom_bar)
+                            .findViewById<View>(R.id.topBarContainer)
                             .height
                     } else {
                         0
                     }
-                    topMargin = if (visibility == View.VISIBLE) {
+                    bottomMargin = if (syncBottom && visibility == View.VISIBLE) {
                         binding.playerView
-                            .findViewById<View>(R.id.topBarContainer)
+                            .findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_bottom_bar)
                             .height
                     } else {
                         0
