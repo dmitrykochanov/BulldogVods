@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="@dimen/icon_size_normal"
+            android:layout_height="@dimen/icon_size_normal"
+            android:layout_marginStart="@dimen/padding_large"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_settings" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:layout_marginEnd="@dimen/padding_large"
+            android:text="@string/dialog_chat_text_size_chooser_title"
+            android:textAppearance="?textAppearanceHeadlineSmall" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/smallContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/touch_target_size"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageCheckSmall"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_normal"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:contentDescription="@string/dialog_chat_text_size_chooser_check_content_description"
+                    android:src="@drawable/ic_check"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:text="@string/chat_text_size_small"
+                    android:textAppearance="?textAppearanceTitleSmall" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/normalContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/touch_target_size"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageCheckNormal"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_normal"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:contentDescription="@string/dialog_chat_text_size_chooser_check_content_description"
+                    android:src="@drawable/ic_check"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:text="@string/chat_text_size_normal"
+                    android:textAppearance="?textAppearanceTitleSmall" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/largeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/touch_target_size"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageCheckLarge"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_normal"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:contentDescription="@string/dialog_chat_text_size_chooser_check_content_description"
+                    android:src="@drawable/ic_check"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:text="@string/chat_text_size_large"
+                    android:textAppearance="?textAppearanceTitleSmall" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hugeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/touch_target_size"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageCheckHuge"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_normal"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:contentDescription="@string/dialog_chat_text_size_chooser_check_content_description"
+                    android:src="@drawable/ic_check"
+                    android:visibility="invisible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_small"
+                    android:text="@string/chat_text_size_huge"
+                    android:textAppearance="?textAppearanceTitleSmall" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_arrow_right" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

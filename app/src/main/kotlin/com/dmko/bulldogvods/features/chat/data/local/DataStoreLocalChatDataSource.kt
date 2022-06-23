@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
+import com.dmko.bulldogvods.features.chat.domain.entities.ChatTextSize
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -46,6 +47,21 @@ class DataStoreLocalChatDataSource @Inject constructor(
                     isVisibleInLandscape = prefs[KEY_LANDSCAPE_VISIBILITY] ?: true,
                     isVisibleInPortrait = prefs[KEY_PORTRAIT_VISIBILITY] ?: true
                 )
+            }
+        }
+
+    override val chatTextSizeFlowable: Flowable<ChatTextSize>
+        get() {
+            return dataStore.data().map { prefs ->
+                val textSizeValue = prefs[KEY_TEXT_SIZE]
+                when (textSizeValue) {
+                    VALUE_TEXT_SIZE_SMALL -> ChatTextSize.SMALL
+                    VALUE_TEXT_SIZE_NORMAL -> ChatTextSize.NORMAL
+                    VALUE_TEXT_SIZE_LARGE -> ChatTextSize.LARGE
+                    VALUE_TEXT_SIZE_HUGE -> ChatTextSize.HUGE
+                    null -> ChatTextSize.NORMAL
+                    else -> throw IllegalStateException("Unknown text size value $textSizeValue")
+                }
             }
         }
 
@@ -97,6 +113,20 @@ class DataStoreLocalChatDataSource @Inject constructor(
             .ignoreElement()
     }
 
+    override fun saveChatTextSize(size: ChatTextSize): Completable {
+        return dataStore.updateDataAsync { prefs ->
+            val mutablePrefs = prefs.toMutablePreferences()
+            mutablePrefs[KEY_TEXT_SIZE] = when (size) {
+                ChatTextSize.SMALL -> VALUE_TEXT_SIZE_SMALL
+                ChatTextSize.NORMAL -> VALUE_TEXT_SIZE_NORMAL
+                ChatTextSize.LARGE -> VALUE_TEXT_SIZE_LARGE
+                ChatTextSize.HUGE -> VALUE_TEXT_SIZE_HUGE
+            }
+            Single.just(mutablePrefs)
+        }
+            .ignoreElement()
+    }
+
     private companion object {
 
         private const val CHAT_PREFERENCES_NAME = "chat"
@@ -113,9 +143,15 @@ class DataStoreLocalChatDataSource @Inject constructor(
         private const val VALUE_PORTRAIT_POSITION_TOP = "top"
         private const val VALUE_PORTRAIT_POSITION_BOTTOM = "bottom"
 
+        private const val VALUE_TEXT_SIZE_SMALL = "small"
+        private const val VALUE_TEXT_SIZE_NORMAL = "normal"
+        private const val VALUE_TEXT_SIZE_LARGE = "large"
+        private const val VALUE_TEXT_SIZE_HUGE = "huge"
+
         private val KEY_LANDSCAPE_POSITION = stringPreferencesKey("landscape_position")
         private val KEY_PORTRAIT_POSITION = stringPreferencesKey("portrait_position")
         private val KEY_LANDSCAPE_VISIBILITY = booleanPreferencesKey("landscape_visibility")
         private val KEY_PORTRAIT_VISIBILITY = booleanPreferencesKey("portrait_visibility")
+        private val KEY_TEXT_SIZE = stringPreferencesKey("text_size")
     }
 }

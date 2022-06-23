@@ -27,6 +27,8 @@ sealed class NavigationCommand {
 
     object ChatPositionChooser : NavigationCommand()
 
+    object ChatTextSizeChooser : NavigationCommand()
+
     object ThemeChooser : NavigationCommand()
 
     object Back : NavigationCommand()

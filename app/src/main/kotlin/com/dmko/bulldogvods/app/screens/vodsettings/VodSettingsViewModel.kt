@@ -10,6 +10,7 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.chat.data.local.LocalChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatPositionToStringMapper
+import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatTextSIzeToStringMapper
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VideoSourceToVideoSourceNameMapper
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VodSettingsViewModel @Inject constructor(
     private val videoSourceToVideoSourceNameMapper: VideoSourceToVideoSourceNameMapper,
+    private val chatTextSIzeToStringMapper: ChatTextSIzeToStringMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     chatPositionToStringMapper: ChatPositionToStringMapper,
     schedulers: Schedulers,
@@ -38,6 +40,9 @@ class VodSettingsViewModel @Inject constructor(
 
     private val portraitChatPositionMutableLiveData = MutableLiveData<Int>()
     val portraitChatPositionLiveData: LiveData<Int> = portraitChatPositionMutableLiveData
+
+    private val selectedChatTextSizeMutableLiveData = MutableLiveData<Int>()
+    val selectedChatTextSizeLiveData: LiveData<Int> = selectedChatTextSizeMutableLiveData
 
     init {
         networkVodsDataSource.getVod(vodId)
@@ -63,6 +68,13 @@ class VodSettingsViewModel @Inject constructor(
             .observeOn(schedulers.ui)
             .subscribe(portraitChatPositionMutableLiveData::setValue)
             .disposeOnClear()
+
+        localChatDataSource.chatTextSizeFlowable
+            .map(chatTextSIzeToStringMapper::map)
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(selectedChatTextSizeMutableLiveData::setValue)
+            .disposeOnClear()
     }
 
     private fun getSelectedVideoSourceName(vod: Vod): String {
@@ -78,6 +90,11 @@ class VodSettingsViewModel @Inject constructor(
     fun onChatPositionClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.Back)
         navigationCommandDispatcher.dispatch(NavigationCommand.ChatPositionChooser)
+    }
+
+    fun onChatTextSizeClicked() {
+        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
+        navigationCommandDispatcher.dispatch(NavigationCommand.ChatTextSizeChooser)
     }
 
     private companion object {

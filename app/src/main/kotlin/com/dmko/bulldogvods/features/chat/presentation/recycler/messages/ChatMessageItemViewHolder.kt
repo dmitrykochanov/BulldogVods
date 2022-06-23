@@ -8,7 +8,8 @@ class ChatMessageItemViewHolder(
     val binding: ListItemChatMessageBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bindChatMessageItem(chatMessageItem: ChatMessageItem) {
+    fun bindChatMessageItem(chatMessageItem: ChatMessageItem, textSizeSp: Float) {
+        binding.messageTextView.textSize = textSizeSp
         binding.messageTextView.text = chatMessageItem.text
     }
 }

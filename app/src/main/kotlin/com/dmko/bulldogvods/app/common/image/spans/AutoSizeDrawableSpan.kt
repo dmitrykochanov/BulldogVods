@@ -45,20 +45,14 @@ class AutoSizeDrawableSpan(
     }
 
     private fun setDrawableBoundsIfNeeded(fontMetrics: Paint.FontMetricsInt) {
-        if (!drawable.isBoundsInitialized()) {
-            val lineHeight = (fontMetrics.bottom - fontMetrics.top)
-            val drawableAspectRatio = drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight
-            val calculatedDrawableWidth = (lineHeight * drawableAspectRatio).toInt()
-            drawable.updateBounds(
-                left = 0,
-                top = 0,
-                right = calculatedDrawableWidth,
-                bottom = lineHeight
-            )
-        }
-    }
-
-    private fun Drawable.isBoundsInitialized(): Boolean {
-        return bounds.left != 0 || bounds.right != 0 || bounds.top != 0 || bounds.bottom != 0
+        val lineHeight = (fontMetrics.bottom - fontMetrics.top)
+        val drawableAspectRatio = drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight
+        val calculatedDrawableWidth = (lineHeight * drawableAspectRatio).toInt()
+        drawable.updateBounds(
+            left = 0,
+            top = 0,
+            right = calculatedDrawableWidth,
+            bottom = lineHeight
+        )
     }
 }

@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChapterChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChatPositionChooser
+import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionChatTextSizeChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionSearchVods
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionThemeChooser
 import com.dmko.bulldogvods.AppNavGraphDirections.Companion.actionVideoSourceChooser
@@ -21,6 +22,7 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.Back
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChapterChooser
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChatPositionChooser
+import com.dmko.bulldogvods.app.navigation.NavigationCommand.ChatTextSizeChooser
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.SearchVods
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.ThemeChooser
 import com.dmko.bulldogvods.app.navigation.NavigationCommand.VideoSourceChooser
@@ -59,6 +61,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             is VodSettings -> actionVodSettings(command.vodId, command.selectedVideoSourceUrl)
             is VideoSourceChooser -> actionVideoSourceChooser(command.vodId, command.selectedVideoSourceUrl)
             is ChatPositionChooser -> actionChatPositionChooser()
+            is ChatTextSizeChooser -> actionChatTextSizeChooser()
             is ThemeChooser -> actionThemeChooser()
             is Back -> {
                 findNavController(R.id.fragmentNavHost).navigateUp()

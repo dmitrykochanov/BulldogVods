@@ -57,6 +57,9 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
         viewModel.chatPositionLiveData.observe(viewLifecycleOwner, ::setChatPosition)
+        viewModel.chatTextSizeSpLiveData.observe(viewLifecycleOwner) { size ->
+            chatMessageItemsAdapter.textSizeSp = size
+        }
         viewModel.keepScreenOnLiveData.observe(viewLifecycleOwner, binding.playerView::setKeepScreenOn)
         viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
 

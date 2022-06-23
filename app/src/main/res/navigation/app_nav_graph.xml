@@ -74,6 +74,11 @@
         tools:layout="@layout/dialog_fragment_chat_position_chooser" />
 
     <dialog
+        android:id="@+id/dialogChatTextSizeChooser"
+        android:name="com.dmko.bulldogvods.app.screens.chattextsizechooser.ChatTextSizeChooserDialogFragment"
+        tools:layout="@layout/dialog_fragment_chat_text_size_chooser" />
+
+    <dialog
         android:id="@+id/dialogThemeChooser"
         android:name="com.dmko.bulldogvods.app.screens.themechooser.ThemeChooserDialogFragment"
         tools:layout="@layout/dialog_fragment_theme_chooser" />
@@ -101,6 +106,10 @@
     <action
         android:id="@+id/actionChatPositionChooser"
         app:destination="@id/dialogChatPositionChooser" />
+
+    <action
+        android:id="@+id/actionChatTextSizeChooser"
+        app:destination="@id/dialogChatTextSizeChooser" />
 
     <action
         android:id="@+id/actionThemeChooser"

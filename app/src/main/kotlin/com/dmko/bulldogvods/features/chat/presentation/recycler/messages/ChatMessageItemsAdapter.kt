@@ -14,6 +14,12 @@ class ChatMessageItemsAdapter : ListAdapter<ChatMessageItem, ChatMessageItemView
 
     private val drawableCallbacksMap = hashMapOf<Drawable, DrawableMultiCallback>()
 
+    var textSizeSp: Float = DEFAULT_TEXT_SIZE
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemChatMessageBinding.inflate(inflater, parent, false)
@@ -22,7 +28,7 @@ class ChatMessageItemsAdapter : ListAdapter<ChatMessageItem, ChatMessageItemView
 
     override fun onBindViewHolder(holder: ChatMessageItemViewHolder, position: Int) {
         val chatMessageItem = requireNotNull(getItem(position))
-        holder.bindChatMessageItem(chatMessageItem)
+        holder.bindChatMessageItem(chatMessageItem, textSizeSp)
         holder.binding.messageTextView.startAnimations(chatMessageItem.animatedDrawables)
     }
 
@@ -49,5 +55,10 @@ class ChatMessageItemsAdapter : ListAdapter<ChatMessageItem, ChatMessageItemView
             }
         }
         drawableCallbacksMap.entries.removeAll { it.value.viewCount == 0 }
+    }
+
+    private companion object {
+
+        private const val DEFAULT_TEXT_SIZE = 14f
     }
 }

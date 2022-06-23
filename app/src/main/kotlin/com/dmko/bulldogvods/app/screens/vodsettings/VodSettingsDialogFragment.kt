@@ -19,6 +19,7 @@ class VodSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragme
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.videoSourceChooserContainer.setOnClickListener { viewModel.onVideoSourceClicked() }
         binding.chatPositionChooserContainer.setOnClickListener { viewModel.onChatPositionClicked() }
+        binding.chatTextSizeChooserContainer.setOnClickListener { viewModel.onChatTextSizeClicked() }
 
         viewModel.selectedVideoSourceNameLiveData.observe(
             viewLifecycleOwner,
@@ -36,5 +37,6 @@ class VodSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragme
                 binding.selectedChatPositionText::setText
             )
         }
+        viewModel.selectedChatTextSizeLiveData.observe(viewLifecycleOwner, binding.selectedChatTextSizeText::setText)
     }
 }
