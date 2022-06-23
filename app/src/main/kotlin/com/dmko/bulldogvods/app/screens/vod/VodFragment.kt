@@ -60,6 +60,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         viewModel.chatTextSizeSpLiveData.observe(viewLifecycleOwner) { size ->
             chatMessageItemsAdapter.textSizeSp = size
         }
+        viewModel.chatWidthPercentageLiveData.observe(viewLifecycleOwner, ::setChatWidthPercentage)
         viewModel.keepScreenOnLiveData.observe(viewLifecycleOwner, binding.playerView::setKeepScreenOn)
         viewModel.isAutoScrollPausedLiveData.observe(viewLifecycleOwner, ::onAutoScrollStateChanged)
 
@@ -439,5 +440,11 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
             bottomToTop = ConstraintLayout.LayoutParams.UNSET
             topToTop = ConstraintLayout.LayoutParams.UNSET
         }
+    }
+
+    private fun setChatWidthPercentage(widthPercentage: Float) {
+        val widthRation = widthPercentage / 100
+        binding.leftChatGuideline?.setGuidelinePercent(widthRation)
+        binding.rightChatGuideline?.setGuidelinePercent(1 - widthRation)
     }
 }

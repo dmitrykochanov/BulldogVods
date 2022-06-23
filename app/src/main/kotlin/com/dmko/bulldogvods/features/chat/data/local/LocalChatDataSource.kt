@@ -11,6 +11,8 @@ interface LocalChatDataSource {
 
     val chatTextSizeFlowable: Flowable<ChatTextSize>
 
+    val chatWidthPercentageFlowable: Flowable<Float>
+
     fun saveLandscapeChatPosition(position: ChatPosition.Landscape): Completable
 
     fun savePortraitChatPosition(position: ChatPosition.Portrait): Completable
@@ -20,4 +22,6 @@ interface LocalChatDataSource {
     fun savePortraitChatVisibility(isVisible: Boolean): Completable
 
     fun saveChatTextSize(size: ChatTextSize): Completable
+
+    fun saveChatWidthPercentage(widthPercentage: Float): Completable
 }

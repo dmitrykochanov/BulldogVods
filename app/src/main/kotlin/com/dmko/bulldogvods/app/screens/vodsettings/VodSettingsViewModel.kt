@@ -22,10 +22,10 @@ class VodSettingsViewModel @Inject constructor(
     private val videoSourceToVideoSourceNameMapper: VideoSourceToVideoSourceNameMapper,
     private val chatTextSIzeToStringMapper: ChatTextSIzeToStringMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
+    private val localChatDataSource: LocalChatDataSource,
+    private val schedulers: Schedulers,
     chatPositionToStringMapper: ChatPositionToStringMapper,
-    schedulers: Schedulers,
     networkVodsDataSource: NetworkVodsDataSource,
-    localChatDataSource: LocalChatDataSource,
     savedStateHandle: SavedStateHandle,
 ) : RxViewModel() {
 
@@ -43,6 +43,9 @@ class VodSettingsViewModel @Inject constructor(
 
     private val selectedChatTextSizeMutableLiveData = MutableLiveData<Int>()
     val selectedChatTextSizeLiveData: LiveData<Int> = selectedChatTextSizeMutableLiveData
+
+    private val selectedChatWidthMutableLiveData = MutableLiveData<Float>()
+    val selectedChatWidthLiveData: LiveData<Float> = selectedChatWidthMutableLiveData
 
     init {
         networkVodsDataSource.getVod(vodId)
@@ -75,6 +78,13 @@ class VodSettingsViewModel @Inject constructor(
             .observeOn(schedulers.ui)
             .subscribe(selectedChatTextSizeMutableLiveData::setValue)
             .disposeOnClear()
+
+        localChatDataSource.chatWidthPercentageFlowable
+            .distinctUntilChanged()
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(selectedChatWidthMutableLiveData::setValue)
+            .disposeOnClear()
     }
 
     private fun getSelectedVideoSourceName(vod: Vod): String {
@@ -95,6 +105,13 @@ class VodSettingsViewModel @Inject constructor(
     fun onChatTextSizeClicked() {
         navigationCommandDispatcher.dispatch(NavigationCommand.Back)
         navigationCommandDispatcher.dispatch(NavigationCommand.ChatTextSizeChooser)
+    }
+
+    fun onChatWidthSelected(chatWidth: Float) {
+        localChatDataSource.saveChatWidthPercentage(chatWidth)
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
     }
 
     private companion object {

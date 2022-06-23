@@ -2,6 +2,7 @@ package com.dmko.bulldogvods.features.chat.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
@@ -62,6 +63,13 @@ class DataStoreLocalChatDataSource @Inject constructor(
                     null -> ChatTextSize.NORMAL
                     else -> throw IllegalStateException("Unknown text size value $textSizeValue")
                 }
+            }
+        }
+
+    override val chatWidthPercentageFlowable: Flowable<Float>
+        get() {
+            return dataStore.data().map { prefs ->
+                prefs[KEY_WIDTH] ?: DEFAULT_WIDTH_PERCENTAGE
             }
         }
 
@@ -127,6 +135,15 @@ class DataStoreLocalChatDataSource @Inject constructor(
             .ignoreElement()
     }
 
+    override fun saveChatWidthPercentage(widthPercentage: Float): Completable {
+        return dataStore.updateDataAsync { prefs ->
+            val mutablePrefs = prefs.toMutablePreferences()
+            mutablePrefs[KEY_WIDTH] = widthPercentage
+            Single.just(mutablePrefs)
+        }
+            .ignoreElement()
+    }
+
     private companion object {
 
         private const val CHAT_PREFERENCES_NAME = "chat"
@@ -148,10 +165,13 @@ class DataStoreLocalChatDataSource @Inject constructor(
         private const val VALUE_TEXT_SIZE_LARGE = "large"
         private const val VALUE_TEXT_SIZE_HUGE = "huge"
 
+        private const val DEFAULT_WIDTH_PERCENTAGE = 25f
+
         private val KEY_LANDSCAPE_POSITION = stringPreferencesKey("landscape_position")
         private val KEY_PORTRAIT_POSITION = stringPreferencesKey("portrait_position")
         private val KEY_LANDSCAPE_VISIBILITY = booleanPreferencesKey("landscape_visibility")
         private val KEY_PORTRAIT_VISIBILITY = booleanPreferencesKey("portrait_visibility")
         private val KEY_TEXT_SIZE = stringPreferencesKey("text_size")
+        private val KEY_WIDTH = floatPreferencesKey("width")
     }
 }

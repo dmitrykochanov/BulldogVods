@@ -83,6 +83,9 @@ class VodViewModel @Inject constructor(
     private val chatTextSizeSpMutableLiveData = MutableLiveData<Float>()
     val chatTextSizeSpLiveData: LiveData<Float> = chatTextSizeSpMutableLiveData
 
+    private val chatWidthPercentageMutableLiveData = MutableLiveData<Float>()
+    val chatWidthPercentageLiveData: LiveData<Float> = chatWidthPercentageMutableLiveData
+
     private val keepScreenOnMutableLiveData = MutableLiveData<Boolean>()
     val keepScreenOnLiveData: LiveData<Boolean> = keepScreenOnMutableLiveData
 
@@ -165,6 +168,13 @@ class VodViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(chatTextSizeSpMutableLiveData::setValue)
+            .disposeOnClear()
+
+        localChatDataSource.chatWidthPercentageFlowable
+            .distinctUntilChanged()
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(chatWidthPercentageMutableLiveData::setValue)
             .disposeOnClear()
     }
 
