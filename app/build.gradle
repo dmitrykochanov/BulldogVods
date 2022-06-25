@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.parcelize)
     alias(libs.plugins.apollo)
     alias(libs.plugins.navComponentSafeArgs)
-    alias(libs.plugins.junit5)
     id "dagger.hilt.android.plugin"
 }
 
@@ -84,9 +83,6 @@ dependencies {
 
     implementation(libs.timber)
     implementation(libs.sentry)
-
-    testImplementation(libs.bundles.junit5)
-    testRuntimeOnly(libs.junit5.engine)
 
     coreLibraryDesugaring(libs.desugarJdkLibs)
 }

@@ -12,8 +12,6 @@ hilt = "2.42"
 liveEvent = "1.2.0"
 exoPlayer = "2.18.0"
 coil = "2.1.0"
-junit5Plugin = "1.8.2.0"
-junit5 = "5.8.2"
 
 [plugins]
 android = { id = "com.android.application", version.ref = "androidPlugin" }
@@ -23,7 +21,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
 navComponentSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navComponent" }
-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5Plugin" }
 
 [libraries]
 material = "com.google.android.material:material:1.6.0"
@@ -76,10 +73,6 @@ eventBus = "org.greenrobot:eventbus:3.3.1"
 timber = "com.jakewharton.timber:timber:5.0.1"
 sentry = "io.sentry:sentry-android:5.7.4"
 
-junit5 = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
-junit5_params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
-junit5_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
-
 desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.1.5"
 
 [bundles]
@@ -91,4 +84,3 @@ rxJava3 = ["rxJava3", "rxJava3_rxAndroid", "rxJava3_rxKotlin"]
 apollo = ["apollo", "apollo_rxJava3", "apollo_memoryCache"]
 coil = ["coil", "coil_gif"]
 exoPlayer = ["exoPlayer_core", "exoPlayer_ui", "exoPlayer_hls"]
-junit5 = ["junit5", "junit5_params"]

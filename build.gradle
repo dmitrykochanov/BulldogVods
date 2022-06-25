@@ -12,7 +12,6 @@ plugins {
     alias(libs.plugins.parcelize) apply false
     alias(libs.plugins.apollo) apply false
     alias(libs.plugins.navComponentSafeArgs) apply false
-    alias(libs.plugins.junit5) apply false
 }
 
 task clean(type: Delete) {
