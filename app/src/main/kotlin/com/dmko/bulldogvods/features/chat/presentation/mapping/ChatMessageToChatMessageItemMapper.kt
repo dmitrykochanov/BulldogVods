@@ -33,7 +33,7 @@ class ChatMessageToChatMessageItemMapper @Inject constructor() {
             val badgeDrawable = messageWithDrawables.drawables[badge.url]
             if (badgeDrawable != null) {
                 inSpans(AutoSizeDrawableSpan(badgeDrawable)) {
-                    append(" ")
+                    append(BADGE_PLACEHOLDER)
                 }
                 append(" ")
             }
@@ -74,5 +74,6 @@ class ChatMessageToChatMessageItemMapper @Inject constructor() {
     private companion object {
 
         private const val DEFAULT_USER_NAME_COLOR = "#DAA520"
+        private const val BADGE_PLACEHOLDER = "badge"
     }
 }
