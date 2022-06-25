@@ -5,13 +5,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.dmko.bulldogvods.app.common.extensions.getFlowable
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.app.common.resource.asResource
 import com.dmko.bulldogvods.app.common.resource.mapResource
 import com.dmko.bulldogvods.app.common.resource.switchMapResource
 import com.dmko.bulldogvods.app.common.resource.unwrapResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
-import com.dmko.bulldogvods.app.common.rx.getFlowable
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
 import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand

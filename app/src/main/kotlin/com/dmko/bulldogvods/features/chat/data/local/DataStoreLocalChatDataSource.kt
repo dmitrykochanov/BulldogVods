@@ -5,12 +5,12 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
+import com.dmko.bulldogvods.app.common.extensions.updateData
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatTextSize
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -74,9 +74,8 @@ class DataStoreLocalChatDataSource @Inject constructor(
         }
 
     override fun saveLandscapeChatPosition(position: ChatPosition.Landscape): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_LANDSCAPE_POSITION] = when (position) {
+        return dataStore.updateData { prefs ->
+            prefs[KEY_LANDSCAPE_POSITION] = when (position) {
                 ChatPosition.Landscape.LEFT -> VALUE_LANDSCAPE_POSITION_LEFT
                 ChatPosition.Landscape.RIGHT -> VALUE_LANDSCAPE_POSITION_RIGHT
                 ChatPosition.Landscape.LEFT_OVERLAY -> VALUE_LANDSCAPE_POSITION_LEFT_OVERLAY
@@ -86,62 +85,45 @@ class DataStoreLocalChatDataSource @Inject constructor(
                 ChatPosition.Landscape.BOTTOM_LEFT_OVERLAY -> VALUE_LANDSCAPE_POSITION_BOTTOM_LEFT_OVERLAY
                 ChatPosition.Landscape.BOTTOM_RIGHT_OVERLAY -> VALUE_LANDSCAPE_POSITION_BOTTOM_RIGHT_OVERLAY
             }
-            Single.just(mutablePrefs)
         }
-            .ignoreElement()
     }
 
     override fun savePortraitChatPosition(position: ChatPosition.Portrait): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_PORTRAIT_POSITION] = when (position) {
+        return dataStore.updateData { prefs ->
+            prefs[KEY_PORTRAIT_POSITION] = when (position) {
                 ChatPosition.Portrait.TOP -> VALUE_PORTRAIT_POSITION_TOP
                 ChatPosition.Portrait.BOTTOM -> VALUE_PORTRAIT_POSITION_BOTTOM
             }
-            Single.just(mutablePrefs)
         }
-            .ignoreElement()
     }
 
     override fun saveLandscapeChatVisibility(isVisible: Boolean): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_LANDSCAPE_VISIBILITY] = isVisible
-            Single.just(mutablePrefs)
+        return dataStore.updateData { prefs ->
+            prefs[KEY_LANDSCAPE_VISIBILITY] = isVisible
         }
-            .ignoreElement()
     }
 
     override fun savePortraitChatVisibility(isVisible: Boolean): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_PORTRAIT_VISIBILITY] = isVisible
-            Single.just(mutablePrefs)
+        return dataStore.updateData { prefs ->
+            prefs[KEY_PORTRAIT_VISIBILITY] = isVisible
         }
-            .ignoreElement()
     }
 
     override fun saveChatTextSize(size: ChatTextSize): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_TEXT_SIZE] = when (size) {
+        return dataStore.updateData { prefs ->
+            prefs[KEY_TEXT_SIZE] = when (size) {
                 ChatTextSize.SMALL -> VALUE_TEXT_SIZE_SMALL
                 ChatTextSize.NORMAL -> VALUE_TEXT_SIZE_NORMAL
                 ChatTextSize.LARGE -> VALUE_TEXT_SIZE_LARGE
                 ChatTextSize.HUGE -> VALUE_TEXT_SIZE_HUGE
             }
-            Single.just(mutablePrefs)
         }
-            .ignoreElement()
     }
 
     override fun saveChatWidthPercentage(widthPercentage: Float): Completable {
-        return dataStore.updateDataAsync { prefs ->
-            val mutablePrefs = prefs.toMutablePreferences()
-            mutablePrefs[KEY_WIDTH] = widthPercentage
-            Single.just(mutablePrefs)
+        return dataStore.updateData { prefs ->
+            prefs[KEY_WIDTH] = widthPercentage
         }
-            .ignoreElement()
     }
 
     private companion object {
