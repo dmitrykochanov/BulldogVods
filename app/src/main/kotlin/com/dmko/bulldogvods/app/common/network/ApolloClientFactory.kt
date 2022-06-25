@@ -8,6 +8,7 @@ import com.dmko.bulldogvods.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ApolloClientFactory @Inject constructor() {
@@ -19,12 +20,15 @@ class ApolloClientFactory @Inject constructor() {
         } else {
             Level.HEADERS
         }
-        val loggingOkHttpClient = OkHttpClient.Builder()
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+            .writeTimeout(WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+            .readTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
             .addInterceptor(loggingInterceptor)
             .build()
         return ApolloClient.Builder()
             .serverUrl(BASE_URL)
-            .okHttpClient(loggingOkHttpClient)
+            .okHttpClient(okHttpClient)
             .normalizedCache(MemoryCacheFactory(maxSizeBytes = MEMORY_CACHE_SIZE_BYTES))
             .build()
     }
@@ -33,5 +37,9 @@ class ApolloClientFactory @Inject constructor() {
 
         private const val BASE_URL = "https://vods.admiralbulldog.live/api/gql"
         private const val MEMORY_CACHE_SIZE_BYTES = 10 * 1024 * 1024
+
+        private const val CONNECT_TIMEOUT_MILLIS = 30_000L
+        private const val READ_TIMEOUT_MILLIS = 30_000L
+        private const val WRITE_TIMEOUT_MILLIS = 30_000L
     }
 }
