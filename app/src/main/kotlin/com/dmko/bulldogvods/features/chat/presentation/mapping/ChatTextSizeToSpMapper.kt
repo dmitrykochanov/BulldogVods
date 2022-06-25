@@ -10,7 +10,7 @@ class ChatTextSizeToSpMapper @Inject constructor() {
             ChatTextSize.SMALL -> 11f
             ChatTextSize.NORMAL -> 14f
             ChatTextSize.LARGE -> 16f
-            ChatTextSize.HUGE -> 20f
+            ChatTextSize.HUGE -> 18f
         }
     }
 }
