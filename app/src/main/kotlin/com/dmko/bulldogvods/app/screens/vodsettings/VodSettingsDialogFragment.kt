@@ -11,6 +11,7 @@ import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.setOnStopTrackingTouchListener
 import com.dmko.bulldogvods.databinding.DialogFragmentVodSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class VodSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragment_vod_settings) {
@@ -23,6 +24,7 @@ class VodSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragme
         binding.chatPositionChooserContainer.setOnClickListener { viewModel.onChatPositionClicked() }
         binding.chatTextSizeChooserContainer.setOnClickListener { viewModel.onChatTextSizeClicked() }
         binding.chatSizeSlider.setOnStopTrackingTouchListener(viewModel::onChatWidthSelected)
+        binding.chatSizeSlider.setLabelFormatter(::formatChatWidthSliderValue)
 
         viewModel.selectedVideoSourceNameLiveData.observe(
             viewLifecycleOwner,
@@ -43,5 +45,9 @@ class VodSettingsDialogFragment : AppCompatDialogFragment(R.layout.dialog_fragme
         }
         viewModel.selectedChatTextSizeLiveData.observe(viewLifecycleOwner, binding.selectedChatTextSizeText::setText)
         viewModel.selectedChatWidthLiveData.observe(viewLifecycleOwner, binding.chatSizeSlider::setValue)
+    }
+
+    private fun formatChatWidthSliderValue(value: Float): String {
+        return requireContext().getString(R.string.dialog_vod_settings_chat_width_value_percentage, value.roundToInt())
     }
 }
