@@ -9,7 +9,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.requireAppActivity
+import com.dmko.bulldogvods.app.common.extensions.resolveColor
 import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
@@ -311,7 +311,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
     }
 
     private fun setOverlayChatBackground() {
-        val overlayChatColor = ContextCompat.getColor(requireContext(), R.color.black_50)
+        val overlayChatColor = requireContext().resolveColor(R.attr.overlayChatBackgroundColor)
         binding.chatContainer.setBackgroundColor(overlayChatColor)
     }
 

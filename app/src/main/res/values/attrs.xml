@@ -2,4 +2,5 @@
 <resources>
 
     <attr name="fullscreenPlayerBackgroundColor" format="reference" />
+    <attr name="overlayChatBackgroundColor" format="reference" />
 </resources>

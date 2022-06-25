@@ -1,10 +1,14 @@
 package com.dmko.bulldogvods.app.common.extensions
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
@@ -13,6 +17,13 @@ import com.google.android.material.slider.Slider
 
 fun Fragment.requireAppActivity(): AppActivity {
     return requireActivity() as AppActivity
+}
+
+@ColorInt
+fun Context.resolveColor(@AttrRes colorAttr: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(colorAttr, typedValue, true)
+    return ContextCompat.getColor(this, typedValue.resourceId)
 }
 
 @ColorInt
