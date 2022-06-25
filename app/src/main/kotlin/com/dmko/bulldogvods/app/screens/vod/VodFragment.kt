@@ -305,6 +305,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 }
             }
         } else {
+            setLandscapePlayerFullscreen()
             binding.chatContainer.isVisible = false
         }
     }
@@ -402,17 +403,21 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
                 }
             }
         } else {
+            setPortraitPlayerMiddle()
             binding.chatContainer.isVisible = false
-            binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            }
         }
     }
 
     private fun setPortraitPlayerTop() {
         binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+    }
+
+    private fun setPortraitPlayerMiddle() {
+        binding.playerView.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
             topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         }
     }
