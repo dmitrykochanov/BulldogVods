@@ -123,51 +123,39 @@
         android:id="@+id/chatTextSizeChooserContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_medium"
         android:gravity="center_vertical"
         android:minHeight="@dimen/touch_target_size"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chatPositionChooserContainer">
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="@dimen/padding_large"
+            android:text="@string/dialog_vod_settings_chat_text_size_title"
+            android:textAppearance="?textAppearanceTitleSmall" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dialog_vod_settings_chat_text_size_title"
-                android:textAppearance="?textAppearanceTitleSmall" />
-
-            <TextView
-                android:id="@+id/selectedChatTextSizeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?textAppearanceLabelSmall"
-                tools:text="Normal" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="@dimen/icon_size_small"
-            android:layout_height="@dimen/icon_size_small"
-            android:layout_marginEnd="@dimen/padding_large"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_arrow_right" />
+        <com.google.android.material.slider.Slider
+            android:id="@+id/chatTextSizeSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="14dp"
+            android:stepSize="1"
+            android:valueFrom="5"
+            android:valueTo="30"
+            app:thumbRadius="5dp"
+            app:tickVisible="false" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/chatWidthChooserContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_medium"
         android:gravity="center_vertical"
         android:minHeight="@dimen/touch_target_size"
         android:orientation="vertical"
@@ -191,6 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="11dp"
+            android:layout_marginTop="-8dp"
             android:layout_marginEnd="14dp"
             android:stepSize="1"
             android:valueFrom="10"

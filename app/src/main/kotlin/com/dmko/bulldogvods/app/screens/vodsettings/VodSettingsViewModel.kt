@@ -10,7 +10,6 @@ import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
 import com.dmko.bulldogvods.features.chat.data.local.LocalChatDataSource
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatPositionToStringMapper
-import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatTextSIzeToStringMapper
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.presentation.mapping.VideoSourceToVideoSourceNameMapper
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class VodSettingsViewModel @Inject constructor(
     private val videoSourceToVideoSourceNameMapper: VideoSourceToVideoSourceNameMapper,
-    private val chatTextSIzeToStringMapper: ChatTextSIzeToStringMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val localChatDataSource: LocalChatDataSource,
     private val schedulers: Schedulers,
@@ -41,8 +39,8 @@ class VodSettingsViewModel @Inject constructor(
     private val portraitChatPositionMutableLiveData = MutableLiveData<Int>()
     val portraitChatPositionLiveData: LiveData<Int> = portraitChatPositionMutableLiveData
 
-    private val selectedChatTextSizeMutableLiveData = MutableLiveData<Int>()
-    val selectedChatTextSizeLiveData: LiveData<Int> = selectedChatTextSizeMutableLiveData
+    private val selectedChatTextSizeMutableLiveData = MutableLiveData<Float>()
+    val selectedChatTextSizeLiveData: LiveData<Float> = selectedChatTextSizeMutableLiveData
 
     private val selectedChatWidthMutableLiveData = MutableLiveData<Float>()
     val selectedChatWidthLiveData: LiveData<Float> = selectedChatWidthMutableLiveData
@@ -72,8 +70,8 @@ class VodSettingsViewModel @Inject constructor(
             .subscribe(portraitChatPositionMutableLiveData::setValue)
             .disposeOnClear()
 
-        localChatDataSource.chatTextSizeFlowable
-            .map(chatTextSIzeToStringMapper::map)
+        localChatDataSource.chatTextSizeSpFlowable
+            .distinctUntilChanged()
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(selectedChatTextSizeMutableLiveData::setValue)
@@ -102,9 +100,11 @@ class VodSettingsViewModel @Inject constructor(
         navigationCommandDispatcher.dispatch(NavigationCommand.ChatPositionChooser)
     }
 
-    fun onChatTextSizeClicked() {
-        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
-        navigationCommandDispatcher.dispatch(NavigationCommand.ChatTextSizeChooser)
+    fun onChatTextSizeSelected(chatTextSize: Float) {
+        localChatDataSource.saveChatTextSizeSp(chatTextSize)
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
     }
 
     fun onChatWidthSelected(chatWidth: Float) {

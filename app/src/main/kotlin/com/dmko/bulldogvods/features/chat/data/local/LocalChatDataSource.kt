@@ -1,7 +1,6 @@
 package com.dmko.bulldogvods.features.chat.data.local
 
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatTextSize
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 
@@ -9,7 +8,7 @@ interface LocalChatDataSource {
 
     val chatPositionFlowable: Flowable<ChatPosition>
 
-    val chatTextSizeFlowable: Flowable<ChatTextSize>
+    val chatTextSizeSpFlowable: Flowable<Float>
 
     val chatWidthPercentageFlowable: Flowable<Float>
 
@@ -21,7 +20,7 @@ interface LocalChatDataSource {
 
     fun savePortraitChatVisibility(isVisible: Boolean): Completable
 
-    fun saveChatTextSize(size: ChatTextSize): Completable
+    fun saveChatTextSizeSp(size: Float): Completable
 
     fun saveChatWidthPercentage(widthPercentage: Float): Completable
 }

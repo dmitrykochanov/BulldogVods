@@ -24,7 +24,6 @@ import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.domain.usecases.ReplayChatMessagesUseCase
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatMessageToChatMessageItemMapper
-import com.dmko.bulldogvods.features.chat.presentation.mapping.ChatTextSizeToSpMapper
 import com.dmko.bulldogvods.features.vods.data.database.datasource.DatabaseVodsDataSource
 import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDataSource
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
@@ -48,7 +47,6 @@ import javax.inject.Inject
 class VodViewModel @Inject constructor(
     private val replayChatMessagesUseCase: ReplayChatMessagesUseCase,
     private val chatMessageItemMapper: ChatMessageToChatMessageItemMapper,
-    private val chatTextSizeToSpMapper: ChatTextSizeToSpMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
     private val savedStateHandle: SavedStateHandle,
@@ -161,9 +159,8 @@ class VodViewModel @Inject constructor(
             .subscribe(chatPositionMutableLiveData::setValue)
             .disposeOnClear()
 
-        localChatDataSource.chatTextSizeFlowable
+        localChatDataSource.chatTextSizeSpFlowable
             .distinctUntilChanged()
-            .map(chatTextSizeToSpMapper::map)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(chatTextSizeSpMutableLiveData::setValue)

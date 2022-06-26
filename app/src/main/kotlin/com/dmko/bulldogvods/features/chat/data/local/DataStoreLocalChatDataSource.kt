@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import com.dmko.bulldogvods.app.common.extensions.updateData
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
-import com.dmko.bulldogvods.features.chat.domain.entities.ChatTextSize
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -51,18 +50,10 @@ class DataStoreLocalChatDataSource @Inject constructor(
             }
         }
 
-    override val chatTextSizeFlowable: Flowable<ChatTextSize>
+    override val chatTextSizeSpFlowable: Flowable<Float>
         get() {
             return dataStore.data().map { prefs ->
-                val textSizeValue = prefs[KEY_TEXT_SIZE]
-                when (textSizeValue) {
-                    VALUE_TEXT_SIZE_SMALL -> ChatTextSize.SMALL
-                    VALUE_TEXT_SIZE_NORMAL -> ChatTextSize.NORMAL
-                    VALUE_TEXT_SIZE_LARGE -> ChatTextSize.LARGE
-                    VALUE_TEXT_SIZE_HUGE -> ChatTextSize.HUGE
-                    null -> ChatTextSize.NORMAL
-                    else -> throw IllegalStateException("Unknown text size value $textSizeValue")
-                }
+                prefs[KEY_TEXT_SIZE] ?: DEFAULT_TEXT_SIZE_SP
             }
         }
 
@@ -109,14 +100,9 @@ class DataStoreLocalChatDataSource @Inject constructor(
         }
     }
 
-    override fun saveChatTextSize(size: ChatTextSize): Completable {
+    override fun saveChatTextSizeSp(size: Float): Completable {
         return dataStore.updateData { prefs ->
-            prefs[KEY_TEXT_SIZE] = when (size) {
-                ChatTextSize.SMALL -> VALUE_TEXT_SIZE_SMALL
-                ChatTextSize.NORMAL -> VALUE_TEXT_SIZE_NORMAL
-                ChatTextSize.LARGE -> VALUE_TEXT_SIZE_LARGE
-                ChatTextSize.HUGE -> VALUE_TEXT_SIZE_HUGE
-            }
+            prefs[KEY_TEXT_SIZE] = size
         }
     }
 
@@ -142,18 +128,14 @@ class DataStoreLocalChatDataSource @Inject constructor(
         private const val VALUE_PORTRAIT_POSITION_TOP = "top"
         private const val VALUE_PORTRAIT_POSITION_BOTTOM = "bottom"
 
-        private const val VALUE_TEXT_SIZE_SMALL = "small"
-        private const val VALUE_TEXT_SIZE_NORMAL = "normal"
-        private const val VALUE_TEXT_SIZE_LARGE = "large"
-        private const val VALUE_TEXT_SIZE_HUGE = "huge"
-
+        private const val DEFAULT_TEXT_SIZE_SP = 14f
         private const val DEFAULT_WIDTH_PERCENTAGE = 25f
 
         private val KEY_LANDSCAPE_POSITION = stringPreferencesKey("landscape_position")
         private val KEY_PORTRAIT_POSITION = stringPreferencesKey("portrait_position")
         private val KEY_LANDSCAPE_VISIBILITY = booleanPreferencesKey("landscape_visibility")
         private val KEY_PORTRAIT_VISIBILITY = booleanPreferencesKey("portrait_visibility")
-        private val KEY_TEXT_SIZE = stringPreferencesKey("text_size")
+        private val KEY_TEXT_SIZE = floatPreferencesKey("text_size")
         private val KEY_WIDTH = floatPreferencesKey("width")
     }
 }

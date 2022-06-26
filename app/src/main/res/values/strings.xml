@@ -28,11 +28,6 @@
     <string name="chat_position_top">Top</string>
     <string name="chat_position_bottom">Bottom</string>
 
-    <string name="chat_text_size_small">Small</string>
-    <string name="chat_text_size_normal">Normal</string>
-    <string name="chat_text_size_large">Large</string>
-    <string name="chat_text_size_huge">Huge</string>
-
     <string name="navigate_back_content_description">Go back</string>
 
     <string name="fragment_vods_image_search_content_description">Search</string>
@@ -67,7 +62,4 @@
 
     <string name="dialog_chat_position_chooser_title">Chat position</string>
     <string name="dialog_chat_position_chooser_check_content_description">Selected chat position</string>
-
-    <string name="dialog_chat_text_size_chooser_title">Chat text size</string>
-    <string name="dialog_chat_text_size_chooser_check_content_description">Selected chat text size</string>
 </resources>
