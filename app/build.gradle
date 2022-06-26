@@ -16,8 +16,8 @@ android {
         applicationId "com.dmko.bulldogvods"
         minSdk 23
         targetSdk 32
-        versionCode 8
-        versionName "1.1.5"
+        versionCode 9
+        versionName "2.0.0"
         archivesBaseName = "$applicationId-v$versionCode($versionName)"
     }
 
