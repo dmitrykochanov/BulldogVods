@@ -39,6 +39,10 @@
             <meta-data
                 android:name="com.dmko.bulldogvods.app.common.startup.StrictModeInitializer"
                 android:value="androidx.startup" />
+
+            <meta-data
+                android:name="com.dmko.bulldogvods.app.common.startup.RxJavaInitializer"
+                android:value="androidx.startup" />
         </provider>
 
         <meta-data
