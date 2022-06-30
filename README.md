@@ -2,7 +2,7 @@
 [![license: MIT](https://img.shields.io/badge/License-MIT-green)](https://github.com/dmitrykochanov/BulldogVods/blob/2b4699d64051cdb8d0b70e118c64ac57b4e36ed8/LICENSE.md) [![API: 23+](https://img.shields.io/badge/API-23+-green)](https://github.com/dmitrykochanov/BulldogVods/blob/2b4699d64051cdb8d0b70e118c64ac57b4e36ed8/LICENSE.md)
 
 ### About
-Watch AdmiralBulldog twitch vods including chat replay with static and animated emotes. The app supports light and dark theme, tablets, portrait and landscape orientation.
+Watch [AdmiralBulldog](https://www.twitch.tv/admiralbulldog) twitch vods including chat replay with static and animated emotes. The app supports light and dark theme, tablets, portrait and landscape orientation.
 
 <a href="https://play.google.com/store/apps/details?id=com.dmko.bulldogvods">
 <img alt="Get it on Google Play" height="80" src="https://i.imgur.com/52TPheC.png" />
@@ -28,7 +28,11 @@ Watch AdmiralBulldog twitch vods including chat replay with static and animated 
 <p align="center">Watch vod with chat replay</p>
 <div align="center" style="display:flex">
 <img src="https://lh3.googleusercontent.com/6Uuupn0SzStHM8pwkXmsIIoqxxvuj04gqPoAenyl__s9jpXCR6R4b87n9As1PrPYoAI=h1024-rw" width="25%">
-<img src="https://lh3.googleusercontent.com/4qS1oWUihtcffmw1bPcHJCDc0M6RN804NGHhX_OH91DC0dDZsQ4d3kb__RVGHy7EPw=h1024-rw" width="25%">
+<img src="https://lh3.googleusercontent.com/Qm_RebGQTTBFkcMLTlTrOilL77wq-lCU8OBDpZyUH3UmJUfZEiSOdBky3u2vbBS0K5x4=h1024-rw" width="25%">
+</div>
+
+<div align="center" style="display:flex">
+<img src="https://lh3.googleusercontent.com/itj5tn5gkzP2VL7H4v_i2qnQm_Gh2_HXwIByBZOyQVKS20ICGPtFeNZgkRfg6zuDUVA=h1024-rw" width="60%">
 </div>
 
 <div align="center" style="display:flex">
