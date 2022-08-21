@@ -41,7 +41,7 @@ class SearchVodsFragment : Fragment(R.layout.fragment_search_vods) {
         setupVodsRecycler()
         binding.swipeRefreshLayout.setOnRefreshListener { vodItemsAdapter.refresh() }
         binding.layoutError.buttonRetry.setOnClickListener { vodItemsAdapter.retry() }
-        binding.imageBack.setOnClickListener { requireActivity().onBackPressed() }
+        binding.imageBack.setOnClickListener { viewModel.onBackClicked() }
         binding.textInputSearch.focusAndShowKeyboard()
         binding.textInputSearch.doAfterTextChanged { editable ->
             viewModel.onSearchQueryChanged(editable?.toString().orEmpty())

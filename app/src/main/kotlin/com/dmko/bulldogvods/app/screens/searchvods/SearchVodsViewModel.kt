@@ -52,6 +52,10 @@ class SearchVodsViewModel @Inject constructor(
             .disposeOnClear()
     }
 
+    fun onBackClicked() {
+        navigationCommandDispatcher.dispatch(NavigationCommand.Back)
+    }
+
     fun onSearchQueryChanged(query: String) {
         savedStateHandle[ARG_SEARCH_QUERY] = query.trim()
     }

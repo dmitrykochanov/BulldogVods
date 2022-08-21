@@ -1,17 +1,17 @@
 [versions]
-kotlin = "1.7.0"
-androidPlugin = "7.2.1"
-ksp = "1.7.0-1.0.6"
+kotlin = "1.7.10"
+androidPlugin = "7.2.2"
+ksp = "1.7.10-1.0.6"
 apollo = "3.3.1"
-navComponent = "2.4.2"
-androidx_lifecycle = "2.4.1"
+navComponent = "2.5.1"
+androidx_lifecycle = "2.5.1"
 androidx_datastore = "1.0.0"
 androidx_paging = "3.1.1"
-androidx_room = "2.4.2"
-hilt = "2.42"
+androidx_room = "2.4.3"
+hilt = "2.43.2"
 liveEvent = "1.2.0"
-exoPlayer = "2.18.0"
-coil = "2.1.0"
+exoPlayer = "2.18.1"
+coil = "2.2.0"
 
 [plugins]
 android = { id = "com.android.application", version.ref = "androidPlugin" }
@@ -21,12 +21,13 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
 navComponentSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navComponent" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 [libraries]
-material = "com.google.android.material:material:1.6.0"
+material = "com.google.android.material:material:1.6.1"
 
-androidx_appCompat = "androidx.appcompat:appcompat:1.4.1"
-androidx_ktx = "androidx.core:core-ktx:1.8.0-rc02"
+androidx_appCompat = "androidx.appcompat:appcompat:1.5.0"
+androidx_ktx = "androidx.core:core-ktx:1.8.0"
 androidx_constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx_swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 androidx_startup = "androidx.startup:startup-runtime:1.1.1"
@@ -50,7 +51,7 @@ hilt_kapt = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 
 navComponent_fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navComponent" }
 
-rxJava3 = "io.reactivex.rxjava3:rxjava:3.1.3"
+rxJava3 = "io.reactivex.rxjava3:rxjava:3.1.5"
 rxJava3_rxAndroid = "io.reactivex.rxjava3:rxandroid:3.0.0"
 rxJava3_rxKotlin = "io.reactivex.rxjava3:rxkotlin:3.0.1"
 
@@ -60,7 +61,7 @@ apollo_memoryCache = { module = "com.apollographql.apollo3:apollo-normalized-cac
 
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil_gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
-animatedWebp = "com.github.penfeizhou.android.animation:awebp:2.21.0"
+animatedWebp = "com.github.penfeizhou.android.animation:awebp:2.23.0"
 
 exoPlayer_core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoPlayer" }
 exoPlayer_ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoPlayer" }
