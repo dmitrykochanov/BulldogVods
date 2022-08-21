@@ -2,7 +2,7 @@
 [![license: MIT](https://img.shields.io/badge/License-MIT-green)](https://github.com/dmitrykochanov/BulldogVods/blob/2b4699d64051cdb8d0b70e118c64ac57b4e36ed8/LICENSE.md) [![API: 23+](https://img.shields.io/badge/API-23+-green)](https://github.com/dmitrykochanov/BulldogVods/blob/2b4699d64051cdb8d0b70e118c64ac57b4e36ed8/LICENSE.md)
 
 ### About
-Watch [AdmiralBulldog](https://www.twitch.tv/admiralbulldog) twitch vods including chat replay with static and animated emotes. The app supports light and dark theme, tablets, portrait and landscape orientation.
+Watch [AdmiralBulldog](https://www.twitch.tv/admiralbulldog) twitch vods with chat replay. The app supports BTTV/FFZ/7TV emotes, light and dark theme, tablets, portrait and landscape orientation.
 
 <a href="https://play.google.com/store/apps/details?id=com.dmko.bulldogvods">
 <img alt="Get it on Google Play" height="80" src="https://i.imgur.com/52TPheC.png" />
