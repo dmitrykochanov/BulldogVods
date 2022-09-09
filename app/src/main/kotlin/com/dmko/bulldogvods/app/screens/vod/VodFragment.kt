@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -21,6 +19,7 @@ import com.dmko.bulldogvods.app.common.extensions.resolveColor
 import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
+import com.dmko.bulldogvods.databinding.LayoutExoPlayerControlsBinding
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessageItemsAdapter
@@ -34,6 +33,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
 
     private val viewModel: VodViewModel by viewModels()
     private val binding by viewBinding(FragmentVodBinding::bind)
+    private val playerControlsBinding by viewBinding(LayoutExoPlayerControlsBinding::bind)
 
     private lateinit var chatMessageItemsAdapter: ChatMessageItemsAdapter
 
@@ -56,6 +56,9 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         viewModel.chatMessageItemsLiveData.observe(viewLifecycleOwner) { chatMessages ->
             onPlayerOrChatChanged(viewModel.playerLiveData.value, chatMessages)
         }
+        viewModel.playerSegmentsLiveData.observe(viewLifecycleOwner) { segments ->
+            playerControlsBinding.exoProgress.segments = segments
+        }
         viewModel.chatPositionLiveData.observe(viewLifecycleOwner, ::setChatPosition)
         viewModel.chatTextSizeSpLiveData.observe(viewLifecycleOwner) { size ->
             chatMessageItemsAdapter.textSizeSp = size
@@ -67,15 +70,9 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.layoutError.buttonRetry.setOnClickListener { viewModel.onRetryClicked() }
         binding.layoutChatError.buttonRetry.setOnClickListener { viewModel.onRetryChatClicked() }
 
-        binding.playerView
-            .findViewById<ImageView>(R.id.backButton)
-            .setOnClickListener { viewModel.onBackClicked() }
-        binding.playerView
-            .findViewById<ImageButton>(R.id.exo_chapters)
-            .setOnClickListener { viewModel.onVodChaptersClicked() }
-        binding.playerView
-            .findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_settings)
-            .setOnClickListener { viewModel.onVodSettingsClicked() }
+        playerControlsBinding.backButton.setOnClickListener { viewModel.onBackClicked() }
+        playerControlsBinding.exoChapters.setOnClickListener { viewModel.onVodChaptersClicked() }
+        playerControlsBinding.exoSettings.setOnClickListener { viewModel.onVodSettingsClicked() }
     }
 
     private fun setupChatAutoScroll() {

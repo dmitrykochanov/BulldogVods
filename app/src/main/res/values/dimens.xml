@@ -19,4 +19,6 @@
     <dimen name="vods_list_content_extra_padding">@dimen/padding_medium</dimen>
     <dimen name="content_max_width">600dp</dimen>
     <dimen name="vod_progress_height">3dp</dimen>
+
+    <dimen name="player_time_bar_segment_width">5dp</dimen>
 </resources>

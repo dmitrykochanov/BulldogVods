@@ -13,6 +13,7 @@ import com.dmko.bulldogvods.app.common.resource.switchMapResource
 import com.dmko.bulldogvods.app.common.resource.unwrapResource
 import com.dmko.bulldogvods.app.common.rx.RxViewModel
 import com.dmko.bulldogvods.app.common.schedulers.Schedulers
+import com.dmko.bulldogvods.app.common.views.timebar.TimeBarSegment
 import com.dmko.bulldogvods.app.navigation.LongWrapper
 import com.dmko.bulldogvods.app.navigation.NavigationCommand
 import com.dmko.bulldogvods.app.navigation.NavigationCommandDispatcher
@@ -72,6 +73,9 @@ class VodViewModel @Inject constructor(
     private val playerMutableLiveData = MutableLiveData<Resource<Player>>()
     val playerLiveData: LiveData<Resource<Player>> = playerMutableLiveData
 
+    private val playerSegmentsMutableLiveData = MutableLiveData<List<TimeBarSegment>>()
+    val playerSegmentsLiveData: LiveData<List<TimeBarSegment>> = playerSegmentsMutableLiveData
+
     private val chatMessageItemsMutableLiveData = MutableLiveData<Resource<List<ChatMessageItem>>>()
     val chatMessageItemsLiveData: LiveData<Resource<List<ChatMessageItem>>> = chatMessageItemsMutableLiveData
 
@@ -120,6 +124,14 @@ class VodViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe(::onVideoSourceUrlChanged)
+            .disposeOnClear()
+
+        vodFlowable
+            .mapResource { vod -> vod.chapters.map { chapter -> TimeBarSegment(chapter.startOffset) } }
+            .unwrapResource(defaultValue = emptyList())
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.ui)
+            .subscribe(playerSegmentsMutableLiveData::setValue)
             .disposeOnClear()
 
         databaseVodsDataSource.observeVodPlaybackPosition(vodId)
