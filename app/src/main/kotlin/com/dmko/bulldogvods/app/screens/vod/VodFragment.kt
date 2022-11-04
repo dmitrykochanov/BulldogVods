@@ -18,13 +18,13 @@ import com.dmko.bulldogvods.R
 import com.dmko.bulldogvods.app.common.binding.viewBinding
 import com.dmko.bulldogvods.app.common.extensions.requireAppActivity
 import com.dmko.bulldogvods.app.common.extensions.resolveColor
-import com.dmko.bulldogvods.app.common.extensions.setOnDoubleClickListener
 import com.dmko.bulldogvods.app.common.resource.Resource
 import com.dmko.bulldogvods.databinding.FragmentVodBinding
 import com.dmko.bulldogvods.features.chat.domain.entities.ChatPosition
 import com.dmko.bulldogvods.features.chat.presentation.entities.ChatMessageItem
 import com.dmko.bulldogvods.features.chat.presentation.recycler.messages.ChatMessageItemsAdapter
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -47,7 +47,7 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         binding.recyclerChat.adapter = chatMessageItemsAdapter
         binding.recyclerChat.itemAnimator = null
         setupChatAutoScroll()
-        setupChatVisibilityToggle()
+        setupPlayerTouchListener()
 
         viewModel.titleLiveData.observe(viewLifecycleOwner, ::showTitle)
         viewModel.playerLiveData.observe(viewLifecycleOwner) { playerResource ->
@@ -99,13 +99,24 @@ class VodFragment : Fragment(R.layout.fragment_vod) {
         })
     }
 
-    private fun setupChatVisibilityToggle() {
+    private fun setupPlayerTouchListener() {
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        if (isLandscape) {
-            binding.playerView.setOnDoubleClickListener { viewModel.onLandscapePlayerDoubleClicked() }
-        } else {
-            binding.playerView.setOnDoubleClickListener { viewModel.onPortraitPlayerDoubleClicked() }
-        }
+        val playerTouchListener = PlayerTouchListener(
+            context = requireContext(),
+            onSingleClick = binding.playerView::performClick,
+            onDoubleClick = if (isLandscape) {
+                viewModel::onLandscapePlayerDoubleClicked
+            } else {
+                viewModel::onPortraitPlayerDoubleClicked
+            },
+            onScaleUp = {
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+            },
+            onScaleDown = {
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            }
+        )
+        binding.playerView.setOnTouchListener(playerTouchListener)
     }
 
     override fun onStart() {
