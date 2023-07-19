@@ -6,10 +6,7 @@ import com.dmko.bulldogvods.features.vods.domain.entities.VodChapter
 import com.dmko.bulldogvods.features.vods.domain.entities.VodState
 import com.dmko.bulldogvods.features.vods.domain.entities.VodWithPlaybackPosition
 import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.MultipleChapters
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.NoChapters
-import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.ChaptersSection.SingleChapter
+import com.dmko.bulldogvods.features.vods.presentation.entities.VodItem.Vod.ChaptersSection.*
 import com.dmko.bulldogvods.features.vods.presentation.formatting.DurationFormat
 import com.dmko.bulldogvods.features.vods.presentation.formatting.RelativeDateFormat
 import javax.inject.Inject
@@ -22,7 +19,7 @@ class VodWithPlaybackPositionToVodItemMapper @Inject constructor(
 
     fun map(vodWithPlaybackPosition: VodWithPlaybackPosition): VodItem {
         val vod = vodWithPlaybackPosition.vod
-        return VodItem(
+        return VodItem.Vod(
             id = vod.id,
             thumbnailUrl = vod.thumbnailUrl ?: DEFAULT_VOD_THUMBNAIL_URL,
             length = mapVodStateToDuration(vod.state),
@@ -53,17 +50,17 @@ class VodWithPlaybackPositionToVodItemMapper @Inject constructor(
         return chapters.maxByOrNull(VodChapter::length)?.gameThumbnailUrl
     }
 
-    private fun mapVodStateToBadge(vodState: VodState): VodItem.StateBadge? {
+    private fun mapVodStateToBadge(vodState: VodState): VodItem.Vod.StateBadge? {
         return when (vodState) {
-            is VodState.Live -> VodItem.StateBadge(
+            is VodState.Live -> VodItem.Vod.StateBadge(
                 backgroundColor = R.color.red_70,
                 text = R.string.vod_state_live
             )
-            is VodState.Ready -> VodItem.StateBadge(
+            is VodState.Ready -> VodItem.Vod.StateBadge(
                 backgroundColor = R.color.fruit_salad_70,
                 text = R.string.vod_state_ready
             )
-            is VodState.Processing -> VodItem.StateBadge(
+            is VodState.Processing -> VodItem.Vod.StateBadge(
                 backgroundColor = R.color.clementine_70,
                 text = R.string.vod_state_processing
             )
@@ -71,7 +68,7 @@ class VodWithPlaybackPositionToVodItemMapper @Inject constructor(
         }
     }
 
-    private fun mapChaptersToSection(chapters: List<VodChapter>): ChaptersSection {
+    private fun mapChaptersToSection(chapters: List<VodChapter>): VodItem.Vod.ChaptersSection {
         return when {
             chapters.isEmpty() -> NoChapters
             chapters.size == 1 -> SingleChapter(gameName = chapters.first().gameName)

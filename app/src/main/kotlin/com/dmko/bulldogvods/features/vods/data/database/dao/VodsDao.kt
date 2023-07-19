@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.dmko.bulldogvods.features.vods.data.database.dao.entities.RecentlyWatchedVodEntity
 import com.dmko.bulldogvods.features.vods.data.database.dao.entities.VodPlaybackPositionEntity
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -20,4 +21,10 @@ interface VodsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveVodPlaybackPosition(vodPlaybackPositionEntity: VodPlaybackPositionEntity): Completable
+
+    @Query("SELECT * FROM recently_watched_vod ORDER BY watched_at DESC")
+    fun observeRecentlyWatchedVods(): Flowable<List<RecentlyWatchedVodEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveRecentlyWatchedVods(recentlyWatchedVodEntities: List<RecentlyWatchedVodEntity>): Completable
 }

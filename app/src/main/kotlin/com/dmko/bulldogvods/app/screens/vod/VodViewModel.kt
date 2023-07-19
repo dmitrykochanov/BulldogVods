@@ -29,6 +29,7 @@ import com.dmko.bulldogvods.features.vods.data.network.datasource.NetworkVodsDat
 import com.dmko.bulldogvods.features.vods.domain.entities.VideoSource
 import com.dmko.bulldogvods.features.vods.domain.entities.Vod
 import com.dmko.bulldogvods.features.vods.domain.selector.DefaultVideoSourceSelector
+import com.dmko.bulldogvods.features.vods.domain.usecases.SaveRecentlyWatchedVodUseCase
 import com.dmko.bulldogvods.features.vods.presentation.player.ExoPlayerFactory
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -46,6 +47,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VodViewModel @Inject constructor(
     private val replayChatMessagesUseCase: ReplayChatMessagesUseCase,
+    private val saveRecentlyWatchedVodUseCase: SaveRecentlyWatchedVodUseCase,
     private val chatMessageItemMapper: ChatMessageToChatMessageItemMapper,
     private val navigationCommandDispatcher: NavigationCommandDispatcher,
     private val eventBus: EventBus,
@@ -202,6 +204,10 @@ class VodViewModel @Inject constructor(
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.ui)
             .subscribe { playbackPositionSubject.onNext(exoPlayer.currentPosition) }
+        saveRecentlyWatchedVodUseCase.execute(vodId)
+            .subscribeOn(schedulers.io)
+            .subscribe()
+            .disposeOnClear()
     }
 
     private fun onVodPlaybackStopped() {
